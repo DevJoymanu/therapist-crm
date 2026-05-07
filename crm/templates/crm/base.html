@@ -312,6 +312,42 @@
         syncNavigation();
       }
     });
+
+    function dobWidget(iso) {
+      return {
+        dd: '', mm: '', yyyy: '',
+        get isoValue() {
+          const d = parseInt(this.dd), m = parseInt(this.mm), y = parseInt(this.yyyy);
+          if (!d || !m || isNaN(y) || String(y).length !== 4) return '';
+          return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        },
+        get age() {
+          const v = this.isoValue;
+          if (!v) return null;
+          const dob = new Date(v + 'T00:00:00');
+          if (isNaN(dob)) return null;
+          const now = new Date();
+          let a = now.getFullYear() - dob.getFullYear();
+          if (now.getMonth() < dob.getMonth() || (now.getMonth() === dob.getMonth() && now.getDate() < dob.getDate())) a--;
+          return a >= 0 ? a : null;
+        },
+        get currentYear() { return new Date().getFullYear(); },
+        init() {
+          if (!iso) return;
+          const parts = String(iso).split('-');
+          if (parts.length === 3) {
+            this.yyyy = parts[0];
+            this.mm = String(parseInt(parts[1]));
+            this.dd = String(parseInt(parts[2]));
+          }
+        },
+        advance(event, maxLen, nextRef) {
+          if (event.target.value.replace(/\D/g,'').length >= maxLen && nextRef) {
+            this.$nextTick(() => { nextRef.focus(); nextRef.select(); });
+          }
+        }
+      };
+    }
   </script>
 </head>
 <body class="h-full text-slate-900 antialiased" hx-indicator="#page-spinner">
