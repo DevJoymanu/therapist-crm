@@ -1,9 +1,12 @@
 ﻿{% load static %}
 <!doctype html>
-<html lang="en" class="h-full bg-slate-50" x-data="{ dark: localStorage.getItem('theme') === 'dark' }" x-bind:class="{ 'dark': dark }" x-effect="localStorage.setItem('theme', dark ? 'dark' : 'light')">
+<html lang="en" class="h-full bg-slate-50" x-data="{ dark: localStorage.getItem('theme') === 'dark', mobileNav: false }" x-bind:class="{ 'dark': dark }" x-effect="localStorage.setItem('theme', dark ? 'dark' : 'light')">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>{% block title %}Therapist CRM{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -321,7 +324,7 @@
       {% include "crm/components/sidebar.html" %}
       <div class="flex min-w-0 flex-1 flex-col lg:pl-72">
         {% include "crm/components/topbar.html" %}
-        <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <main class="flex-1 px-4 py-6 pb-24 sm:px-6 lg:px-8 lg:pb-8">
           <div id="main-content" class="mx-auto max-w-7xl">
   {% else %}
     <main class="flex min-h-full items-center justify-center px-4 py-12">

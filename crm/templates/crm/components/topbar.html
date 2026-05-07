@@ -1,33 +1,70 @@
 <header class="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
-  <div class="flex h-16 items-center gap-4 px-4 sm:px-6 lg:px-8">
+  <div class="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
+
+    {# Hamburger — mobile only #}
+    <button type="button"
+            @click="mobileNav = true"
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 lg:hidden"
+            aria-label="Open navigation">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+
+    {# Global search #}
     <form method="get" action="{% url 'crm:patient_list' %}" class="min-w-0 flex-1" hx-get="{% url 'crm:patient_list' %}" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">
       <label class="sr-only" for="global-search">Search</label>
-      <input id="global-search" name="q" value="{{ request.GET.q }}" hx-get="{% url 'crm:patient_list' %}" hx-trigger="keyup changed delay:300ms" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner" class="h-10 w-full max-w-xl rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100" placeholder="Search patients, notes, appointments">
+      <input id="global-search" name="q" value="{{ request.GET.q }}"
+             hx-get="{% url 'crm:patient_list' %}" hx-trigger="keyup changed delay:300ms" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner"
+             class="h-10 w-full max-w-xl rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
+             placeholder="Search patients...">
     </form>
-<a href="{% url 'crm:session_create' %}" hx-get="{% url 'crm:session_create' %}" hx-target="#main-content"
-  hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner"
-  class="hidden rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 sm:inline-flex">
-  Add session
-</a>
-    <button type="button" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50" aria-label="Toggle dark mode" @click="dark = !dark">
+
+    {# Add session — hidden on mobile, visible sm+ #}
+    <a href="{% url 'crm:session_create' %}" hx-get="{% url 'crm:session_create' %}" hx-target="#main-content"
+       hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner"
+       class="hidden shrink-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 sm:inline-flex">
+      Add session
+    </a>
+
+    {# Dark mode toggle — hidden on mobile #}
+    <button type="button"
+            class="hidden shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 md:block"
+            aria-label="Toggle dark mode"
+            @click="dark = !dark">
       <span x-show="!dark">Dark</span>
       <span x-cloak x-show="dark">Light</span>
     </button>
-    <button type="button" class="relative rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 hover:bg-slate-50" aria-label="Notifications">
+
+    {# Notifications — hidden on mobile #}
+    <button type="button"
+            class="relative hidden shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 hover:bg-slate-50 md:block"
+            aria-label="Notifications">
       <span class="block h-2.5 w-2.5 rounded-full bg-rose-500"></span>
     </button>
-    <div class="relative" x-data="{ open: false }">
-      <button type="button" @click="open = !open" class="flex cursor-pointer list-none items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" :aria-expanded="open.toString()">
+
+    {# User menu #}
+    <div class="relative shrink-0" x-data="{ open: false }">
+      <button type="button" @click="open = !open"
+              class="flex cursor-pointer list-none items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              :aria-expanded="open.toString()">
         <span class="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">{{ user.username|first|upper }}</span>
         <span class="hidden sm:block">{{ user.get_username }}</span>
       </button>
-      <div x-cloak x-show="open" x-transition @click.outside="open = false" class="absolute right-0 mt-2 w-44 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+      <div x-cloak x-show="open" x-transition @click.outside="open = false"
+           class="absolute right-0 mt-2 w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
         <a href="{% url 'crm:criterion_list' %}" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">Settings</a>
+        <button @click="dark = !dark; open = false"
+                class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 md:hidden">
+          <span x-show="!dark">Switch to dark mode</span>
+          <span x-cloak x-show="dark">Switch to light mode</span>
+        </button>
         <form method="post" action="{% url 'logout' %}" data-full-reload>
           {% csrf_token %}
           <button class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-600 hover:bg-slate-50" type="submit">Logout</button>
         </form>
       </div>
     </div>
+
   </div>
 </header>

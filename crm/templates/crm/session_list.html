@@ -9,11 +9,28 @@
     <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Session notes</h1>
     <p class="mt-2 text-sm text-slate-500">Recent clinical documentation and treatment plans.</p>
   </div>
-  <a class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:session_create' %}">New session</a>
+  <a class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:session_create' %}">New session</a>
 </div>
 
 <section id="session-results" class="skeleton-target overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-  <div class="overflow-x-auto">
+
+  {# Mobile card list — hidden md+ #}
+  <div class="md:hidden">
+    {% for session in sessions %}
+      <a href="{{ session.get_absolute_url }}" class="block border-b border-slate-100 px-5 py-4 last:border-0 hover:bg-slate-50">
+        <div class="flex items-center justify-between gap-4">
+          <p class="font-semibold text-slate-950">{{ session.patient.full_name }}</p>
+          <p class="shrink-0 text-sm text-slate-500">{{ session.session_date }}</p>
+        </div>
+        <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ session.plan|truncatechars:100|default:"No plan recorded." }}</p>
+      </a>
+    {% empty %}
+      <p class="px-5 py-12 text-center text-sm text-slate-500">No session notes yet.</p>
+    {% endfor %}
+  </div>
+
+  {# Desktop table — hidden below md #}
+  <div class="hidden overflow-x-auto md:block">
     <table class="min-w-full divide-y divide-slate-100">
       <thead class="bg-slate-50">
         <tr>
@@ -37,5 +54,6 @@
       </tbody>
     </table>
   </div>
+
 </section>
 {% endblock %}

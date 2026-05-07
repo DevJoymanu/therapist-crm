@@ -28,6 +28,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -36,6 +37,14 @@ body {
     linear-gradient(180deg, #f8fafc 0%, var(--color-bg) 45%, #eef4f8 100%);
   color: var(--color-text);
   font-family: var(--font-body);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 .dark body {
@@ -114,6 +123,16 @@ input,
 select,
 textarea {
   transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 120ms ease;
+}
+
+/* Minimum 44px tap targets on touch devices */
+@media (pointer: coarse) {
+  button,
+  a[href][class*="rounded"],
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+  }
 }
 
 button:active,
@@ -206,6 +225,21 @@ thead th:first-child {
   to { transform: translateX(100%); }
 }
 
+/* Suppress hover animations on touch to avoid sticky states */
+@media (hover: none) {
+  .card:hover,
+  section[class*="bg-white"]:hover,
+  article[class*="bg-white"]:hover,
+  .surface:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+  }
+
+  tbody tr:hover {
+    transform: none;
+  }
+}
+
 [x-cloak] {
   display: none !important;
 }
@@ -241,4 +275,18 @@ thead th:first-child {
 .dark .border-slate-100,
 .dark .border-slate-200 {
   border-color: var(--color-border) !important;
+}
+
+/* Dark mode: bottom nav and mobile drawer */
+.dark nav[class*="fixed bottom"] {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+}
+
+.dark nav[class*="fixed bottom"] a {
+  color: var(--color-muted) !important;
+}
+
+.dark nav[class*="fixed bottom"] a.text-blue-700 {
+  color: #60a5fa !important;
 }
