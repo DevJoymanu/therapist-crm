@@ -256,6 +256,40 @@
 
     let historyNavigation = false;
 
+    // ── DEBUG: Add session click tracing ────────────────────────────────────
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("a[href*='/sessions/new/']");
+      if (!link) return;
+      console.group("[AddSession] click #" + (window._addSessionClicks = (window._addSessionClicks || 0) + 1));
+      console.log("element:", link);
+      console.log("hx-get:", link.getAttribute("hx-get"));
+      console.log("hx-target:", link.getAttribute("hx-target"));
+      console.log("hx-swap:", link.getAttribute("hx-swap"));
+      console.log("location:", link.getAttribute("href"));
+      console.groupEnd();
+    }, true); // capture phase — fires before HTMX
+
+    document.body.addEventListener("htmx:beforeRequest", (e) => {
+      if (e.detail.requestConfig?.path?.includes("/sessions/new/")) {
+        console.log("[AddSession] htmx:beforeRequest →", e.detail.requestConfig.path);
+      }
+    });
+
+    document.body.addEventListener("htmx:afterSwap", (e) => {
+      if (e.detail.requestConfig?.path?.includes("/sessions/new/")) {
+        console.log("[AddSession] htmx:afterSwap — swap completed");
+      }
+    });
+
+    document.body.addEventListener("htmx:responseError", (e) => {
+      console.warn("[HTMX] responseError", e.detail.xhr?.status, e.detail.requestConfig?.path);
+    });
+
+    document.body.addEventListener("htmx:sendError", (e) => {
+      console.warn("[HTMX] sendError (network/abort)", e.detail.requestConfig?.path);
+    });
+    // ── END DEBUG ────────────────────────────────────────────────────────────
+
     document.body.addEventListener("htmx:configRequest", (event) => {
       event.detail.headers["X-CSRFToken"] = csrfToken();
       event.detail.headers["Cache-Control"] = "no-cache";
