@@ -3,6 +3,44 @@
 {% block title %}Form | Therapist CRM{% endblock %}
 
 {% block content %}
+<script>
+function dobWidget(iso) {
+  return {
+    dd: '', mm: '', yyyy: '',
+    get isoValue() {
+      const d = parseInt(this.dd), m = parseInt(this.mm), y = parseInt(this.yyyy);
+      if (!d || !m || isNaN(y) || String(y).length !== 4) return '';
+      return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    },
+    get age() {
+      const v = this.isoValue;
+      if (!v) return null;
+      const dob = new Date(v + 'T00:00:00');
+      if (isNaN(dob)) return null;
+      const now = new Date();
+      let a = now.getFullYear() - dob.getFullYear();
+      if (now.getMonth() < dob.getMonth() || (now.getMonth() === dob.getMonth() && now.getDate() < dob.getDate())) a--;
+      return a >= 0 ? a : null;
+    },
+    get currentYear() { return new Date().getFullYear(); },
+    init() {
+      if (!iso) return;
+      const parts = String(iso).split('-');
+      if (parts.length === 3) {
+        this.yyyy = parts[0];
+        this.mm = String(parseInt(parts[1]));
+        this.dd = String(parseInt(parts[2]));
+      }
+    },
+    advance(event, maxLen, nextRef) {
+      if (event.target.value.replace(/\D/g,'').length >= maxLen && nextRef) {
+        this.$nextTick(() => { nextRef.focus(); nextRef.select(); });
+      }
+    }
+  };
+}
+</script>
+
 <div class="mb-6">
   <p class="text-sm font-medium text-blue-700">Record</p>
   <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Update details</h1>
@@ -18,22 +56,44 @@
   {% endif %}
   <div class="grid gap-5 md:grid-cols-2">
     {% for field in form %}
-      <div class="{% if field.field.widget.input_type == 'checkbox' %}flex items-center gap-3 md:col-span-2{% elif field.field.widget.input_type == 'textarea' %}md:col-span-2{% endif %}">
-        {% if field.field.widget.input_type == 'checkbox' %}
-          {{ field }}
-          <label class="text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% else %}
-          <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.field.required %}
-            <p class="mt-2 text-xs text-amber-700" x-show="submitted && !$el.parentElement.querySelector('input, select, textarea')?.value" x-transition>Please complete this field.</p>
+      {% if field.html_name == 'date_of_birth' %}
+        <div x-data="dobWidget('{{ field.value|default:'' }}')" x-init="init()">
+          <label class="mb-2 block text-sm font-medium text-slate-700">{{ field.label }}</label>
+          <input type="hidden" name="date_of_birth" :value="isoValue">
+          <div class="dob-grid">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="DD"
+                   class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                   x-model="dd" @input="advance($event, 2, $refs.mm)" x-ref="dd">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="MM"
+                   class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                   x-model="mm" @input="advance($event, 2, $refs.yyyy)" x-ref="mm">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="YYYY"
+                   class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                   x-model="yyyy" x-ref="yyyy">
+          </div>
+          <p class="dob-age" x-cloak x-show="age !== null" x-text="age + ' years old'"></p>
+          {% for error in field.errors %}
+            <p class="mt-2 text-sm text-rose-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="{% if field.field.widget.input_type == 'checkbox' %}flex items-center gap-3 md:col-span-2{% elif field.field.widget.input_type == 'textarea' %}md:col-span-2{% endif %}">
+          {% if field.field.widget.input_type == 'checkbox' %}
+            {{ field }}
+            <label class="text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {% else %}
+            <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.field.required %}
+              <p class="mt-2 text-xs text-amber-700" x-show="submitted && !$el.parentElement.querySelector('input, select, textarea')?.value" x-transition>Please complete this field.</p>
+            {% endif %}
           {% endif %}
-        {% endif %}
-        {% if field.help_text %}<p class="mt-2 text-xs text-slate-500">{{ field.help_text }}</p>{% endif %}
-        {% for error in field.errors %}
-          <p class="mt-2 text-sm text-rose-600">{{ error }}</p>
-        {% endfor %}
-      </div>
+          {% if field.help_text %}<p class="mt-2 text-xs text-slate-500">{{ field.help_text }}</p>{% endif %}
+          {% for error in field.errors %}
+            <p class="mt-2 text-sm text-rose-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
     {% endfor %}
   </div>
   <div class="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-5">

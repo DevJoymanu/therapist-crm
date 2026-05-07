@@ -9,7 +9,7 @@
     <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">{{ patient.full_name }}</h1>
     <p class="mt-2 text-sm text-slate-500">Clinical summary, session history, and progress tracking in one place.</p>
   </div>
-  <div class="flex gap-3">
+  <div class="detail-actions">
     <a href="{% url 'crm:session_create' %}" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">Add session</a>
     <a href="{% url 'crm:patient_update' patient.pk %}" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">Edit</a>
   </div>
@@ -50,7 +50,7 @@
   <div class="space-y-6" x-data="{ tab: 'overview' }">
     <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div class="border-b border-slate-100 px-5 pt-4">
-        <nav class="-mb-px flex gap-6">
+        <nav class="tab-bar -mb-px gap-6">
           <button type="button" @click="tab = 'overview'" :class="tab === 'overview' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Overview</button>
           <button type="button" @click="tab = 'notes'" :class="tab === 'notes' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Session Notes</button>
           <button type="button" @click="tab = 'progress'; setTimeout(() => window.dispatchEvent(new Event('resize')), 40)" :class="tab === 'progress' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Progress Tracking</button>

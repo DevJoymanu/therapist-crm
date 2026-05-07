@@ -290,3 +290,52 @@ thead th:first-child {
 .dark nav[class*="fixed bottom"] a.text-blue-700 {
   color: #60a5fa !important;
 }
+
+/* ── Tab bar: horizontal scroll, no wrap ───────────────────────── */
+.tab-bar {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-bar > * { flex-shrink: 0; }
+
+/* ── Detail action buttons: stack full-width on mobile → row ────── */
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.detail-actions > a,
+.detail-actions > button {
+  width: 100%;
+  text-align: center;
+}
+@media (min-width: 640px) {
+  .detail-actions { flex-direction: row; gap: 0.75rem; }
+  .detail-actions > a,
+  .detail-actions > button { width: auto; }
+}
+
+/* ── Date-of-birth split inputs ─────────────────────────────────── */
+.dob-grid {
+  display: grid;
+  grid-template-columns: 4.5rem 4.5rem 1fr;
+  gap: 0.5rem;
+  align-items: start;
+}
+.dob-age {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  min-height: 1rem;
+}
+
+/* ── Dashboard chart: constrain height on very small screens ────── */
+@media (max-width: 479px) {
+  #dashboardChart,
+  #trendChart {
+    max-height: 200px;
+  }
+}

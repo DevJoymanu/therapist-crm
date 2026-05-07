@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Therapist CRM – Complete User Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#2563eb;--blue-dark:#1d4ed8;--blue-light:#eff6ff;
+  --slate-950:#020617;--slate-900:#0f172a;--slate-800:#1e293b;
+  --slate-700:#334155;--slate-600:#475569;--slate-500:#64748b;
+  --slate-400:#94a3b8;--slate-300:#cbd5e1;--slate-200:#e2e8f0;
+  --slate-100:#f1f5f9;--slate-50:#f8fafc;
+  --rose:#e11d48;--amber:#f59e0b;--emerald:#059669;
+}
+body{font-family:'Inter',system-ui,sans-serif;font-size:10.5pt;line-height:1.65;color:var(--slate-800);background:#cbd5e1}
+.page{width:210mm;min-height:297mm;margin:0 auto 8mm;padding:18mm 18mm 18mm;background:white;position:relative}
+@media screen{.page{box-shadow:0 4px 28px rgba(0,0,0,.15);border-radius:3px}}
+@media print{
+  body{background:white}
+  .page{margin:0;box-shadow:none;border-radius:0;page-break-after:always;overflow:hidden;height:297mm;padding:16mm 16mm 14mm}
+  .page:last-child{page-break-after:auto}
+  .no-print{display:none}
+  @page{size:A4;margin:0}
+}
+/* Typography */
+h1{font-size:26pt;font-weight:800;line-height:1.15;color:var(--slate-950)}
+h2{font-size:16pt;font-weight:700;line-height:1.3;color:var(--slate-900);margin-bottom:7pt}
+h3{font-size:12pt;font-weight:600;color:var(--slate-800);margin-bottom:5pt;margin-top:10pt}
+h4{font-size:10pt;font-weight:600;color:var(--slate-700);margin-bottom:3pt}
+p{margin-bottom:7pt;color:var(--slate-700)}
+strong{color:var(--slate-900)}
+/* Chapter badge */
+.badge-chapter{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:8pt;font-weight:700;padding:2pt 9pt;border-radius:20pt;margin-bottom:7pt;text-transform:uppercase;letter-spacing:.07em}
+/* Steps */
+.steps{list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:9pt;margin-bottom:7pt;align-items:flex-start}
+.steps li::before{content:counter(s);display:flex;align-items:center;justify-content:center;min-width:20pt;height:20pt;border-radius:50%;background:var(--blue);color:white;font-size:8pt;font-weight:700;flex-shrink:0;margin-top:1pt}
+.steps li p{margin-bottom:0}
+/* Callouts */
+.callout{border-left:3pt solid;padding:7pt 10pt;margin:9pt 0;border-radius:0 5pt 5pt 0;font-size:9.5pt}
+.tip{border-color:var(--emerald);background:#f0fdf4}.tip b{color:#065f46}
+.warn{border-color:var(--amber);background:#fffbeb}.warn b{color:#92400e}
+.info{border-color:var(--blue);background:var(--blue-light)}.info b{color:var(--blue-dark)}
+/* Grid layouts */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12pt}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9pt}
+/* Figure */
+.fig{margin:10pt 0}
+.fig-cap{text-align:center;font-size:8.5pt;color:var(--slate-500);margin-top:5pt;font-style:italic}
+/* Annotation grid */
+.ann{display:grid;grid-template-columns:18pt 1fr;gap:4pt 7pt;margin-top:7pt;font-size:9pt}
+.ann-n{display:flex;align-items:center;justify-content:center;width:18pt;height:18pt;border-radius:50%;background:var(--blue);color:white;font-size:7.5pt;font-weight:700;flex-shrink:0;margin-top:1pt}
+.ann-t{color:var(--slate-700);align-self:center}
+/* Inline badge */
+.tag{display:inline-block;padding:1pt 6pt;border-radius:12pt;font-size:8pt;font-weight:600}
+.tag-blue{background:#dbeafe;color:#1d4ed8}
+.tag-rose{background:#ffe4e6;color:#be123c}
+.tag-amber{background:#fef3c7;color:#92400e}
+.tag-green{background:#d1fae5;color:#065f46}
+.tag-slate{background:var(--slate-100);color:var(--slate-600)}
+/* Divider */
+hr{border:none;border-top:1pt solid var(--slate-200);margin:11pt 0}
+/* Table */
+table{width:100%;border-collapse:collapse;margin:9pt 0;font-size:9.5pt}
+th{background:var(--slate-900);color:white;padding:5pt 8pt;text-align:left;font-size:8.5pt;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+td{padding:5pt 8pt;border-bottom:1pt solid var(--slate-100);vertical-align:top}
+tr:nth-child(even) td{background:var(--slate-50)}
+/* Info card */
+.icard{border:1pt solid var(--slate-200);border-radius:7pt;padding:9pt;background:var(--slate-50)}
+.icard h4{color:var(--blue);margin-bottom:3pt}
+/* Flow diagram boxes */
+.flow{display:flex;align-items:center;justify-content:center;gap:0;margin:10pt 0}
+.flow-box{text-align:center;padding:7pt 10pt;border-radius:7pt;border:1.5pt solid;flex:1}
+.flow-arrow{color:var(--slate-400);font-size:14pt;padding:0 4pt;flex-shrink:0}
+/* TOC */
+.toc-row{display:flex;justify-content:space-between;align-items:baseline;padding:4pt 2pt;border-bottom:1pt dotted var(--slate-200);text-decoration:none;color:inherit;border-radius:3pt;transition:background .15s}
+a.toc-row:hover{background:var(--blue-light);border-bottom-color:transparent;padding-left:6pt}
+a.toc-row:hover .toc-ch,a.toc-row:hover .toc-pg{color:var(--blue)}
+a.toc-row:hover span:first-child{color:var(--blue)}
+.toc-ch{font-weight:700;font-size:10.5pt}
+.toc-sub{font-size:9.5pt;color:var(--slate-600);padding-left:11pt}
+.toc-pg{font-size:9.5pt;color:var(--slate-500);font-weight:500}
+/* Mockup container */
+.mock{border:1.5pt solid var(--slate-200);border-radius:7pt;overflow:hidden;box-shadow:0 2pt 10pt rgba(0,0,0,.08)}
+/* Keyboard shortcut */
+kbd{display:inline-block;background:var(--slate-100);border:1pt solid var(--slate-300);border-radius:3pt;padding:1pt 5pt;font-family:monospace;font-size:8.5pt;color:var(--slate-700)}
+/* FAQ */
+.faq-cat{font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin:12pt 0 5pt;padding-bottom:3pt;border-bottom:2pt solid var(--blue-light)}
+.faq-item{margin-bottom:7pt;border:1pt solid var(--slate-200);border-radius:7pt;overflow:hidden}
+.faq-q{background:var(--slate-50);padding:7pt 10pt;font-size:9.5pt;font-weight:700;color:var(--slate-900);margin:0;border-bottom:1pt solid var(--slate-200);display:flex;gap:7pt;align-items:baseline}
+.faq-q::before{content:'Q';display:inline-flex;align-items:center;justify-content:center;min-width:16pt;height:16pt;border-radius:50%;background:var(--blue);color:white;font-size:7.5pt;font-weight:800;flex-shrink:0;margin-top:1pt}
+.faq-a{padding:7pt 10pt;font-size:9.5pt;color:var(--slate-700);line-height:1.65}
+.faq-a p{margin-bottom:5pt}
+.faq-a p:last-child{margin-bottom:0}
+.faq-a ul{margin:3pt 0 5pt 14pt}
+.faq-a li{margin-bottom:3pt}
+/* Page number footer */
+.pg-footer{position:absolute;bottom:10mm;left:18mm;right:18mm;display:flex;justify-content:space-between;font-size:8pt;color:var(--slate-400)}
+</style>
+</head>
+<body>
+
+<!-- PRINT INSTRUCTION BAR (screen only) -->
+<div class="no-print" style="background:#fef3c7;border-bottom:2px solid #f59e0b;padding:12px 24px;text-align:center;font-size:11pt;font-family:Inter,sans-serif;position:sticky;top:0;z-index:99">
+  📄 <strong>To save as PDF:</strong> Press <kbd>Ctrl+P</kbd> (or <kbd>⌘P</kbd> on Mac) → set Destination to <em>"Save as PDF"</em> → set Paper size to <strong>A4</strong> → click Save.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 1 · COVER                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" style="background:linear-gradient(150deg,#eff6ff 0%,#f8fafc 55%,#f0fdf4 100%);display:flex;flex-direction:column;justify-content:center;min-height:297mm">
+  <!-- Logo mark -->
+  <div style="margin-bottom:28pt">
+    <div style="display:inline-flex;align-items:center;justify-content:center;width:64pt;height:64pt;background:#2563eb;border-radius:16pt;box-shadow:0 8pt 24pt rgba(37,99,235,.35)">
+      <span style="font-size:24pt;font-weight:800;color:white;font-family:Inter,sans-serif">TC</span>
+    </div>
+  </div>
+  <!-- Eyebrow -->
+  <p style="font-size:10pt;font-weight:600;color:var(--blue);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10pt">Complete User Guide</p>
+  <!-- Title -->
+  <h1 style="font-size:34pt;margin-bottom:14pt;line-height:1.1">Therapist CRM<br><span style="color:var(--slate-500);font-weight:400;font-size:22pt">Clinical Workspace</span></h1>
+  <!-- Subtitle -->
+  <p style="font-size:13pt;color:var(--slate-600);max-width:360pt;line-height:1.6;margin-bottom:32pt">
+    A step-by-step guide to managing patients, scheduling appointments, recording clinical notes, and tracking patient progress — all in one place.
+  </p>
+  <hr style="border-color:var(--slate-300);margin-bottom:20pt">
+  <!-- Meta -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16pt">
+    <div><p style="font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin-bottom:2pt">Intended for</p><p style="color:var(--slate-700);font-size:10pt;font-weight:500;margin:0">Licensed Therapists &amp; Clinicians</p></div>
+    <div><p style="font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin-bottom:2pt">Guide version</p><p style="color:var(--slate-700);font-size:10pt;font-weight:500;margin:0">1.0 — May 2026</p></div>
+    <div><p style="font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--slate-400);margin-bottom:2pt">Chapters</p><p style="color:var(--slate-700);font-size:10pt;font-weight:500;margin:0">7 Sections + Quick Reference</p></div>
+  </div>
+  <!-- decorative corner graphic -->
+  <div style="position:absolute;bottom:0;right:0;opacity:.07">
+    <svg width="260" height="260" viewBox="0 0 260 260"><circle cx="260" cy="260" r="220" fill="#2563eb"/><circle cx="260" cy="260" r="160" fill="#2563eb"/><circle cx="260" cy="260" r="100" fill="#2563eb"/></svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 2 · TABLE OF CONTENTS                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page">
+  <p class="badge-chapter">Navigation</p>
+  <h2>Table of Contents</h2>
+  <p style="color:var(--slate-500);font-size:9.5pt;margin-bottom:14pt">Use this guide section by section or jump straight to what you need.</p>
+
+  <a class="toc-row" href="#ch1"><span class="toc-ch">1 · Getting Started</span><span class="toc-pg">3</span></a>
+  <a class="toc-row toc-sub" href="#ch1"><span>Logging in &amp; the interface layout</span><span class="toc-pg">3</span></a>
+  <a class="toc-row toc-sub" href="#ch1"><span>Desktop vs. mobile navigation</span><span class="toc-pg">3</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#ch2"><span class="toc-ch">2 · Your Dashboard</span><span class="toc-pg">4</span></a>
+  <a class="toc-row toc-sub" href="#ch2"><span>Understanding the home screen</span><span class="toc-pg">4</span></a>
+  <a class="toc-row toc-sub" href="#ch2-alerts"><span>Metric cards &amp; alerts</span><span class="toc-pg">5</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#ch3"><span class="toc-ch">3 · Managing Patients</span><span class="toc-pg">6</span></a>
+  <a class="toc-row toc-sub" href="#ch3"><span>The care roster &amp; search</span><span class="toc-pg">6</span></a>
+  <a class="toc-row toc-sub" href="#ch3-add"><span>Adding a new patient</span><span class="toc-pg">7</span></a>
+  <a class="toc-row toc-sub" href="#ch3-profile"><span>The patient profile page</span><span class="toc-pg">8</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#ch4"><span class="toc-ch">4 · Appointments</span><span class="toc-pg">9</span></a>
+  <a class="toc-row toc-sub" href="#ch4"><span>Scheduling a new appointment</span><span class="toc-pg">9</span></a>
+  <a class="toc-row toc-sub" href="#ch4"><span>Viewing appointment details</span><span class="toc-pg">10</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#ch5"><span class="toc-ch">5 · Session Notes &amp; Scoring</span><span class="toc-pg">11</span></a>
+  <a class="toc-row toc-sub" href="#ch5"><span>Recording a session note</span><span class="toc-pg">11</span></a>
+  <a class="toc-row toc-sub" href="#ch5-scoring"><span>Clinical scoring explained</span><span class="toc-pg">12</span></a>
+  <a class="toc-row toc-sub" href="#ch5-review"><span>Reviewing a completed session</span><span class="toc-pg">13</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#ch6"><span class="toc-ch">6 · Progress Tracking</span><span class="toc-pg">14</span></a>
+  <a class="toc-row toc-sub" href="#ch6"><span>Reading progress charts &amp; trends</span><span class="toc-pg">14</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#ch7"><span class="toc-ch">7 · Settings &amp; Scoring Criteria</span><span class="toc-pg">15</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#qr-workflow"><span class="toc-ch">Quick Reference Card</span><span class="toc-pg">16</span></a>
+  <a class="toc-row toc-sub" href="#qr-workflow"><span>Full patient workflow diagram</span><span class="toc-pg">16</span></a>
+  <a class="toc-row toc-sub" href="#qr"><span>Common tasks at a glance</span><span class="toc-pg">16</span></a>
+
+  <a class="toc-row" style="margin-top:6pt" href="#faq"><span class="toc-ch">Frequently Asked Questions</span><span class="toc-pg">17</span></a>
+  <a class="toc-row toc-sub" href="#faq"><span>Login, accounts &amp; security</span><span class="toc-pg">17</span></a>
+  <a class="toc-row toc-sub" href="#faq"><span>Patients &amp; appointments</span><span class="toc-pg">17</span></a>
+  <a class="toc-row toc-sub" href="#faq2"><span>Session notes &amp; scoring</span><span class="toc-pg">18</span></a>
+  <a class="toc-row toc-sub" href="#faq2"><span>Progress tracking &amp; technical</span><span class="toc-pg">18</span></a>
+
+  <hr style="margin-top:16pt">
+  <div class="callout info" style="margin-top:12pt">
+    <b>How to use this guide</b><br>
+    Each section begins with a visual mockup of the screen being described, followed by step-by-step instructions. Numbered callouts on the mockups match the explanations below each image. Read this guide from start to finish for a complete orientation, or skip to any chapter for a quick refresher.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 2</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 3 · GETTING STARTED                               -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch1">
+  <p class="badge-chapter">Chapter 1</p>
+  <h2>Getting Started</h2>
+  <p>Therapist CRM is a secure, web-based tool designed specifically for clinical professionals. You access it through any modern web browser — no app installation required.</p>
+
+  <h3>Logging In</h3>
+  <!-- Login screen mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 620 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <!-- Background -->
+        <rect width="620" height="280" fill="#f8fafc"/>
+        <!-- Center card -->
+        <rect x="185" y="30" width="250" height="220" rx="12" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <!-- TC logo -->
+        <rect x="267" y="50" width="86" height="36" rx="0" fill="none"/>
+        <rect x="291" y="50" width="38" height="38" rx="10" fill="#2563eb"/>
+        <text x="310" y="74" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="14" font-weight="800">TC</text>
+        <!-- Title -->
+        <text x="310" y="108" text-anchor="middle" fill="#020617" font-family="Inter,sans-serif" font-size="11" font-weight="700">Therapist CRM</text>
+        <text x="310" y="122" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="8">Sign in to your clinical workspace</text>
+        <!-- Username field -->
+        <rect x="205" y="134" width="210" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+        <text x="218" y="151" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Username</text>
+        <!-- Password field -->
+        <rect x="205" y="168" width="210" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+        <text x="218" y="185" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Password</text>
+        <!-- Login button -->
+        <rect x="205" y="203" width="210" height="28" rx="8" fill="#2563eb"/>
+        <text x="310" y="221" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="9" font-weight="600">Sign In</text>
+        <!-- Annotation 1 -->
+        <circle cx="182" cy="162" r="9" fill="#2563eb"/>
+        <text x="182" y="166" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8" font-weight="700">1</text>
+        <!-- Annotation 2 -->
+        <circle cx="438" cy="217" r="9" fill="#2563eb"/>
+        <text x="438" y="221" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8" font-weight="700">2</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 1.1 — The login screen is the entry point to Therapist CRM</p>
+  </div>
+
+  <div class="ann">
+    <div class="ann-n">1</div><div class="ann-t">Enter your <strong>username</strong> and <strong>password</strong> provided by your clinic administrator.</div>
+    <div class="ann-n">2</div><div class="ann-t">Click <strong>Sign In</strong>. You will be taken directly to your personalised dashboard.</div>
+  </div>
+
+  <div class="callout tip" style="margin-top:9pt">
+    <b>Tip:</b> Your session stays active while your browser is open. Always click <strong>Logout</strong> (via your name in the top-right) when using a shared computer.
+  </div>
+
+  <hr>
+  <h3>Understanding the Interface Layout</h3>
+  <p>The workspace is divided into three persistent areas that are always visible on desktop:</p>
+
+  <!-- Interface layout diagram -->
+  <div class="fig">
+    <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+      <rect width="620" height="200" fill="#f8fafc" rx="8"/>
+      <!-- Sidebar block -->
+      <rect x="10" y="10" width="130" height="180" rx="8" fill="#1e293b"/>
+      <text x="75" y="36" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="9" font-weight="700">SIDEBAR</text>
+      <text x="75" y="52" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Navigation menu</text>
+      <text x="75" y="74" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">• Dashboard</text>
+      <text x="75" y="87" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">• Patients</text>
+      <text x="75" y="100" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">• Appointments</text>
+      <text x="75" y="113" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">• Reports</text>
+      <text x="75" y="126" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">• Settings</text>
+      <text x="75" y="175" text-anchor="middle" fill="#475569" font-family="Inter,sans-serif" font-size="7">Always visible · 288px wide</text>
+      <!-- Top bar block -->
+      <rect x="150" y="10" width="460" height="38" rx="8" fill="#2563eb"/>
+      <text x="380" y="29" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="9" font-weight="700">TOP BAR — Search · Add session · User menu</text>
+      <!-- Main content block -->
+      <rect x="150" y="58" width="460" height="132" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+      <text x="380" y="95" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="10" font-weight="600">MAIN CONTENT AREA</text>
+      <text x="380" y="112" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Dashboard · Patient lists · Forms · Reports</text>
+      <text x="380" y="127" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Updates without reloading the full page</text>
+      <!-- Labels -->
+      <text x="75" y="165" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">① Sidebar</text>
+      <text x="380" y="22" text-anchor="middle" fill="rgba(255,255,255,.6)" font-family="Inter,sans-serif" font-size="7">② Top Bar</text>
+      <text x="623" y="130" text-anchor="end" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">③ Content</text>
+    </svg>
+    <p class="fig-cap">Figure 1.2 — Desktop layout: Sidebar (left) + Top bar (top) + Main content (centre)</p>
+  </div>
+
+  <div class="three-col" style="margin-top:6pt">
+    <div class="icard"><h4>① Sidebar</h4><p style="font-size:9pt;margin:0">Fixed left panel with all five main navigation links. Click any section name to navigate.</p></div>
+    <div class="icard"><h4>② Top bar</h4><p style="font-size:9pt;margin:0">Always-on header with a global patient search, an <em>Add session</em> shortcut, and your user menu.</p></div>
+    <div class="icard"><h4>③ Content area</h4><p style="font-size:9pt;margin:0">The main workspace — pages load here instantly without a full browser refresh.</p></div>
+  </div>
+
+  <div class="callout info" style="margin-top:9pt">
+    <b>On a phone or tablet:</b> The sidebar is replaced by a <strong>bottom navigation bar</strong> (five icons at the foot of the screen) and a <strong>☰ menu button</strong> in the top-left corner that opens a slide-in drawer with all navigation links.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 3</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 4 · DASHBOARD                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch2">
+  <p class="badge-chapter">Chapter 2</p>
+  <h2>Your Dashboard</h2>
+  <p>The Dashboard is your home screen — the first thing you see after logging in. It gives you an instant clinical overview: who needs attention today, upcoming sessions, recent notes, and risk alerts.</p>
+
+  <!-- Dashboard full mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="720" height="400" fill="#f8fafc"/>
+        <!-- Sidebar -->
+        <rect width="144" height="400" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <rect x="12" y="12" width="34" height="34" rx="8" fill="#2563eb"/>
+        <text x="29" y="33" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="11" font-weight="800">TC</text>
+        <text x="53" y="23" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="700">Therapist CRM</text>
+        <text x="53" y="34" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Clinical workspace</text>
+        <!-- Nav: Dashboard active -->
+        <rect x="8" y="58" width="128" height="22" rx="6" fill="#eff6ff"/>
+        <text x="22" y="73" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">● Dashboard</text>
+        <text x="22" y="93" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Patients</text>
+        <text x="22" y="110" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Appointments</text>
+        <text x="22" y="127" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Reports</text>
+        <text x="22" y="144" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Settings</text>
+        <!-- User info -->
+        <rect x="8" y="366" width="128" height="26" rx="6" fill="#f8fafc"/>
+        <text x="18" y="377" fill="#94a3b8" font-family="Inter,sans-serif" font-size="6" font-weight="700">SIGNED IN</text>
+        <text x="18" y="388" fill="#0f172a" font-family="Inter,sans-serif" font-size="7" font-weight="600">dr.johnson</text>
+        <!-- Topbar -->
+        <rect x="144" y="0" width="576" height="44" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <rect x="160" y="10" width="280" height="24" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="174" y="26" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Search patients, notes, appointments…</text>
+        <rect x="452" y="10" width="78" height="24" rx="7" fill="#2563eb"/>
+        <text x="491" y="26" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8" font-weight="600">Add session</text>
+        <rect x="538" y="10" width="40" height="24" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="558" y="26" text-anchor="middle" fill="#475569" font-family="Inter,sans-serif" font-size="8">Dark</text>
+        <rect x="586" y="10" width="26" height="24" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <circle cx="599" cy="16" r="4" fill="#e11d48"/>
+        <rect x="620" y="10" width="86" height="24" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <circle cx="636" cy="22" r="8" fill="#0f172a"/>
+        <text x="636" y="26" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">D</text>
+        <text x="650" y="26" fill="#334155" font-family="Inter,sans-serif" font-size="8">dr.johnson</text>
+        <!-- Hero banner -->
+        <rect x="156" y="52" width="552" height="48" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="172" y="67" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">Dashboard</text>
+        <text x="172" y="83" fill="#020617" font-family="Inter,sans-serif" font-size="11" font-weight="700">Good day, Dr. Johnson</text>
+        <text x="172" y="94" fill="#64748b" font-family="Inter,sans-serif" font-size="8">A focused view of today's clinical work and patient risk signals.</text>
+        <rect x="588" y="63" width="60" height="20" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="618" y="77" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="8" font-weight="600">Add patient</text>
+        <!-- 4 Metric cards -->
+        <rect x="156" y="110" width="128" height="58" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="170" y="126" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Total patients</text>
+        <text x="170" y="148" fill="#020617" font-family="Inter,sans-serif" font-size="20" font-weight="800">24</text>
+        <rect x="170" y="153" width="32" height="10" rx="5" fill="#dbeafe"/>
+        <text x="186" y="161" text-anchor="middle" fill="#1d4ed8" font-family="Inter,sans-serif" font-size="6.5" font-weight="600">Active</text>
+
+        <rect x="292" y="110" width="128" height="58" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="306" y="126" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Sessions this week</text>
+        <text x="306" y="148" fill="#020617" font-family="Inter,sans-serif" font-size="20" font-weight="800">8</text>
+        <rect x="306" y="153" width="36" height="10" rx="5" fill="#dbeafe"/>
+        <text x="324" y="161" text-anchor="middle" fill="#1d4ed8" font-family="Inter,sans-serif" font-size="6.5" font-weight="600">Clinical</text>
+
+        <rect x="428" y="110" width="128" height="58" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="442" y="126" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">High-risk patients</text>
+        <text x="442" y="148" fill="#e11d48" font-family="Inter,sans-serif" font-size="20" font-weight="800">3</text>
+        <rect x="442" y="153" width="36" height="10" rx="5" fill="#ffe4e6"/>
+        <text x="460" y="161" text-anchor="middle" fill="#be123c" font-family="Inter,sans-serif" font-size="6.5" font-weight="600">Review</text>
+
+        <rect x="564" y="110" width="144" height="58" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="578" y="126" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Upcoming apts</text>
+        <text x="578" y="148" fill="#020617" font-family="Inter,sans-serif" font-size="20" font-weight="800">5</text>
+        <rect x="578" y="153" width="46" height="10" rx="5" fill="#fef3c7"/>
+        <text x="601" y="161" text-anchor="middle" fill="#92400e" font-family="Inter,sans-serif" font-size="6.5" font-weight="600">Scheduled</text>
+
+        <!-- Chart panel -->
+        <rect x="156" y="178" width="374" height="120" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="172" y="195" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Patient progress</text>
+        <text x="172" y="206" fill="#64748b" font-family="Inter,sans-serif" font-size="7">Mood, progress, and risk trends across sessions.</text>
+        <!-- Chart lines -->
+        <line x1="172" y1="285" x2="510" y2="285" stroke="#f1f5f9" stroke-width="1"/>
+        <line x1="172" y1="260" x2="510" y2="260" stroke="#f1f5f9" stroke-width="1"/>
+        <line x1="172" y1="235" x2="510" y2="235" stroke="#f1f5f9" stroke-width="1"/>
+        <line x1="172" y1="215" x2="510" y2="215" stroke="#f1f5f9" stroke-width="1"/>
+        <polyline points="178,278 220,258 265,265 310,248 360,252 405,235 455,228 498,220" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="178,282 220,278 265,284 310,275 360,280 405,272 455,278 498,270" fill="none" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="4,2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="178" cy="278" r="3" fill="#2563eb"/>
+        <circle cx="498" cy="220" r="3" fill="#2563eb"/>
+        <circle cx="178" cy="282" r="3" fill="#e11d48"/>
+        <circle cx="498" cy="270" r="3" fill="#e11d48"/>
+        <text x="178" y="295" fill="#94a3b8" font-family="Inter,sans-serif" font-size="6.5">Jan</text>
+        <text x="315" y="295" fill="#94a3b8" font-family="Inter,sans-serif" font-size="6.5">Mar</text>
+        <text x="490" y="295" fill="#94a3b8" font-family="Inter,sans-serif" font-size="6.5">May</text>
+
+        <!-- Upcoming appointments panel -->
+        <rect x="540" y="178" width="168" height="120" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="554" y="195" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Upcoming</text>
+        <line x1="540" y1="202" x2="708" y2="202" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="554" y="217" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="600">Sarah Mitchell</text>
+        <text x="700" y="217" text-anchor="end" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">May 8</text>
+        <text x="554" y="228" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Online · 10:00</text>
+        <line x1="540" y1="234" x2="708" y2="234" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="554" y="249" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="600">James Rodriguez</text>
+        <text x="700" y="249" text-anchor="end" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">May 9</text>
+        <text x="554" y="260" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Room 3 · 14:30</text>
+        <line x1="540" y1="266" x2="708" y2="266" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="554" y="281" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="600">Emma Thompson</text>
+        <text x="700" y="281" text-anchor="end" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">May 10</text>
+        <text x="554" y="292" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Phone · 11:00</text>
+
+        <!-- Recent activity + Alerts row -->
+        <rect x="156" y="308" width="270" height="80" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="170" y="324" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Recent activity</text>
+        <line x1="156" y1="330" x2="426" y2="330" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="170" y="344" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="500">Sarah Mitchell</text>
+        <text x="418" y="344" text-anchor="end" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">May 5</text>
+        <text x="170" y="355" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">CBT session — anxiety trigger mapping…</text>
+        <line x1="156" y1="362" x2="426" y2="362" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="170" y="376" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="500">James Rodriguez</text>
+        <text x="418" y="376" text-anchor="end" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">May 3</text>
+
+        <rect x="436" y="308" width="272" height="80" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="450" y="324" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Alerts</text>
+        <line x1="436" y1="330" x2="708" y2="330" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="450" y="344" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="500">James Rodriguez</text>
+        <rect x="630" y="336" width="56" height="12" rx="6" fill="#ffe4e6"/>
+        <text x="658" y="345" text-anchor="middle" fill="#be123c" font-family="Inter,sans-serif" font-size="6.5" font-weight="600">High risk</text>
+        <text x="450" y="355" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">PHQ-9 score · May 3</text>
+        <line x1="436" y1="362" x2="708" y2="362" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="450" y="376" fill="#020617" font-family="Inter,sans-serif" font-size="8" font-weight="500">Emma Thompson</text>
+        <rect x="630" y="368" width="56" height="12" rx="6" fill="#ffe4e6"/>
+        <text x="658" y="377" text-anchor="middle" fill="#be123c" font-family="Inter,sans-serif" font-size="6.5" font-weight="600">High risk</text>
+
+        <!-- Annotation numbers -->
+        <circle cx="150" cy="139" r="8" fill="#2563eb" stroke="white" stroke-width="1.5"/>
+        <text x="150" y="143" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">1</text>
+        <circle cx="149" cy="222" r="8" fill="#2563eb" stroke="white" stroke-width="1.5"/>
+        <text x="149" y="226" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">2</text>
+        <circle cx="149" cy="295" r="8" fill="#2563eb" stroke="white" stroke-width="1.5"/>
+        <text x="149" y="299" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">3</text>
+        <circle cx="149" cy="350" r="8" fill="#2563eb" stroke="white" stroke-width="1.5"/>
+        <text x="149" y="354" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">4</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 2.1 — The Dashboard: your clinical overview at a glance</p>
+  </div>
+
+  <div class="ann">
+    <div class="ann-n">1</div><div class="ann-t"><strong>Metric cards</strong> — Four key numbers updated in real time: total patients, sessions this week, high-risk patients, and upcoming appointments.</div>
+    <div class="ann-n">2</div><div class="ann-t"><strong>Patient progress chart</strong> — A line graph plotting wellness scores (blue) and risk scores (red dashed) across sessions for all patients combined.</div>
+    <div class="ann-n">3</div><div class="ann-t"><strong>Upcoming appointments</strong> — The next sessions chronologically. Click any row to jump to full appointment details.</div>
+    <div class="ann-n">4</div><div class="ann-t"><strong>Alerts panel</strong> — Patients who have recently scored in the high-risk range. These require urgent clinical review. Click a row to open the session that triggered the alert.</div>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 4</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 5 · DASHBOARD — METRIC CARDS & ALERTS             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch2-alerts">
+  <p class="badge-chapter">Chapter 2 continued</p>
+  <h2>Reading Metric Cards &amp; Alerts</h2>
+
+  <div class="three-col" style="margin-bottom:10pt">
+    <div style="border:1.5pt solid #e2e8f0;border-radius:8pt;padding:10pt;background:white">
+      <p style="font-size:8pt;font-weight:600;color:#64748b;margin-bottom:4pt">TOTAL PATIENTS</p>
+      <p style="font-size:24pt;font-weight:800;color:#020617;margin-bottom:4pt;line-height:1">24</p>
+      <span class="tag tag-blue">Active</span>
+      <p style="font-size:8.5pt;color:#64748b;margin-top:6pt;margin-bottom:0">The total number of patient records currently in your system — both active and inactive.</p>
+    </div>
+    <div style="border:1.5pt solid #e2e8f0;border-radius:8pt;padding:10pt;background:white">
+      <p style="font-size:8pt;font-weight:600;color:#64748b;margin-bottom:4pt">HIGH-RISK PATIENTS</p>
+      <p style="font-size:24pt;font-weight:800;color:#e11d48;margin-bottom:4pt;line-height:1">3</p>
+      <span class="tag tag-rose">Review</span>
+      <p style="font-size:8.5pt;color:#64748b;margin-top:6pt;margin-bottom:0">Patients whose most recent session produced a high-risk score. This number should be reviewed <strong>daily</strong>.</p>
+    </div>
+    <div style="border:1.5pt solid #e2e8f0;border-radius:8pt;padding:10pt;background:white">
+      <p style="font-size:8pt;font-weight:600;color:#64748b;margin-bottom:4pt">UPCOMING APPOINTMENTS</p>
+      <p style="font-size:24pt;font-weight:800;color:#020617;margin-bottom:4pt;line-height:1">5</p>
+      <span class="tag tag-amber">Scheduled</span>
+      <p style="font-size:8.5pt;color:#64748b;margin-top:6pt;margin-bottom:0">Sessions booked in the future. Click <em>Schedule</em> on the dashboard to add a new appointment.</p>
+    </div>
+  </div>
+
+  <hr>
+  <h3>Responding to Alerts</h3>
+  <p>The <strong>Alerts</strong> panel on your dashboard is the most clinically important area. Any patient whose session produces a <span class="tag tag-rose">High risk</span> score appears here automatically.</p>
+
+  <!-- Alert detail mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 560 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="560" height="140" fill="#f8fafc"/>
+        <rect x="10" y="10" width="540" height="120" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <!-- Header -->
+        <text x="24" y="28" fill="#020617" font-family="Inter,sans-serif" font-size="10" font-weight="700">Alerts</text>
+        <text x="24" y="40" fill="#64748b" font-family="Inter,sans-serif" font-size="8">High-risk scores that may need follow-up.</text>
+        <line x1="10" y1="46" x2="550" y2="46" stroke="#f1f5f9" stroke-width="1"/>
+        <!-- Alert row 1 -->
+        <text x="24" y="62" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">James Rodriguez</text>
+        <text x="24" y="74" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">PHQ-9 score from May 3, 2026</text>
+        <rect x="462" y="55" width="68" height="16" rx="8" fill="#ffe4e6"/>
+        <text x="496" y="67" text-anchor="middle" fill="#be123c" font-family="Inter,sans-serif" font-size="8" font-weight="700">High risk</text>
+        <text x="24" y="85" fill="#2563eb" font-family="Inter,sans-serif" font-size="7.5">Click to open session →</text>
+        <line x1="10" y1="92" x2="550" y2="92" stroke="#f1f5f9" stroke-width="1"/>
+        <!-- Alert row 2 -->
+        <text x="24" y="108" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Emma Thompson</text>
+        <text x="24" y="120" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">GAD-7 score from May 1, 2026</text>
+        <rect x="462" y="101" width="68" height="16" rx="8" fill="#ffe4e6"/>
+        <text x="496" y="113" text-anchor="middle" fill="#be123c" font-family="Inter,sans-serif" font-size="8" font-weight="700">High risk</text>
+        <text x="24" y="131" fill="#2563eb" font-family="Inter,sans-serif" font-size="7.5">Click to open session →</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 2.2 — The Alerts panel shows patients requiring urgent clinical review</p>
+  </div>
+
+  <ol class="steps">
+    <li><p>Spot a patient name in the <strong>Alerts</strong> panel on the dashboard.</p></li>
+    <li><p>Click the row. The system opens the specific session that triggered the alert, showing the full clinical note and score breakdown.</p></li>
+    <li><p>Review the session notes, interventions recorded, and the scoring algorithm to understand why the risk flag was raised.</p></li>
+    <li><p>Take clinical action: contact the patient, update your notes, or schedule an urgent follow-up appointment.</p></li>
+  </ol>
+
+  <div class="callout warn">
+    <b>Important:</b> Alerts are generated automatically based on the scoring criteria you have configured. They are a clinical <em>aid</em>, not a substitute for your professional judgement. Always review the full session context before acting.
+  </div>
+
+  <hr>
+  <h3>Quick Navigation from the Dashboard</h3>
+  <div class="two-col">
+    <div>
+      <h4>Add a patient quickly</h4>
+      <p style="font-size:9.5pt">Click the <strong>Add patient</strong> button on the dashboard header banner — this opens the new patient form directly.</p>
+    </div>
+    <div>
+      <h4>Start a new session note</h4>
+      <p style="font-size:9.5pt">Click <strong>Add session</strong> in the top bar (or the <em>Add note</em> link in the Recent activity panel) to open the session note form.</p>
+    </div>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 5</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 6 · PATIENTS — CARE ROSTER                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch3">
+  <p class="badge-chapter">Chapter 3</p>
+  <h2>Managing Patients</h2>
+  <p>The <strong>Patients</strong> section (click <em>Patients</em> in the sidebar) is your care roster — a searchable list of every patient in your system, with quick-glance risk status and last-session information.</p>
+
+  <!-- Patient list mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="720" height="330" fill="#f8fafc"/>
+        <!-- Sidebar -->
+        <rect width="144" height="330" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <rect x="12" y="12" width="34" height="34" rx="8" fill="#2563eb"/>
+        <text x="29" y="33" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="11" font-weight="800">TC</text>
+        <text x="22" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Dashboard</text>
+        <rect x="8" y="78" width="128" height="22" rx="6" fill="#eff6ff"/>
+        <text x="22" y="93" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">● Patients</text>
+        <text x="22" y="110" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Appointments</text>
+        <text x="22" y="127" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Reports</text>
+        <text x="22" y="144" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Settings</text>
+        <!-- Topbar -->
+        <rect x="144" y="0" width="576" height="44" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <rect x="160" y="10" width="280" height="24" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="174" y="26" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Search patients…</text>
+        <rect x="452" y="10" width="78" height="24" rx="7" fill="#2563eb"/>
+        <text x="491" y="26" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8" font-weight="600">Add session</text>
+        <!-- Page header -->
+        <text x="160" y="62" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">Patients</text>
+        <text x="160" y="76" fill="#020617" font-family="Inter,sans-serif" font-size="13" font-weight="800">Care roster</text>
+        <text x="160" y="88" fill="#64748b" font-family="Inter,sans-serif" font-size="8">Find patient records, risk status, and recent session history.</text>
+        <rect x="624" y="58" width="80" height="24" rx="7" fill="#2563eb"/>
+        <text x="664" y="74" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8" font-weight="600">Add Patient</text>
+        <!-- Card -->
+        <rect x="156" y="98" width="552" height="224" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <!-- Filter bar -->
+        <rect x="168" y="108" width="320" height="24" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="182" y="124" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Search by patient name…</text>
+        <rect x="498" y="108" width="46" height="24" rx="7" fill="#e2e8f0"/>
+        <text x="521" y="124" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="8" font-weight="600">Search</text>
+        <!-- Tab row -->
+        <rect x="570" y="108" width="24" height="24" rx="7" fill="#f1f5f9"/>
+        <text x="582" y="124" text-anchor="middle" fill="#475569" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">All</text>
+        <rect x="600" y="108" width="36" height="24" rx="7" fill="#f8fafc"/>
+        <text x="618" y="124" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Active</text>
+        <rect x="642" y="108" width="28" height="24" rx="7" fill="#f8fafc"/>
+        <text x="656" y="124" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Risk</text>
+        <!-- Table header -->
+        <rect x="156" y="136" width="552" height="20" fill="#f8fafc"/>
+        <text x="170" y="150" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">NAME</text>
+        <text x="310" y="150" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">CONTACT</text>
+        <text x="420" y="150" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">LAST SESSION</text>
+        <text x="520" y="150" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">RISK LEVEL</text>
+        <text x="680" y="150" text-anchor="end" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">ACTION</text>
+        <!-- Row 1 -->
+        <line x1="156" y1="156" x2="708" y2="156" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="170" y="173" fill="#020617" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">Sarah Mitchell</text>
+        <text x="170" y="184" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Active</text>
+        <text x="310" y="173" fill="#475569" font-family="Inter,sans-serif" font-size="8">sarah@example.com</text>
+        <text x="420" y="173" fill="#475569" font-family="Inter,sans-serif" font-size="8">2026-05-05</text>
+        <rect x="520" y="165" width="48" height="13" rx="6" fill="#d1fae5"/>
+        <text x="544" y="175" text-anchor="middle" fill="#065f46" font-family="Inter,sans-serif" font-size="7" font-weight="600">Low risk</text>
+        <rect x="640" y="163" width="34" height="16" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="657" y="175" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">View</text>
+        <!-- Row 2 -->
+        <line x1="156" y1="193" x2="708" y2="193" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="170" y="210" fill="#020617" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">James Rodriguez</text>
+        <text x="170" y="221" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Active</text>
+        <text x="310" y="210" fill="#475569" font-family="Inter,sans-serif" font-size="8">+44 7700 900123</text>
+        <text x="420" y="210" fill="#475569" font-family="Inter,sans-serif" font-size="8">2026-05-03</text>
+        <rect x="520" y="202" width="56" height="13" rx="6" fill="#ffe4e6"/>
+        <text x="548" y="212" text-anchor="middle" fill="#be123c" font-family="Inter,sans-serif" font-size="7" font-weight="600">High risk</text>
+        <rect x="640" y="200" width="34" height="16" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="657" y="212" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">View</text>
+        <!-- Row 3 -->
+        <rect x="156" y="230" width="552" height="30" fill="#f8fafc"/>
+        <line x1="156" y1="230" x2="708" y2="230" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="170" y="247" fill="#020617" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">Emma Thompson</text>
+        <text x="170" y="258" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Active</text>
+        <text x="310" y="247" fill="#475569" font-family="Inter,sans-serif" font-size="8">emma@example.com</text>
+        <text x="420" y="247" fill="#475569" font-family="Inter,sans-serif" font-size="8">2026-05-01</text>
+        <rect x="520" y="239" width="56" height="13" rx="6" fill="#fef3c7"/>
+        <text x="548" y="249" text-anchor="middle" fill="#92400e" font-family="Inter,sans-serif" font-size="7" font-weight="600">Medium risk</text>
+        <rect x="640" y="237" width="34" height="16" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="657" y="249" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">View</text>
+        <!-- Row 4 -->
+        <line x1="156" y1="260" x2="708" y2="260" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="170" y="277" fill="#020617" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">David Osei</text>
+        <text x="170" y="288" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Active</text>
+        <text x="310" y="277" fill="#475569" font-family="Inter,sans-serif" font-size="8">+44 7711 234567</text>
+        <text x="420" y="277" fill="#475569" font-family="Inter,sans-serif" font-size="8">2026-04-28</text>
+        <rect x="520" y="269" width="48" height="13" rx="6" fill="#d1fae5"/>
+        <text x="544" y="279" text-anchor="middle" fill="#065f46" font-family="Inter,sans-serif" font-size="7" font-weight="600">Low risk</text>
+        <rect x="640" y="267" width="34" height="16" rx="6" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="657" y="279" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">View</text>
+        <!-- Annotations -->
+        <circle cx="709" cy="74" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="709" y="78" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">1</text>
+        <circle cx="149" cy="120" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="149" y="124" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">2</text>
+        <circle cx="149" cy="212" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="149" y="216" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">3</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 3.1 — The care roster: all patients with risk status and last-session date</p>
+  </div>
+
+  <div class="ann">
+    <div class="ann-n">1</div><div class="ann-t"><strong>Add Patient button</strong> — Opens the new patient form. Fill in demographics, contact details, and medical history.</div>
+    <div class="ann-n">2</div><div class="ann-t"><strong>Search &amp; filter bar</strong> — Type a patient name to filter the list instantly. Use the <em>All / Active / Risk</em> tabs to narrow results.</div>
+    <div class="ann-n">3</div><div class="ann-t"><strong>Risk level badges</strong> — Automatically calculated from the most recent session scores. <span class="tag tag-rose">High risk</span> patients should be prioritised. Click <em>View</em> to open the full patient profile.</div>
+  </div>
+
+  <div class="callout tip">
+    <b>Tip:</b> The global search bar in the top bar also searches patients — you can type a name from <em>any</em> page in the system and jump straight to their record.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 6</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 7 · ADDING A NEW PATIENT                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch3-add">
+  <p class="badge-chapter">Chapter 3 continued</p>
+  <h2>Adding a New Patient</h2>
+  <p>Before you can schedule appointments or record session notes, you must create a patient record. The patient record stores all demographic and contact information that supports ongoing care.</p>
+
+  <ol class="steps">
+    <li><p>Click <strong>Patients</strong> in the sidebar, then click the blue <strong>Add Patient</strong> button (top-right of the care roster).</p></li>
+    <li><p>Complete the patient form (shown below). Fields marked with an asterisk (*) are required.</p></li>
+    <li><p>Click <strong>Save patient</strong>. The system takes you directly to the new patient's profile page.</p></li>
+  </ol>
+
+  <!-- Patient form mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 620 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="620" height="340" fill="#f8fafc"/>
+        <!-- Form card -->
+        <rect x="10" y="10" width="600" height="320" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="28" y="32" fill="#020617" font-family="Inter,sans-serif" font-size="11" font-weight="700">Patient details</text>
+        <text x="28" y="46" fill="#64748b" font-family="Inter,sans-serif" font-size="8">All demographic and contact information for this patient.</text>
+        <line x1="10" y1="54" x2="610" y2="54" stroke="#f1f5f9" stroke-width="1.5"/>
+        <!-- Grid: col 1 -->
+        <!-- First name -->
+        <text x="28" y="72" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">First name *</text>
+        <rect x="28" y="76" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="93" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">Sarah</text>
+        <!-- Email -->
+        <text x="28" y="118" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Email address</text>
+        <rect x="28" y="122" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="139" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">sarah@example.com</text>
+        <!-- Emergency contact -->
+        <text x="28" y="164" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Emergency contact</text>
+        <rect x="28" y="168" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="185" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8.5">Name &amp; phone number…</text>
+        <!-- Active checkbox -->
+        <rect x="28" y="206" width="13" height="13" rx="3" fill="#2563eb"/>
+        <text x="29" y="216" fill="white" font-family="Inter,sans-serif" font-size="9" font-weight="800">✓</text>
+        <text x="46" y="216" fill="#334155" font-family="Inter,sans-serif" font-size="8.5">Active patient</text>
+        <!-- col 2 -->
+        <!-- Last name -->
+        <text x="322" y="72" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Last name *</text>
+        <rect x="322" y="76" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="336" y="93" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">Mitchell</text>
+        <!-- Phone -->
+        <text x="322" y="118" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Phone number</text>
+        <rect x="322" y="122" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="336" y="139" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8.5">+44 7700 900 000</text>
+        <!-- Date of birth -->
+        <text x="322" y="164" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Date of birth</text>
+        <rect x="322" y="168" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="336" y="185" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8.5">YYYY-MM-DD</text>
+        <!-- Medical history (full width) -->
+        <text x="28" y="234" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Medical history &amp; background notes</text>
+        <rect x="28" y="238" width="564" height="50" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="255" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8.5">Relevant diagnoses, medications, allergies, or prior treatment history…</text>
+        <!-- Buttons -->
+        <rect x="440" y="298" width="80" height="26" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="480" y="315" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">Cancel</text>
+        <rect x="528" y="298" width="82" height="26" rx="7" fill="#2563eb"/>
+        <text x="569" y="315" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">Save patient</text>
+        <!-- annotations -->
+        <circle cx="6" cy="90" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="6" y="94" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">1</text>
+        <circle cx="6" cy="252" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="6" y="256" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">2</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 3.2 — The Add Patient form</p>
+  </div>
+
+  <div class="ann">
+    <div class="ann-n">1</div><div class="ann-t"><strong>Required fields:</strong> First name and last name are the only required fields. All other fields (email, phone, emergency contact, date of birth) are optional but recommended for complete clinical records.</div>
+    <div class="ann-n">2</div><div class="ann-t"><strong>Medical history:</strong> Use this free-text area to record relevant diagnoses, current medications, allergies, and prior treatment history. This information appears in the patient profile sidebar for quick reference during sessions.</div>
+  </div>
+
+  <div class="callout tip">
+    <b>Tip:</b> The <strong>Active patient</strong> checkbox controls whether a patient appears in your active care roster. Uncheck it for patients who have completed treatment or are on extended leave — their records are preserved but they no longer clutter your active lists.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 7</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 8 · PATIENT PROFILE                               -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch3-profile">
+  <p class="badge-chapter">Chapter 3 continued</p>
+  <h2>The Patient Profile Page</h2>
+  <p>Click <strong>View</strong> on any patient row (or the patient's name anywhere in the system) to open their full profile. This is your clinical hub for that individual.</p>
+
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="720" height="360" fill="#f8fafc"/>
+        <!-- Sidebar (mini) -->
+        <rect width="144" height="360" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <rect x="12" y="12" width="34" height="34" rx="8" fill="#2563eb"/>
+        <text x="29" y="33" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="11" font-weight="800">TC</text>
+        <text x="22" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Dashboard</text>
+        <rect x="8" y="78" width="128" height="22" rx="6" fill="#eff6ff"/>
+        <text x="22" y="93" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">● Patients</text>
+        <text x="22" y="110" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Appointments</text>
+        <!-- Topbar -->
+        <rect x="144" y="0" width="576" height="44" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <rect x="160" y="10" width="260" height="24" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="174" y="26" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Search…</text>
+        <!-- Page header -->
+        <text x="160" y="60" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">Patient profile</text>
+        <text x="160" y="76" fill="#020617" font-family="Inter,sans-serif" font-size="14" font-weight="800">Sarah Mitchell</text>
+        <rect x="560" y="56" width="70" height="22" rx="7" fill="#2563eb"/>
+        <text x="595" y="71" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8" font-weight="600">Add session</text>
+        <rect x="638" y="56" width="38" height="22" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="657" y="71" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="8" font-weight="600">Edit</text>
+        <!-- LEFT sidebar panel -->
+        <rect x="156" y="92" width="194" height="268" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <!-- avatar -->
+        <circle cx="224" cy="122" r="22" fill="#eff6ff"/>
+        <text x="224" y="129" text-anchor="middle" fill="#2563eb" font-family="Inter,sans-serif" font-size="14" font-weight="800">SM</text>
+        <text x="280" y="114" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Sarah Mitchell</text>
+        <text x="280" y="127" fill="#64748b" font-family="Inter,sans-serif" font-size="8">Active patient</text>
+        <!-- Contact info -->
+        <line x1="156" y1="152" x2="350" y2="152" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="170" y="167" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">Email</text>
+        <text x="170" y="179" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">sarah@example.com</text>
+        <text x="170" y="196" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">Phone</text>
+        <text x="170" y="208" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">+44 7700 900 000</text>
+        <text x="170" y="225" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">Emergency contact</text>
+        <text x="170" y="237" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">John Mitchell · 07800 111 222</text>
+        <!-- Medical history card -->
+        <rect x="156" y="268" width="194" height="92" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="170" y="284" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Medical history</text>
+        <text x="170" y="298" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">GAD diagnosis (2022). Sertraline</text>
+        <text x="170" y="310" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">50mg. No known allergies.</text>
+        <text x="170" y="322" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Previous CBT (6 sessions, 2023).</text>
+        <!-- RIGHT content panel -->
+        <rect x="360" y="92" width="348" height="268" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <!-- Tabs -->
+        <text x="376" y="114" fill="#2563eb" font-family="Inter,sans-serif" font-size="9" font-weight="700">Overview</text>
+        <line x1="376" y1="118" x2="426" y2="118" stroke="#2563eb" stroke-width="2"/>
+        <text x="436" y="114" fill="#94a3b8" font-family="Inter,sans-serif" font-size="9">Session Notes</text>
+        <text x="528" y="114" fill="#94a3b8" font-family="Inter,sans-serif" font-size="9">Progress</text>
+        <line x1="360" y1="120" x2="708" y2="120" stroke="#f1f5f9" stroke-width="1"/>
+        <!-- Score cards -->
+        <rect x="374" y="130" width="100" height="62" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="384" y="147" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Wellness score</text>
+        <text x="384" y="168" fill="#020617" font-family="Inter,sans-serif" font-size="18" font-weight="800">7.4</text>
+        <text x="384" y="184" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">↑ Improving trend</text>
+        <rect x="482" y="130" width="100" height="62" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="492" y="147" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Risk score</text>
+        <text x="492" y="168" fill="#020617" font-family="Inter,sans-serif" font-size="18" font-weight="800">2.1</text>
+        <rect x="492" y="175" width="48" height="12" rx="6" fill="#d1fae5"/>
+        <text x="516" y="184" text-anchor="middle" fill="#065f46" font-family="Inter,sans-serif" font-size="7" font-weight="600">Low risk</text>
+        <rect x="590" y="130" width="100" height="62" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="600" y="147" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Alerts</text>
+        <text x="600" y="168" fill="#020617" font-family="Inter,sans-serif" font-size="18" font-weight="800">0</text>
+        <text x="600" y="184" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">From latest session</text>
+        <!-- Recent sessions -->
+        <text x="376" y="213" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Recent sessions</text>
+        <line x1="360" y1="220" x2="708" y2="220" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="376" y="235" fill="#020617" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">2026-05-05</text>
+        <text x="690" y="235" text-anchor="end" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">3 scores</text>
+        <text x="376" y="247" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">CBT session focused on anxiety triggers and avoidance…</text>
+        <line x1="360" y1="254" x2="708" y2="254" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="376" y="269" fill="#020617" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">2026-04-21</text>
+        <text x="690" y="269" text-anchor="end" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">3 scores</text>
+        <text x="376" y="281" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Progressive muscle relaxation introduced. Homework set…</text>
+        <!-- Annotations -->
+        <circle cx="150" cy="120" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="150" y="124" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">1</text>
+        <circle cx="150" cy="200" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="150" y="204" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">2</text>
+        <circle cx="150" cy="295" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="150" y="299" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">3</text>
+        <circle cx="357" cy="170" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="357" y="174" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">4</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 3.3 — The patient profile: contact info sidebar + tabbed clinical content</p>
+  </div>
+
+  <div class="ann">
+    <div class="ann-n">1</div><div class="ann-t"><strong>Action buttons</strong> — <em>Add session</em> (blue) opens the session note form pre-filled with this patient. <em>Edit</em> updates their demographic details.</div>
+    <div class="ann-n">2</div><div class="ann-t"><strong>Contact sidebar</strong> — Quick reference for email, phone, and emergency contact — always visible while you review clinical content on the right.</div>
+    <div class="ann-n">3</div><div class="ann-t"><strong>Medical history card</strong> — Freetext notes you entered when creating the patient record. Edit the patient to update this information.</div>
+    <div class="ann-n">4</div><div class="ann-t"><strong>Overview tab</strong> — Displays the latest wellness score, risk score, and alert count from the most recent session. Switch to <em>Session Notes</em> to see all clinical entries, or <em>Progress</em> for the trend chart.</div>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 8</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 9 · APPOINTMENTS                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch4">
+  <p class="badge-chapter">Chapter 4</p>
+  <h2>Appointments</h2>
+  <p>Use the <strong>Appointments</strong> section to manage your entire schedule. Every session booked here is linked to a patient and can later be referenced when creating a session note.</p>
+
+  <h3>Scheduling a New Appointment</h3>
+  <ol class="steps">
+    <li><p>Click <strong>Appointments</strong> in the sidebar (or the calendar icon in the mobile bottom nav).</p></li>
+    <li><p>Click <strong>New appointment</strong> (top-right). The form below opens.</p></li>
+    <li><p>Select the patient, set the date and time, choose a location, and add any internal preparation notes.</p></li>
+    <li><p>Click <strong>Save appointment</strong>. It immediately appears in your schedule and on the dashboard's <em>Upcoming</em> panel.</p></li>
+  </ol>
+
+  <!-- Appointment form mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 620 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="620" height="280" fill="#f8fafc"/>
+        <rect x="10" y="10" width="600" height="260" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="28" y="32" fill="#020617" font-family="Inter,sans-serif" font-size="11" font-weight="700">New appointment</text>
+        <line x1="10" y1="42" x2="610" y2="42" stroke="#f1f5f9" stroke-width="1.5"/>
+        <!-- Patient (full width) -->
+        <text x="28" y="58" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Patient *</text>
+        <rect x="28" y="62" width="564" height="26" rx="8" fill="#f8fafc" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="42" y="79" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">Sarah Mitchell</text>
+        <text x="580" y="79" text-anchor="end" fill="#94a3b8" font-family="Inter,sans-serif" font-size="9">▼</text>
+        <!-- Starts at | Ends at -->
+        <text x="28" y="104" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Starts at *</text>
+        <rect x="28" y="108" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="125" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">2026-05-12  10:00</text>
+        <text x="322" y="104" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Ends at *</text>
+        <rect x="322" y="108" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="336" y="125" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">2026-05-12  11:00</text>
+        <!-- Location | Status -->
+        <text x="28" y="150" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Location</text>
+        <rect x="28" y="154" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="171" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">Clinic room 2</text>
+        <text x="322" y="150" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Status</text>
+        <rect x="322" y="154" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="336" y="171" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">Scheduled</text>
+        <text x="580" y="171" text-anchor="end" fill="#94a3b8" font-family="Inter,sans-serif" font-size="9">▼</text>
+        <!-- Reminders -->
+        <rect x="28" y="194" width="13" height="13" rx="3" fill="#2563eb"/>
+        <text x="29" y="204" fill="white" font-family="Inter,sans-serif" font-size="9" font-weight="800">✓</text>
+        <text x="46" y="204" fill="#334155" font-family="Inter,sans-serif" font-size="8.5">Send email reminder</text>
+        <rect x="200" y="194" width="13" height="13" rx="3" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="218" y="204" fill="#334155" font-family="Inter,sans-serif" font-size="8.5">Send SMS reminder</text>
+        <!-- Internal notes -->
+        <text x="28" y="222" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Internal preparation notes</text>
+        <rect x="28" y="226" width="270" height="30" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="244" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Review last session goals before meeting…</text>
+        <!-- Buttons -->
+        <rect x="434" y="240" width="74" height="24" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="471" y="256" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">Cancel</text>
+        <rect x="516" y="240" width="84" height="24" rx="7" fill="#2563eb"/>
+        <text x="558" y="256" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">Save appointment</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 4.1 — The New Appointment form</p>
+  </div>
+
+  <div class="two-col">
+    <div class="callout info">
+      <b>Appointment statuses:</b><br>
+      <span class="tag tag-slate">Scheduled</span> — booked, not yet attended<br>
+      <span class="tag tag-green">Completed</span> — session held<br>
+      <span class="tag tag-amber">No-show</span> — patient did not attend<br>
+      <span class="tag tag-rose">Cancelled</span> — appointment removed
+    </div>
+    <div class="callout tip">
+      <b>Tip:</b> When creating a session note, you can link it to an existing appointment. This lets you track which appointments have corresponding clinical notes and which do not.
+    </div>
+  </div>
+
+  <h3>Viewing the Appointments Schedule</h3>
+  <p>The main appointments list (click <strong>Appointments</strong> in the sidebar) shows all upcoming sessions in chronological order. Click any row to open full details — including the patient's name, time, location, status, and your preparation notes.</p>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 9</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 10 · SESSION NOTES — RECORDING                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch5">
+  <p class="badge-chapter">Chapter 5</p>
+  <h2>Session Notes &amp; Scoring</h2>
+  <p>Session notes are the core clinical record in Therapist CRM. After each patient session, you create a structured note that captures what happened and enter numerical scores on each of your configured clinical measures. The system then calculates wellness and risk scores automatically.</p>
+
+  <h3>Creating a Session Note — Step by Step</h3>
+  <ol class="steps">
+    <li><p>Click <strong>Add session</strong> in the top bar, or open a patient profile and click the blue <strong>Add session</strong> button there.</p></li>
+    <li><p>Complete the <strong>Session details</strong> section (patient, date, clinical text fields).</p></li>
+    <li><p>Enter numerical scores in the <strong>Scores</strong> section for each clinical measure.</p></li>
+    <li><p>Click <strong>Save session</strong>. Scores are calculated and the patient's risk level updates immediately.</p></li>
+  </ol>
+
+  <!-- Session form mockup — details section -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="620" height="320" fill="#f8fafc"/>
+        <!-- Details card -->
+        <rect x="10" y="10" width="600" height="300" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="28" y="32" fill="#020617" font-family="Inter,sans-serif" font-size="11" font-weight="700">Session details</text>
+        <line x1="10" y1="42" x2="610" y2="42" stroke="#f1f5f9" stroke-width="1.5"/>
+        <!-- Patient -->
+        <text x="28" y="58" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Patient *</text>
+        <rect x="28" y="62" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="79" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">Sarah Mitchell</text>
+        <!-- Appointment (linked) -->
+        <text x="322" y="58" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Linked appointment (optional)</text>
+        <rect x="322" y="62" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="336" y="79" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8.5">Search appointments…</text>
+        <!-- Date -->
+        <text x="28" y="104" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Session date *</text>
+        <rect x="28" y="108" width="270" height="26" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="125" fill="#0f172a" font-family="Inter,sans-serif" font-size="8.5">2026-05-12</text>
+        <!-- Presenting concerns -->
+        <text x="28" y="150" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Presenting concerns</text>
+        <rect x="28" y="154" width="564" height="40" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="170" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">Patient reports increased anxiety around work deadlines. Sleep</text>
+        <text x="42" y="182" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">disruption noted. Avoidance behaviours escalating.</text>
+        <!-- Interventions -->
+        <text x="28" y="210" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Interventions used</text>
+        <rect x="28" y="214" width="564" height="40" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="230" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">CBT — cognitive restructuring of catastrophic thoughts. Breathing</text>
+        <text x="42" y="242" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">exercise introduced. Behavioural activation plan reviewed.</text>
+        <!-- Plan -->
+        <text x="28" y="268" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Treatment plan / homework</text>
+        <rect x="28" y="272" width="270" height="28" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="287" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">Thought diary for one week. Daily</text>
+        <text x="42" y="299" fill="#0f172a" font-family="Inter,sans-serif" font-size="8">5-min breathing exercise at bedtime.</text>
+        <!-- Private notes -->
+        <text x="322" y="268" fill="#475569" font-family="Inter,sans-serif" font-size="8" font-weight="500">Private clinical notes (not shared)</text>
+        <rect x="322" y="272" width="270" height="28" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="336" y="287" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Supervisor review recommended for</text>
+        <text x="336" y="299" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">risk assessment approach…</text>
+        <!-- Annotations -->
+        <circle cx="6" cy="75" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="6" y="79" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">1</text>
+        <circle cx="6" cy="174" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="6" y="178" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">2</text>
+        <circle cx="6" cy="286" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="6" y="290" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">3</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 5.1 — The Session Note form, Part 1: Clinical details</p>
+  </div>
+
+  <div class="ann">
+    <div class="ann-n">1</div><div class="ann-t"><strong>Patient &amp; linked appointment</strong> — Select the patient first; the appointment dropdown then filters to show only that patient's scheduled appointments. Linking is optional but useful for tracking session coverage.</div>
+    <div class="ann-n">2</div><div class="ann-t"><strong>Presenting concerns &amp; interventions</strong> — Freetext fields for your clinical narrative. Write as much or as little as your workflow requires. These appear in the session detail view and in the patient's Session Notes tab.</div>
+    <div class="ann-n">3</div><div class="ann-t"><strong>Treatment plan vs. private notes</strong> — The <em>Plan</em> field is the patient-facing treatment plan and homework. <em>Private notes</em> is for confidential clinical observations — a reminder to yourself, supervisor notes, or safeguarding flags.</div>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 11 · SCORING SECTION + ALGORITHM                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch5-scoring">
+  <p class="badge-chapter">Chapter 5 continued</p>
+  <h2>Clinical Scoring Explained</h2>
+  <p>Below the clinical text fields, the session form shows a <strong>Scores</strong> section — one input card per clinical measure you have configured (e.g. PHQ-9, GAD-7, or custom scales).</p>
+
+  <!-- Scoring section mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="620" height="200" fill="#f8fafc"/>
+        <rect x="10" y="10" width="600" height="180" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="28" y="32" fill="#020617" font-family="Inter,sans-serif" font-size="11" font-weight="700">Scores</text>
+        <text x="28" y="44" fill="#64748b" font-family="Inter,sans-serif" font-size="8">Use the configured range for each clinical metric.</text>
+        <line x1="10" y1="52" x2="610" y2="52" stroke="#f1f5f9" stroke-width="1.5"/>
+        <!-- Card 1: PHQ-9 -->
+        <rect x="28" y="62" width="172" height="110" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="42" y="80" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">PHQ-9</text>
+        <text x="42" y="92" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Scale: 0 to 27</text>
+        <rect x="42" y="100" width="140" height="30" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="112" y="120" text-anchor="middle" fill="#020617" font-family="Inter,sans-serif" font-size="16" font-weight="700">9</text>
+        <text x="42" y="148" fill="#64748b" font-family="Inter,sans-serif" font-size="7">Moderate depression range</text>
+        <text x="42" y="160" fill="#64748b" font-family="Inter,sans-serif" font-size="7">(Scores 10–19 = moderate)</text>
+        <!-- Card 2: GAD-7 -->
+        <rect x="224" y="62" width="172" height="110" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="238" y="80" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">GAD-7</text>
+        <text x="238" y="92" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Scale: 0 to 21</text>
+        <rect x="238" y="100" width="140" height="30" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="308" y="120" text-anchor="middle" fill="#020617" font-family="Inter,sans-serif" font-size="16" font-weight="700">4</text>
+        <text x="238" y="148" fill="#64748b" font-family="Inter,sans-serif" font-size="7">Mild anxiety range</text>
+        <text x="238" y="160" fill="#64748b" font-family="Inter,sans-serif" font-size="7">(Scores 5–9 = mild)</text>
+        <!-- Card 3: Wellbeing -->
+        <rect x="420" y="62" width="172" height="110" rx="8" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+        <text x="434" y="80" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Wellbeing (WEMWBS)</text>
+        <text x="434" y="92" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Scale: 14 to 70</text>
+        <rect x="434" y="100" width="140" height="30" rx="7" fill="white" stroke="#fed7aa" stroke-width="1.5"/>
+        <text x="504" y="120" text-anchor="middle" fill="#020617" font-family="Inter,sans-serif" font-size="16" font-weight="700">52</text>
+        <text x="434" y="148" fill="#92400e" font-family="Inter,sans-serif" font-size="7">⚠ Score outside expected range</text>
+        <text x="434" y="160" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">(use 14–70)</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 5.2 — The Scores section: one card per clinical measure. Cards highlighted amber indicate out-of-range values.</p>
+  </div>
+
+  <hr>
+  <h3>How the Algorithm Works</h3>
+  <p>After you save a session, the system processes your raw scores into two summary metrics automatically:</p>
+
+  <!-- Algorithm diagram -->
+  <div class="fig">
+    <svg viewBox="0 0 620 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+      <rect width="620" height="170" fill="#f8fafc" rx="8"/>
+      <!-- Box 1: Raw scores -->
+      <rect x="10" y="20" width="110" height="130" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+      <text x="65" y="42" text-anchor="middle" fill="#020617" font-family="Inter,sans-serif" font-size="8.5" font-weight="700">Raw Scores</text>
+      <text x="65" y="58" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">PHQ-9: 9</text>
+      <text x="65" y="72" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">GAD-7: 4</text>
+      <text x="65" y="86" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">WEMWBS: 52</text>
+      <text x="65" y="115" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Values you enter</text>
+      <text x="65" y="128" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">in the session form</text>
+      <!-- Arrow 1 -->
+      <text x="132" y="88" fill="#94a3b8" font-family="Inter,sans-serif" font-size="16">→</text>
+      <!-- Box 2: Normalise -->
+      <rect x="155" y="20" width="110" height="130" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+      <text x="210" y="42" text-anchor="middle" fill="#1d4ed8" font-family="Inter,sans-serif" font-size="8.5" font-weight="700">Normalise</text>
+      <text x="210" y="60" text-anchor="middle" fill="#475569" font-family="Inter,sans-serif" font-size="7.5">Each score ÷ its range</text>
+      <text x="210" y="74" text-anchor="middle" fill="#475569" font-family="Inter,sans-serif" font-size="7.5">→ value 0–1</text>
+      <text x="210" y="100" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7">PHQ-9: 9/27 = 0.33</text>
+      <text x="210" y="114" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7">GAD-7: 4/21 = 0.19</text>
+      <text x="210" y="128" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7">WEMWBS: 52/70 = 0.74</text>
+      <!-- Arrow 2 -->
+      <text x="277" y="88" fill="#94a3b8" font-family="Inter,sans-serif" font-size="16">→</text>
+      <!-- Box 3: Direction -->
+      <rect x="300" y="20" width="110" height="130" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+      <text x="355" y="42" text-anchor="middle" fill="#1d4ed8" font-family="Inter,sans-serif" font-size="8.5" font-weight="700">Direction</text>
+      <text x="355" y="60" text-anchor="middle" fill="#475569" font-family="Inter,sans-serif" font-size="7.5">Invert risk scales</text>
+      <text x="355" y="74" text-anchor="middle" fill="#475569" font-family="Inter,sans-serif" font-size="7.5">so higher = better</text>
+      <text x="355" y="100" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7">PHQ-9: 1−0.33=0.67</text>
+      <text x="355" y="114" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7">GAD-7: 1−0.19=0.81</text>
+      <text x="355" y="128" text-anchor="middle" fill="#64748b" font-family="Inter,sans-serif" font-size="7">WEMWBS: 0.74</text>
+      <!-- Arrow 3 -->
+      <text x="422" y="88" fill="#94a3b8" font-family="Inter,sans-serif" font-size="16">→</text>
+      <!-- Box 4: Weighted avg -->
+      <rect x="445" y="20" width="165" height="130" rx="8" fill="#020617" stroke="#020617" stroke-width="1"/>
+      <text x="527" y="44" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8.5" font-weight="700">Final Scores</text>
+      <text x="527" y="65" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Weighted average</text>
+      <text x="527" y="79" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">of normalised values</text>
+      <rect x="460" y="92" width="130" height="24" rx="6" fill="#2563eb"/>
+      <text x="527" y="108" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="9" font-weight="700">Wellness: 7.4 / 10</text>
+      <rect x="460" y="122" width="130" height="20" rx="6" fill="#e11d48"/>
+      <text x="527" y="136" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="9" font-weight="700">Risk: 2.6 / 10</text>
+    </svg>
+    <p class="fig-cap">Figure 5.3 — The scoring algorithm: raw values → normalised → direction-adjusted → weighted into wellness and risk scores</p>
+  </div>
+
+  <div class="callout info">
+    <b>Key insight:</b> A <strong>high wellness score</strong> (closer to 10) is <em>good</em> — it means the patient is doing well. A <strong>high risk score</strong> (closer to 10) is a <em>concern</em>. The system automatically flags patients when risk exceeds the threshold configured in Settings.
+  </div>
+
+  <h3>Risk Level Interpretation</h3>
+  <div style="border:1.5pt solid #e2e8f0;border-radius:8pt;overflow:hidden;margin:8pt 0">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center">
+      <div style="padding:10pt;background:#d1fae5;border-right:1pt solid #a7f3d0">
+        <p style="font-size:8pt;font-weight:700;color:#065f46;margin-bottom:3pt">LOW RISK</p>
+        <p style="font-size:18pt;font-weight:800;color:#059669;margin-bottom:3pt;line-height:1">0 – 3.9</p>
+        <p style="font-size:8pt;color:#065f46;margin:0">Patient is stable. Continue standard care plan and regular monitoring.</p>
+      </div>
+      <div style="padding:10pt;background:#fef3c7;border-right:1pt solid #fde68a">
+        <p style="font-size:8pt;font-weight:700;color:#92400e;margin-bottom:3pt">MEDIUM RISK</p>
+        <p style="font-size:18pt;font-weight:800;color:#d97706;margin-bottom:3pt;line-height:1">4.0 – 6.9</p>
+        <p style="font-size:8pt;color:#92400e;margin:0">Elevated concern. Consider increasing session frequency or reviewing the care plan.</p>
+      </div>
+      <div style="padding:10pt;background:#ffe4e6">
+        <p style="font-size:8pt;font-weight:700;color:#be123c;margin-bottom:3pt">HIGH RISK</p>
+        <p style="font-size:18pt;font-weight:800;color:#e11d48;margin-bottom:3pt;line-height:1">7.0 – 10</p>
+        <p style="font-size:8pt;color:#be123c;margin:0">Urgent review required. Patient appears in dashboard Alerts. Take immediate clinical action.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>Note:</b> Risk thresholds (the boundaries between low / medium / high) are set by your administrator in <strong>Settings → Scoring Criteria</strong>. The values above are typical defaults — your clinic may use different thresholds.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 11</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 12 · REVIEWING A COMPLETED SESSION                -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch5-review">
+  <p class="badge-chapter">Chapter 5 continued</p>
+  <h2>Reviewing a Completed Session</h2>
+  <p>After saving a session note, click its row in the <strong>Reports</strong> list (sidebar → Reports) or from the patient's <em>Session Notes</em> tab. The session detail page gives a complete clinical picture.</p>
+
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="720" height="360" fill="#f8fafc"/>
+        <!-- Sidebar -->
+        <rect width="144" height="360" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <rect x="12" y="12" width="34" height="34" rx="8" fill="#2563eb"/>
+        <text x="29" y="33" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="11" font-weight="800">TC</text>
+        <text x="22" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Dashboard</text>
+        <text x="22" y="87" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Patients</text>
+        <text x="22" y="104" fill="#64748b" font-family="Inter,sans-serif" font-size="8">● Appointments</text>
+        <rect x="8" y="112" width="128" height="22" rx="6" fill="#eff6ff"/>
+        <text x="22" y="127" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">● Reports</text>
+        <!-- Page header -->
+        <text x="160" y="58" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">Session note</text>
+        <text x="160" y="74" fill="#020617" font-family="Inter,sans-serif" font-size="13" font-weight="800">Sarah Mitchell</text>
+        <text x="160" y="87" fill="#64748b" font-family="Inter,sans-serif" font-size="8">2026-05-12</text>
+        <rect x="584" y="55" width="44" height="22" rx="7" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="606" y="70" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="8" font-weight="600">Edit</text>
+        <rect x="634" y="55" width="56" height="22" rx="7" fill="#e11d48"/>
+        <text x="662" y="70" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8" font-weight="600">Delete</text>
+        <!-- Score summary cards -->
+        <rect x="156" y="96" width="268" height="60" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="172" y="114" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Wellness score</text>
+        <text x="172" y="138" fill="#020617" font-family="Inter,sans-serif" font-size="20" font-weight="800">7.4</text>
+        <text x="222" y="138" fill="#64748b" font-family="Inter,sans-serif" font-size="8">↑ Improving trend</text>
+        <rect x="432" y="96" width="276" height="60" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="448" y="114" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Risk score</text>
+        <text x="448" y="138" fill="#e11d48" font-family="Inter,sans-serif" font-size="20" font-weight="800">2.6</text>
+        <rect x="506" y="128" width="48" height="14" rx="7" fill="#d1fae5"/>
+        <text x="530" y="139" text-anchor="middle" fill="#065f46" font-family="Inter,sans-serif" font-size="7" font-weight="700">Low risk</text>
+        <!-- 4 content cards -->
+        <!-- Concerns -->
+        <rect x="156" y="168" width="268" height="72" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="172" y="184" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Presenting concerns</text>
+        <text x="172" y="198" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Increased anxiety around work deadlines.</text>
+        <text x="172" y="210" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Sleep disruption noted. Avoidance</text>
+        <text x="172" y="222" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">behaviours escalating.</text>
+        <!-- Interventions -->
+        <rect x="432" y="168" width="276" height="72" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="448" y="184" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Interventions</text>
+        <text x="448" y="198" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">CBT — cognitive restructuring of</text>
+        <text x="448" y="210" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">catastrophic thoughts. Breathing</text>
+        <text x="448" y="222" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">exercise introduced.</text>
+        <!-- Plan -->
+        <rect x="156" y="248" width="268" height="60" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="172" y="264" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Treatment plan</text>
+        <text x="172" y="278" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Thought diary for one week. Daily</text>
+        <text x="172" y="290" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">5-min breathing exercise at bedtime.</text>
+        <!-- Private notes -->
+        <rect x="432" y="248" width="276" height="60" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="448" y="264" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Private notes</text>
+        <text x="448" y="278" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Supervisor review recommended for</text>
+        <text x="448" y="290" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">risk assessment approach.</text>
+        <!-- Annotation numbers -->
+        <circle cx="149" cy="126" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="149" y="130" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">1</text>
+        <circle cx="149" cy="204" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="149" y="208" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">2</text>
+        <circle cx="149" cy="278" r="8" fill="#2563eb" stroke="white" stroke-width="1"/>
+        <text x="149" y="282" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7" font-weight="700">3</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 5.4 — Session detail page: scores, clinical narrative, and treatment plan</p>
+  </div>
+
+  <div class="ann">
+    <div class="ann-n">1</div><div class="ann-t"><strong>Score summary cards</strong> — The calculated wellness and risk scores for this session, with trend indicator (↑ ↓ →) comparing to the previous session for the same patient.</div>
+    <div class="ann-n">2</div><div class="ann-t"><strong>Clinical narrative</strong> — The four text fields you entered: Presenting concerns, Interventions, Plan, and Private notes. All visible at a glance for clinical review or supervision.</div>
+    <div class="ann-n">3</div><div class="ann-t"><strong>Edit / Delete</strong> — You can update any session note by clicking Edit. Delete permanently removes the note and its associated scores. A confirmation prompt appears before deletion.</div>
+  </div>
+
+  <div class="callout tip">
+    <b>Tip:</b> Scroll to the bottom of the session detail page to see the <strong>Scoring algorithm breakdown</strong> — a card for each clinical measure showing the raw value, normalised score, direction adjustment, and weight. Useful for understanding exactly why a risk score was assigned.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 12</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 13 · PROGRESS TRACKING                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch6">
+  <p class="badge-chapter">Chapter 6</p>
+  <h2>Tracking Patient Progress Over Time</h2>
+  <p>The most powerful feature of Therapist CRM is longitudinal progress tracking. Every session note you create adds a data point to the patient's progress chart, letting you and your patient see treatment working in real time.</p>
+
+  <h3>Accessing the Progress Chart</h3>
+  <ol class="steps">
+    <li><p>Open a patient's profile (click their name anywhere in the system).</p></li>
+    <li><p>Click the <strong>Progress Tracking</strong> tab in the right-hand panel.</p></li>
+    <li><p>The chart loads automatically, plotting wellness and risk scores across all recorded sessions.</p></li>
+  </ol>
+
+  <!-- Progress chart mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 620 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="620" height="240" fill="#f8fafc"/>
+        <rect x="10" y="10" width="600" height="220" rx="10" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <text x="28" y="32" fill="#020617" font-family="Inter,sans-serif" font-size="11" font-weight="700">Score visualisation</text>
+        <text x="28" y="44" fill="#64748b" font-family="Inter,sans-serif" font-size="8">Mood, progress, and risk over time — all sessions for this patient.</text>
+        <line x1="10" y1="52" x2="610" y2="52" stroke="#f1f5f9" stroke-width="1.5"/>
+        <!-- Y-axis labels -->
+        <text x="26" y="76" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">10</text>
+        <text x="26" y="107" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">7.5</text>
+        <text x="26" y="138" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">5</text>
+        <text x="26" y="169" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">2.5</text>
+        <text x="26" y="200" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">0</text>
+        <!-- Grid lines -->
+        <line x1="44" y1="72" x2="590" y2="72" stroke="#f1f5f9" stroke-width="1"/>
+        <line x1="44" y1="103" x2="590" y2="103" stroke="#f1f5f9" stroke-width="1"/>
+        <line x1="44" y1="134" x2="590" y2="134" stroke="#f1f5f9" stroke-width="1"/>
+        <line x1="44" y1="165" x2="590" y2="165" stroke="#f1f5f9" stroke-width="1"/>
+        <line x1="44" y1="196" x2="590" y2="196" stroke="#f1f5f9" stroke-width="1"/>
+        <!-- Wellness line (blue) - improving -->
+        <polyline points="60,168 140,152 220,140 300,128 380,118 460,108 540,96" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Wellness area fill -->
+        <polygon points="60,168 140,152 220,140 300,128 380,118 460,108 540,96 540,196 60,196" fill="#2563eb" fill-opacity=".07"/>
+        <!-- Risk line (red) - decreasing -->
+        <polyline points="60,128 140,138 220,145 300,150 380,155 460,158 540,162" fill="none" stroke="#e11d48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,3"/>
+        <!-- Data point dots -->
+        <circle cx="60" cy="168" r="4" fill="white" stroke="#2563eb" stroke-width="2"/>
+        <circle cx="140" cy="152" r="4" fill="white" stroke="#2563eb" stroke-width="2"/>
+        <circle cx="220" cy="140" r="4" fill="white" stroke="#2563eb" stroke-width="2"/>
+        <circle cx="300" cy="128" r="4" fill="white" stroke="#2563eb" stroke-width="2"/>
+        <circle cx="380" cy="118" r="4" fill="white" stroke="#2563eb" stroke-width="2"/>
+        <circle cx="460" cy="108" r="4" fill="white" stroke="#2563eb" stroke-width="2"/>
+        <circle cx="540" cy="96" r="5" fill="#2563eb"/>
+        <!-- Tooltip on last point -->
+        <rect x="500" y="68" width="80" height="22" rx="4" fill="#020617"/>
+        <text x="540" y="83" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">Wellness: 7.4</text>
+        <!-- X-axis labels (session dates) -->
+        <text x="60" y="213" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Jan 10</text>
+        <text x="140" y="213" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Feb 3</text>
+        <text x="220" y="213" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Feb 21</text>
+        <text x="300" y="213" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Mar 14</text>
+        <text x="380" y="213" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Apr 4</text>
+        <text x="460" y="213" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">Apr 21</text>
+        <text x="540" y="213" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">May 12</text>
+        <!-- Legend -->
+        <circle cx="44" cy="226" r="4" fill="#2563eb"/>
+        <text x="52" y="229" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Wellness score</text>
+        <line x1="150" y1="226" x2="168" y2="226" stroke="#e11d48" stroke-width="2" stroke-dasharray="5,2"/>
+        <text x="172" y="229" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Risk score</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 6.1 — Progress chart for Sarah Mitchell: wellness improving steadily (blue ↑), risk declining (red - - -)</p>
+  </div>
+
+  <h3>Reading the Chart</h3>
+  <div class="three-col" style="margin-top:6pt">
+    <div class="icard">
+      <h4>Blue line (Wellness)</h4>
+      <p style="font-size:9pt;margin:0">A rising blue line means the patient's overall wellbeing is <strong>improving</strong>. This is the primary indicator of treatment effectiveness.</p>
+    </div>
+    <div class="icard">
+      <h4>Red dashed line (Risk)</h4>
+      <p style="font-size:9pt;margin:0">A falling red line means <strong>risk is decreasing</strong> — the patient is becoming less vulnerable. A sudden spike needs immediate attention.</p>
+    </div>
+    <div class="icard">
+      <h4>Data points</h4>
+      <p style="font-size:9pt;margin:0">Each dot represents one session. The more consistent your recording, the more informative the chart becomes over time.</p>
+    </div>
+  </div>
+
+  <div class="callout tip" style="margin-top:10pt">
+    <b>Clinical use:</b> Print or screen-share the progress chart during patient reviews to make treatment progress visible and tangible. Many patients find seeing their own improvement highly motivating.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 13</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 14 · SETTINGS — SCORING CRITERIA                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="ch7">
+  <p class="badge-chapter">Chapter 7</p>
+  <h2>Settings &amp; Scoring Criteria</h2>
+  <p>Click <strong>Settings</strong> in the sidebar to manage the clinical scoring measures used throughout the system. Each <em>criterion</em> defines one clinical scale — its name, numerical range, direction (higher = worse or higher = better), and weighting in the overall wellness score.</p>
+
+  <div class="callout warn">
+    <b>Administrator task:</b> Scoring criteria should be configured by a clinical lead or system administrator before therapists begin entering session notes. Changing criteria after sessions have been recorded will affect how historical scores appear in charts.
+  </div>
+
+  <!-- Criteria list mockup -->
+  <div class="fig">
+    <div class="mock">
+      <svg viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <rect width="620" height="260" fill="#f8fafc"/>
+        <!-- Header -->
+        <text x="20" y="26" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">Settings</text>
+        <text x="20" y="42" fill="#020617" font-family="Inter,sans-serif" font-size="13" font-weight="800">Scoring criteria</text>
+        <rect x="516" y="18" width="90" height="24" rx="7" fill="#2563eb"/>
+        <text x="561" y="34" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="8.5" font-weight="600">Add criterion</text>
+        <!-- Card -->
+        <rect x="10" y="56" width="600" height="194" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+        <!-- Table header -->
+        <rect x="10" y="56" width="600" height="20" rx="0" fill="#f8fafc"/>
+        <text x="26" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">NAME</text>
+        <text x="190" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">RANGE</text>
+        <text x="280" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">DIRECTION</text>
+        <text x="400" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">WEIGHT</text>
+        <text x="590" y="70" text-anchor="end" fill="#64748b" font-family="Inter,sans-serif" font-size="7" font-weight="700">ACTIONS</text>
+        <!-- Row 1 -->
+        <line x1="10" y1="76" x2="610" y2="76" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="26" y="95" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">PHQ-9</text>
+        <text x="26" y="107" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Depression scale</text>
+        <text x="190" y="95" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">0 – 27</text>
+        <text x="280" y="95" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">Higher = worse ↓</text>
+        <text x="400" y="95" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">40%</text>
+        <rect x="520" y="84" width="34" height="18" rx="5" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="537" y="96" text-anchor="middle" fill="#334155" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">Edit</text>
+        <rect x="560" y="84" width="38" height="18" rx="5" fill="#fff5f5" stroke="#ffe4e6" stroke-width="1"/>
+        <text x="579" y="96" text-anchor="middle" fill="#be123c" font-family="Inter,sans-serif" font-size="7.5" font-weight="600">Delete</text>
+        <!-- Row 2 -->
+        <rect x="10" y="114" width="600" height="32" fill="#f8fafc"/>
+        <line x1="10" y1="114" x2="610" y2="114" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="26" y="133" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">GAD-7</text>
+        <text x="26" y="145" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Anxiety scale</text>
+        <text x="190" y="133" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">0 – 21</text>
+        <text x="280" y="133" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">Higher = worse ↓</text>
+        <text x="400" y="133" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">35%</text>
+        <!-- Row 3 -->
+        <line x1="10" y1="152" x2="610" y2="152" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="26" y="171" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">WEMWBS</text>
+        <text x="26" y="183" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Wellbeing scale</text>
+        <text x="190" y="171" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">14 – 70</text>
+        <text x="280" y="171" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">Higher = better ↑</text>
+        <text x="400" y="171" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">25%</text>
+        <!-- Row 4 -->
+        <rect x="10" y="190" width="600" height="32" fill="#f8fafc"/>
+        <line x1="10" y1="190" x2="610" y2="190" stroke="#f1f5f9" stroke-width="1"/>
+        <text x="26" y="209" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="600">Sleep Quality (1–10)</text>
+        <text x="26" y="221" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">Custom scale</text>
+        <text x="190" y="209" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">1 – 10</text>
+        <text x="280" y="209" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">Higher = better ↑</text>
+        <text x="400" y="209" fill="#475569" font-family="Inter,sans-serif" font-size="8.5">0%</text>
+        <text x="404" y="221" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7.5">(not weighted)</text>
+        <text x="26" y="240" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">+ Add criterion</text>
+      </svg>
+    </div>
+    <p class="fig-cap">Figure 7.1 — The Scoring Criteria settings page</p>
+  </div>
+
+  <h3>Understanding Each Field</h3>
+  <table>
+    <thead><tr><th>Field</th><th>Description</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Name</strong></td><td>The clinical scale name shown in the session note form and score breakdowns.</td><td>PHQ-9</td></tr>
+      <tr><td><strong>Min / Max score</strong></td><td>The valid numerical range for this scale. Values outside this range are flagged in the session form.</td><td>0 to 27</td></tr>
+      <tr><td><strong>Direction</strong></td><td>"Higher is worse" for symptom scales (PHQ-9, GAD-7). "Higher is better" for wellbeing scales (WEMWBS, sleep quality).</td><td>Higher = worse</td></tr>
+      <tr><td><strong>Weight</strong></td><td>How much this measure contributes to the overall wellness score (0–100%). All active weights should sum to 100%.</td><td>40%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info">
+    <b>Adding a custom measure:</b> You can create any scale your clinic uses. Click <em>Add criterion</em>, enter the name, range, direction, and weight. The new scale immediately appears in the session note form for all subsequent sessions.
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 14</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 15 · FULL WORKFLOW DIAGRAM                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="qr-workflow">
+  <p class="badge-chapter">Quick Reference</p>
+  <h2>Complete Patient Workflow</h2>
+  <p>The diagram below shows the full clinical lifecycle of a patient in Therapist CRM — from first entry to ongoing progress monitoring.</p>
+
+  <!-- Full workflow diagram -->
+  <div class="fig" style="margin-top:12pt">
+    <svg viewBox="0 0 620 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+      <!-- Background -->
+      <rect width="620" height="360" fill="#f8fafc" rx="8"/>
+
+      <!-- Step 1: Create patient -->
+      <rect x="20" y="30" width="130" height="80" rx="10" fill="white" stroke="#2563eb" stroke-width="2"/>
+      <circle cx="55" cy="52" r="14" fill="#2563eb"/>
+      <text x="55" y="57" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="12" font-weight="800">1</text>
+      <text x="90" y="48" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Add Patient</text>
+      <text x="30" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Enter name, contact</text>
+      <text x="30" y="82" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">details &amp; medical</text>
+      <text x="30" y="94" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">history.</text>
+      <text x="85" y="104" text-anchor="middle" fill="#2563eb" font-family="Inter,sans-serif" font-size="8" font-weight="600">Patients → Add Patient</text>
+      <!-- Arrow 1→2 -->
+      <line x1="150" y1="70" x2="190" y2="70" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Step 2: Schedule appointment -->
+      <rect x="190" y="30" width="130" height="80" rx="10" fill="white" stroke="#059669" stroke-width="2"/>
+      <circle cx="225" cy="52" r="14" fill="#059669"/>
+      <text x="225" y="57" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="12" font-weight="800">2</text>
+      <text x="255" y="48" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Schedule</text>
+      <text x="200" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Set date, time,</text>
+      <text x="200" y="82" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">location &amp; enable</text>
+      <text x="200" y="94" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">reminders.</text>
+      <text x="255" y="104" text-anchor="middle" fill="#059669" font-family="Inter,sans-serif" font-size="8" font-weight="600">Appointments → New</text>
+      <!-- Arrow 2→3 -->
+      <line x1="320" y1="70" x2="360" y2="70" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Step 3: Hold session -->
+      <rect x="360" y="30" width="130" height="80" rx="10" fill="white" stroke="#d97706" stroke-width="2"/>
+      <circle cx="395" cy="52" r="14" fill="#d97706"/>
+      <text x="395" y="57" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="12" font-weight="800">3</text>
+      <text x="425" y="48" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Hold Session</text>
+      <text x="370" y="70" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Conduct the</text>
+      <text x="370" y="82" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">clinical session</text>
+      <text x="370" y="94" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">with the patient.</text>
+      <text x="425" y="104" text-anchor="middle" fill="#d97706" font-family="Inter,sans-serif" font-size="8" font-weight="600">In person / online</text>
+
+      <!-- Arrow down from step 3 -->
+      <line x1="425" y1="110" x2="425" y2="150" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Step 4: Record notes -->
+      <rect x="360" y="150" width="130" height="90" rx="10" fill="white" stroke="#7c3aed" stroke-width="2"/>
+      <circle cx="395" cy="172" r="14" fill="#7c3aed"/>
+      <text x="395" y="177" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="12" font-weight="800">4</text>
+      <text x="420" y="168" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Record Session</text>
+      <text x="370" y="186" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Write concerns,</text>
+      <text x="370" y="198" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">interventions, plan.</text>
+      <text x="370" y="210" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Enter clinical scores.</text>
+      <text x="370" y="222" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Click Save session.</text>
+      <text x="425" y="235" text-anchor="middle" fill="#7c3aed" font-family="Inter,sans-serif" font-size="8" font-weight="600">Top bar → Add session</text>
+      <!-- Arrow 4→5 -->
+      <line x1="360" y1="195" x2="320" y2="195" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Step 5: Review scores -->
+      <rect x="190" y="150" width="130" height="90" rx="10" fill="white" stroke="#e11d48" stroke-width="2"/>
+      <circle cx="225" cy="172" r="14" fill="#e11d48"/>
+      <text x="225" y="177" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="12" font-weight="800">5</text>
+      <text x="250" y="168" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Review Scores</text>
+      <text x="200" y="186" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">System calculates</text>
+      <text x="200" y="198" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">wellness &amp; risk.</text>
+      <text x="200" y="210" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">High-risk → Alert</text>
+      <text x="200" y="222" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">on dashboard.</text>
+      <text x="255" y="235" text-anchor="middle" fill="#e11d48" font-family="Inter,sans-serif" font-size="8" font-weight="600">Dashboard → Alerts</text>
+      <!-- Arrow 5→6 -->
+      <line x1="190" y1="195" x2="150" y2="195" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Step 6: Track progress -->
+      <rect x="20" y="150" width="130" height="90" rx="10" fill="white" stroke="#0284c7" stroke-width="2"/>
+      <circle cx="55" cy="172" r="14" fill="#0284c7"/>
+      <text x="55" y="177" text-anchor="middle" fill="white" font-family="Inter,sans-serif" font-size="12" font-weight="800">6</text>
+      <text x="80" y="168" fill="#020617" font-family="Inter,sans-serif" font-size="9" font-weight="700">Track Progress</text>
+      <text x="30" y="186" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">View trend chart</text>
+      <text x="30" y="198" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">on patient profile.</text>
+      <text x="30" y="210" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">Discuss progress</text>
+      <text x="30" y="222" fill="#64748b" font-family="Inter,sans-serif" font-size="7.5">with patient.</text>
+      <text x="85" y="235" text-anchor="middle" fill="#0284c7" font-family="Inter,sans-serif" font-size="8" font-weight="600">Patient → Progress tab</text>
+
+      <!-- Arrow back up: 6 → 2 (repeat cycle) -->
+      <path d="M 85 240 Q 85 300 255 300 Q 310 300 310 150" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+      <text x="180" y="316" fill="#94a3b8" font-family="Inter,sans-serif" font-size="8">Repeat each session →</text>
+
+      <!-- Arrow markers def -->
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+        </marker>
+      </defs>
+
+      <!-- Legend -->
+      <text x="20" y="348" fill="#64748b" font-family="Inter,sans-serif" font-size="8" font-weight="700">Cycle repeats for every subsequent session with the same patient.</text>
+    </svg>
+    <p class="fig-cap">Figure QR.1 — The complete Therapist CRM patient workflow, from first contact to ongoing monitoring</p>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 15</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 16 · QUICK REFERENCE                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="qr">
+  <p class="badge-chapter">Quick Reference</p>
+  <h2>Common Tasks at a Glance</h2>
+
+  <table>
+    <thead>
+      <tr><th>I want to…</th><th>Where to go</th><th>Steps</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Log in</strong></td><td>Browser → your CRM URL</td><td>Enter username &amp; password → Sign In</td></tr>
+      <tr><td><strong>Add a new patient</strong></td><td>Patients → Add Patient</td><td>Fill form → Save patient</td></tr>
+      <tr><td><strong>Find a patient</strong></td><td>Top bar search (any page)</td><td>Type name → press Enter or wait for results</td></tr>
+      <tr><td><strong>Schedule an appointment</strong></td><td>Appointments → New appointment</td><td>Select patient, date/time, location → Save</td></tr>
+      <tr><td><strong>Record a session note</strong></td><td>Top bar → Add session</td><td>Select patient → fill details &amp; scores → Save</td></tr>
+      <tr><td><strong>Check for alerts</strong></td><td>Dashboard → Alerts panel</td><td>Review high-risk patients → click row to see session</td></tr>
+      <tr><td><strong>View patient progress chart</strong></td><td>Patient profile → Progress Tracking tab</td><td>Open patient profile → click Progress tab</td></tr>
+      <tr><td><strong>Edit an old session note</strong></td><td>Reports → click session → Edit</td><td>Open session → click Edit → update → Save</td></tr>
+      <tr><td><strong>Add a new scoring measure</strong></td><td>Settings → Add criterion</td><td>Enter name, range, direction, weight → Save</td></tr>
+      <tr><td><strong>Change appointment status</strong></td><td>Appointments → click appointment → Reschedule</td><td>Update status field (Completed / No-show / Cancelled) → Save</td></tr>
+      <tr><td><strong>Log out</strong></td><td>Top bar → your name → Logout</td><td>Click Logout. Always do this on shared devices.</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+  <h3>Glossary of Key Terms</h3>
+  <div class="two-col" style="font-size:9.5pt">
+    <div>
+      <p><strong>Wellness score</strong> — A calculated score from 0–10 summarising patient wellbeing across all measures. Higher is better.</p>
+      <p><strong>Risk score</strong> — A calculated score from 0–10 indicating clinical risk. Higher scores trigger alerts.</p>
+      <p><strong>Criterion</strong> — One clinical measuring instrument (e.g. PHQ-9, GAD-7). Configured in Settings.</p>
+      <p><strong>Session note</strong> — A structured clinical record created after each patient session, containing narrative text and numerical scores.</p>
+    </div>
+    <div>
+      <p><strong>Alert</strong> — An automatic flag on the dashboard when a patient's risk score exceeds the configured threshold.</p>
+      <p><strong>Normalise</strong> — The process of converting raw scores to a 0–1 scale for fair comparison across different measures with different ranges.</p>
+      <p><strong>Weight</strong> — The proportion (%) a measure contributes to the overall wellness score. All weights should total 100%.</p>
+      <p><strong>Active patient</strong> — A patient currently receiving treatment. Inactive patients are archived but not deleted.</p>
+    </div>
+  </div>
+
+  <hr>
+  <div class="callout tip">
+    <b>Need help?</b> Contact your clinic administrator or system manager. This guide covers standard usage — your administrator can help with account issues, data exports, and configuration changes.
+  </div>
+
+  <div style="margin-top:16pt;text-align:center;padding:12pt;background:var(--slate-50);border-radius:8pt;border:1pt solid var(--slate-200)">
+    <div style="display:inline-flex;align-items:center;justify-content:center;width:36pt;height:36pt;background:#2563eb;border-radius:10pt;margin-bottom:7pt">
+      <span style="font-size:14pt;font-weight:800;color:white;font-family:Inter,sans-serif">TC</span>
+    </div>
+    <p style="font-weight:700;color:#020617;margin-bottom:2pt">Therapist CRM</p>
+    <p style="font-size:9pt;color:#64748b;margin:0">Clinical Workspace · User Guide v1.0 · May 2026</p>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 16</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 17 · FAQ — PART 1                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="faq">
+  <p class="badge-chapter">Frequently Asked Questions</p>
+  <h2>FAQs — Part 1</h2>
+  <p style="color:var(--slate-500);font-size:9.5pt;margin-bottom:6pt">Common questions from therapists using Therapist CRM, grouped by topic.</p>
+
+  <!-- ── LOGIN & ACCOUNTS ── -->
+  <p class="faq-cat">Login &amp; Accounts</p>
+
+  <div class="faq-item">
+    <p class="faq-q">What do I do if I forget my password?</p>
+    <div class="faq-a">
+      <p>Contact your clinic administrator or IT manager — they can reset your password from the admin panel. There is no self-service password reset link on the login screen. Once reset, log in with the temporary password provided and update it immediately.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can multiple therapists share one account?</p>
+    <div class="faq-a">
+      <p><strong>No — never share login credentials.</strong> Each therapist must have their own account. Shared accounts make it impossible to trace who recorded a session note or updated a patient record, which creates clinical and legal risk. Ask your administrator to create individual accounts for each clinician.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Why was I logged out automatically?</p>
+    <div class="faq-a">
+      <p>Your session may have expired after a period of inactivity, or another tab may have triggered a logout. Simply log in again — your data is not lost. If this happens frequently, ask your administrator about adjusting the session timeout setting.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">How do I log out securely on a shared computer?</p>
+    <div class="faq-a">
+      <p>Click your name or initials in the top-right corner of any page, then click <strong>Logout</strong>. Always do this before leaving a shared device. Do not rely on simply closing the browser tab — the session may remain active in the background.</p>
+    </div>
+  </div>
+
+  <!-- ── PATIENTS ── -->
+  <p class="faq-cat">Patients</p>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I permanently delete a patient record?</p>
+    <div class="faq-a">
+      <p>Yes, but with caution. Open the patient profile, click <strong>Edit</strong>, and use the delete option at the bottom. <strong>Deletion is permanent</strong> — all associated appointments, session notes, and scores are removed and cannot be recovered. For patients who have completed treatment, it is better to <em>deactivate</em> them (uncheck the "Active patient" box) so their records are preserved for audit purposes.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">How do I mark a patient as inactive without deleting their records?</p>
+    <div class="faq-a">
+      <p>Open the patient profile → click <strong>Edit</strong> → uncheck the <strong>Active patient</strong> checkbox → click Save. The patient disappears from the active care roster but all their session notes, appointments, and progress data remain intact and fully searchable.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">I searched for a patient but they don't appear — what's wrong?</p>
+    <div class="faq-a">
+      <ul>
+        <li>Confirm the spelling — the search matches exactly what you type.</li>
+        <li>The patient may be marked as <strong>inactive</strong>. Try the "All" filter tab on the Patients page.</li>
+        <li>The patient may not have been added yet — use <em>Add Patient</em> to create a new record.</li>
+        <li>If you believe the record exists but cannot find it, contact your administrator.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I export patient data to a spreadsheet or external system?</p>
+    <div class="faq-a">
+      <p>There is no built-in export in the current version. For audit or transfer purposes, contact your system administrator — they can run a database export through the admin panel. Do not manually copy patient data to unapproved systems, as this may breach your clinic's data governance policy.</p>
+    </div>
+  </div>
+
+  <!-- ── APPOINTMENTS ── -->
+  <p class="faq-cat">Appointments</p>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I set up recurring (repeating) appointments?</p>
+    <div class="faq-a">
+      <p>Not automatically in the current version. Appointments must be scheduled individually. A practical workaround: immediately after finishing a session, schedule the next appointment before leaving the system — this takes under a minute and keeps your schedule consistently up to date.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">A patient did not attend — what should I do in the system?</p>
+    <div class="faq-a">
+      <p>Open the appointment, click <strong>Reschedule</strong>, change the <em>Status</em> field to <strong>No-show</strong>, and save. This keeps an accurate attendance record without creating a session note for a session that did not occur. Use the <em>Internal notes</em> field to document any attempted contact.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I link a session note to an appointment after it has been saved?</p>
+    <div class="faq-a">
+      <p>Yes. Open the session note (Reports → click the row → Edit), then select the appointment from the <em>Linked appointment</em> dropdown and save. The link is established retrospectively without affecting any clinical content or scores already recorded.</p>
+    </div>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 17</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 18 · FAQ — PART 2                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="faq2">
+  <p class="badge-chapter">Frequently Asked Questions</p>
+  <h2>FAQs — Part 2</h2>
+
+  <!-- ── SESSION NOTES & SCORING ── -->
+  <p class="faq-cat">Session Notes &amp; Scoring</p>
+
+  <div class="faq-item">
+    <p class="faq-q">What if I forget to enter scores during a session note?</p>
+    <div class="faq-a">
+      <p>Scores are optional per session. The note saves with all your clinical text regardless. However, no wellness or risk calculation will be generated for that session and it will not appear on the progress chart. You can go back and add scores later by clicking <strong>Edit</strong> — they are calculated and integrated into the chart immediately on saving.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I edit or correct a session note after saving it?</p>
+    <div class="faq-a">
+      <p>Yes. Go to <strong>Reports</strong> → click the session row → click <strong>Edit</strong>. All fields — clinical text, scores, and the linked appointment — can be updated. Wellness and risk scores are recalculated automatically on saving. There is no change history log, so corrections are made directly to the original record. If your clinic requires an audit trail, document changes in your own records outside the system.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Why is a patient suddenly showing as "High risk" when they seemed fine last week?</p>
+    <div class="faq-a">
+      <p>A high-risk flag triggers automatically when the risk score from the most recent session exceeds the configured threshold. Possible reasons:</p>
+      <ul>
+        <li><strong>Genuine clinical deterioration</strong> — review the session scores and narrative carefully.</li>
+        <li><strong>Data entry error</strong> — an unusually high or low score on one measure can push the overall risk score over the threshold. Check each score against the patient's presentation.</li>
+        <li><strong>Criteria change</strong> — if weights or thresholds were recently updated, historical classifications may shift. Check with your administrator.</li>
+      </ul>
+      <p>Always apply your clinical judgement — the system is an aid, not a diagnosis.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">A score is flagged as "outside the expected range" — what does that mean?</p>
+    <div class="faq-a">
+      <p>Each criterion has a defined minimum and maximum (e.g. PHQ-9: 0–27). If you enter a value outside that range, the score card is highlighted in amber. The system still saves the session, but out-of-range scores are excluded from the wellness and risk calculation. Double-check the figure and correct it if it was a typing error.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Do I need to complete every scoring criterion for every session?</p>
+    <div class="faq-a">
+      <p>No. Only enter scores for measures that are clinically appropriate for that session. A blank criterion simply does not contribute to the calculation. For example, if a session focused on crisis planning and a full PHQ-9 was not administered, leave that field blank rather than entering an estimate.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Why doesn't the wellness score match the raw number I entered?</p>
+    <div class="faq-a">
+      <p>The wellness score (0–10) is not the same as a raw score. The system normalises each raw value against its scale range, adjusts for direction (higher = better or higher = worse), applies configured weights, and averages into a single metric. See <strong>Chapter 5 — Clinical Scoring Explained</strong> (page 11) for the full algorithm walkthrough.</p>
+    </div>
+  </div>
+
+  <!-- ── PROGRESS TRACKING ── -->
+  <p class="faq-cat">Progress Tracking</p>
+
+  <div class="faq-item">
+    <p class="faq-q">Why is the progress chart empty for a patient?</p>
+    <div class="faq-a">
+      <p>The chart only plots sessions where at least one numerical score was recorded. If all score fields were left blank, no data points appear. Edit at least one existing session to add scores, or ensure scores are entered in future sessions to start building the chart.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">How many sessions are needed before the chart shows a useful trend?</p>
+    <div class="faq-a">
+      <p>A trend line becomes meaningful from around <strong>3–4 data points</strong>. With fewer than 3 sessions the chart plots the points but it is too early to draw clinical conclusions. Consistent recording from the first session creates the richest longitudinal picture over time.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I share the progress chart with my patient?</p>
+    <div class="faq-a">
+      <p>The most practical approach is to open the patient's <strong>Progress Tracking</strong> tab on a shared screen during the session. There is no built-in export button. Alternatively, use your OS screenshot tool (<kbd>Win+Shift+S</kbd> on Windows, <kbd>⌘+Shift+4</kbd> on Mac) to capture the chart and paste it into a document or patient letter.</p>
+    </div>
+  </div>
+
+  <!-- ── TECHNICAL & DATA ── -->
+  <p class="faq-cat">Technical &amp; Data</p>
+
+  <div class="faq-item">
+    <p class="faq-q">Which browsers are supported?</p>
+    <div class="faq-a">
+      <p>Up-to-date versions of <strong>Google Chrome</strong>, <strong>Microsoft Edge</strong>, <strong>Firefox</strong>, and <strong>Safari</strong>. Internet Explorer is not supported. Chrome or Edge are recommended, especially when printing this guide to PDF.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Does the system work on a phone or tablet?</p>
+    <div class="faq-a">
+      <p>Yes. Therapist CRM is fully mobile-responsive. On phones and tablets you will see a <strong>bottom navigation bar</strong> (five icons at the foot of the screen) and a <strong>☰ menu button</strong> in the top-left corner. Patient lists, appointments, and session notes display as touch-friendly cards rather than scrollable tables.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">A page is loading slowly or won't load — what should I do?</p>
+    <div class="faq-a">
+      <ul>
+        <li>Check your internet connection — the system requires a live server connection.</li>
+        <li>Refresh the page (<kbd>F5</kbd> or <kbd>Ctrl+R</kbd>).</li>
+        <li>Clear your browser cache (<kbd>Ctrl+Shift+Delete</kbd>) and reload.</li>
+        <li>Try a different browser.</li>
+        <li>If the problem persists, the server may be temporarily unavailable — contact your administrator.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Is patient data secure and confidential?</p>
+    <div class="faq-a">
+      <p>Security depends on your clinic's deployment. Confirm with your administrator that the application is served over <strong>HTTPS</strong>, the database is on a secure access-controlled server, regular backups are in place, and access is restricted to authorised staff only. Never use the system over public Wi-Fi without a VPN, and never leave a logged-in session unattended.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I undo an accidental deletion?</p>
+    <div class="faq-a">
+      <p>There is no undo function. Deletions are permanent once confirmed. If you accidentally delete a record, contact your administrator immediately — depending on the backup schedule, restoration from a recent database backup may be possible. The system always shows a confirmation prompt before deleting anything precisely to prevent accidental loss.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Can I use Therapist CRM as the sole record for a patient's clinical care?</p>
+    <div class="faq-a">
+      <p>Therapist CRM is designed to <em>support</em> clinical documentation, not to replace formal record-keeping obligations. Check your regulatory body's requirements (e.g. BACP, UKCP, BPS in the UK; APA, NASW in the US) for what constitutes an adequate clinical record. You may need to maintain additional formal records alongside this system.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:14pt;text-align:center;padding:12pt;background:var(--slate-50);border-radius:8pt;border:1pt solid var(--slate-200)">
+    <div style="display:inline-flex;align-items:center;justify-content:center;width:36pt;height:36pt;background:#2563eb;border-radius:10pt;margin-bottom:7pt">
+      <span style="font-size:14pt;font-weight:800;color:white;font-family:Inter,sans-serif">TC</span>
+    </div>
+    <p style="font-weight:700;color:#020617;margin-bottom:2pt">Therapist CRM</p>
+    <p style="font-size:9pt;color:#64748b;margin:0">Clinical Workspace · User Guide v1.0 · May 2026</p>
+  </div>
+
+  <div class="pg-footer"><span>Therapist CRM · User Guide</span><span>Page 18</span></div>
+</div>
+
+</body>
+</html>
