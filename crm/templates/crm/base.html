@@ -36,7 +36,8 @@
           href.startsWith("#") ||
           ignoredSchemes.some((scheme) => href.startsWith(scheme)) ||
           link.hasAttribute("download") ||
-          link.target === "_blank"
+          link.target === "_blank" ||
+          link.hasAttribute("hx-get")
         ) return;
 
         let url;
@@ -57,6 +58,7 @@
 
       root.querySelectorAll("form[method='post' i]").forEach((form) => {
         if (form.hasAttribute("data-full-reload")) return;
+        if (form.hasAttribute("hx-select")) return;
         const action = form.getAttribute("action");
         const postUrl = form.getAttribute("hx-post") || action || window.location.pathname;
         form.setAttribute("hx-post", postUrl);
@@ -313,7 +315,7 @@
       }
     });
 
-    function dobWidget(iso) {
+    window.dobWidget = function dobWidget(iso) {
       return {
         dd: '', mm: '', yyyy: '',
         get isoValue() {
