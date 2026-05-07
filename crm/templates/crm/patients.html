@@ -78,7 +78,11 @@
               <td class="px-5 py-4 text-sm text-slate-600">{% if row.last_session %}{{ row.last_session.session_date }}{% else %}-{% endif %}</td>
               <td class="px-5 py-4">{% include "crm/components/status_badge.html" with label=row.risk.label tone=row.risk.tone %}</td>
               <td class="px-5 py-4 text-right">
-                <a href="{{ row.patient.get_absolute_url }}" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white">View</a>
+                <div class="flex justify-end gap-2">
+                  <a href="{{ row.patient.get_absolute_url }}" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white">View</a>
+                  <a href="{% url 'crm:patient_update' row.patient.pk %}" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white">Edit</a>
+                  <a href="{% url 'crm:patient_delete' row.patient.pk %}" class="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50">Delete</a>
+                </div>
               </td>
             </tr>
           {% empty %}

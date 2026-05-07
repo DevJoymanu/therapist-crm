@@ -46,7 +46,13 @@
             <td class="px-5 py-4"><a class="font-semibold text-slate-950 hover:text-blue-700" href="{{ session.patient.get_absolute_url }}">{{ session.patient.full_name }}</a></td>
             <td class="px-5 py-4 text-sm text-slate-600">{{ session.session_date }}</td>
             <td class="px-5 py-4 text-sm text-slate-600">{{ session.plan|truncatechars:90|default:"-" }}</td>
-            <td class="px-5 py-4 text-right"><a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{{ session.get_absolute_url }}">View</a></td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{{ session.get_absolute_url }}">View</a>
+                <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{% url 'crm:session_update' session.pk %}">Edit</a>
+                <a class="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50" href="{% url 'crm:session_delete' session.pk %}">Delete</a>
+              </div>
+            </td>
           </tr>
         {% empty %}
           <tr><td colspan="4" class="px-5 py-12 text-center text-sm text-slate-500">No session notes yet.</td></tr>

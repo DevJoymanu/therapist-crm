@@ -51,7 +51,13 @@
             <td class="px-5 py-4 text-sm text-slate-600">{{ appointment.starts_at|date:"M j, Y H:i" }}</td>
             <td class="px-5 py-4 text-sm text-slate-600">{{ appointment.starts_at|date:"H:i" }}-{{ appointment.ends_at|date:"H:i" }}</td>
             <td class="px-5 py-4">{% include "crm/components/status_badge.html" with label=appointment.get_status_display tone="muted" %}</td>
-            <td class="px-5 py-4 text-right"><a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{{ appointment.get_absolute_url }}">View</a></td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{{ appointment.get_absolute_url }}">View</a>
+                <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{% url 'crm:appointment_update' appointment.pk %}">Edit</a>
+                <a class="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50" href="{% url 'crm:appointment_delete' appointment.pk %}">Delete</a>
+              </div>
+            </td>
           </tr>
         {% empty %}
           <tr><td colspan="5" class="px-5 py-12 text-center text-sm text-slate-500">No appointments yet.</td></tr>
