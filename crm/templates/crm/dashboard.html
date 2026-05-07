@@ -1,0 +1,115 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Dashboard | Therapist CRM{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div class="min-w-0">
+      <p class="text-sm font-medium text-blue-700">Dashboard</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Good day, {{ user.get_username }}</h1>
+      <p class="mt-2 max-w-2xl text-sm text-slate-500">A focused view of today's clinical work and patient risk signals.</p>
+    </div>
+    <div class="flex shrink-0 gap-3">
+      <a href="{% url 'crm:patient_create' %}" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">Add patient</a>
+      <a href="{% url 'crm:appointment_create' %}" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">Schedule</a>
+    </div>
+  </div>
+
+  <section class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {% include "crm/components/metric_card.html" with label="Total patients" value=patient_count hint="Active" tone="blue" %}
+    {% include "crm/components/metric_card.html" with label="Sessions this week" value=sessions_this_week hint="Clinical" tone="blue" %}
+    {% include "crm/components/metric_card.html" with label="High-risk patients" value=high_risk_scores|length hint="Review" tone="rose" %}
+    {% include "crm/components/metric_card.html" with label="Upcoming appointments" value=upcoming_appointments|length hint="Scheduled" tone="amber" %}
+  </section>
+
+  <section class="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.8fr)]">
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div>
+          <h2 class="text-base font-semibold text-slate-950">Patient progress</h2>
+          <p class="mt-1 text-sm text-slate-500">Mood, progress, and risk trends across recent sessions.</p>
+        </div>
+        <a href="{% url 'crm:session_list' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">View reports</a>
+      </div>
+      <div class="h-72 p-5">
+        {{ dashboard_chart|json_script:"dashboard-chart-data" }}
+        <canvas id="dashboardChart"></canvas>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div>
+          <h2 class="text-base font-semibold text-slate-950">Upcoming appointments</h2>
+          <p class="mt-1 text-sm text-slate-500">Next sessions that need attention.</p>
+        </div>
+        <a href="{% url 'crm:appointment_create' %}" class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Add</a>
+      </div>
+      <div class="divide-y divide-slate-100">
+        {% for appointment in upcoming_appointments %}
+        <a href="{{ appointment.get_absolute_url }}" class="flex items-center justify-between gap-4 px-5 py-4 hover:bg-slate-50">
+          <div class="min-w-0">
+            <p class="truncate text-sm font-semibold text-slate-950">{{ appointment.patient.full_name }}</p>
+            <p class="mt-1 text-sm text-slate-500">{{ appointment.location|default:"No location" }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-medium text-slate-900">{{ appointment.starts_at|date:"M j" }}</p>
+            <p class="text-sm text-slate-500">{{ appointment.starts_at|date:"H:i" }}</p>
+          </div>
+        </a>
+        {% empty %}
+        <p class="px-5 py-10 text-center text-sm text-slate-500">No upcoming appointments.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="grid gap-6 xl:grid-cols-2">
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div>
+          <h2 class="text-base font-semibold text-slate-950">Recent activity</h2>
+          <p class="mt-1 text-sm text-slate-500">Latest notes and treatment plan updates.</p>
+        </div>
+        <a href="{% url 'crm:session_create' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">Add note</a>
+      </div>
+      <div class="divide-y divide-slate-100">
+        {% for session in recent_sessions %}
+        <a href="{{ session.get_absolute_url }}" class="block px-5 py-4 hover:bg-slate-50">
+          <div class="flex items-center justify-between gap-4">
+            <p class="text-sm font-semibold text-slate-950">{{ session.patient.full_name }}</p>
+            <p class="text-sm text-slate-500">{{ session.session_date }}</p>
+          </div>
+          <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ session.plan|default:"No plan recorded." }}</p>
+        </a>
+        {% empty %}
+        <p class="px-5 py-10 text-center text-sm text-slate-500">No recent session activity.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <div>
+          <h2 class="text-base font-semibold text-slate-950">Alerts</h2>
+          <p class="mt-1 text-sm text-slate-500">High-risk scores that may need follow-up.</p>
+        </div>
+      </div>
+      <div class="divide-y divide-slate-100">
+        {% for score in high_risk_scores %}
+        <a href="{{ score.session.get_absolute_url }}" class="flex items-center justify-between gap-4 px-5 py-4 hover:bg-rose-50/50">
+          <div>
+            <p class="text-sm font-semibold text-slate-950">{{ score.session.patient.full_name }}</p>
+            <p class="mt-1 text-sm text-slate-500">{{ score.criterion.name }} score from {{ score.session.session_date }}</p>
+          </div>
+          {% include "crm/components/status_badge.html" with label="High risk" tone="danger" %}
+        </a>
+        {% empty %}
+        <p class="px-5 py-10 text-center text-sm text-slate-500">No high-risk alerts right now.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

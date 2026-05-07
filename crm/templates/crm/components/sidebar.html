@@ -1,0 +1,41 @@
+<aside class="fixed inset-y-0 left-0 z-30 hidden w-72 border-r border-slate-200 bg-white lg:flex lg:flex-col">
+  <div class="flex h-16 items-center gap-3 border-b border-slate-100 px-6">
+    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white">TC</div>
+    <div>
+      <a href="{% url 'crm:dashboard' %}" data-nav-link="dashboard" class="block text-sm font-semibold text-slate-950">Therapist CRM</a>
+      <p class="text-xs text-slate-500">Clinical workspace</p>
+    </div>
+  </div>
+
+  <nav class="flex-1 space-y-1 px-3 py-5">
+    <a href="{% url 'crm:dashboard' %}" data-nav-link="dashboard" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
+      <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Dashboard
+    </a>
+    <a href="{% url 'crm:patient_list' %}" data-nav-link="patients" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if 'patient' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
+      <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Patients
+    </a>
+    <a href="{% url 'crm:appointment_list' %}" data-nav-link="appointments" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if 'appointment' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
+      <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Appointments
+    </a>
+    <a href="{% url 'crm:session_list' %}" data-nav-link="sessions" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if 'session' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
+      <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Reports
+    </a>
+    <a href="{% url 'crm:criterion_list' %}" data-nav-link="criteria" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if 'criterion' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
+      <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Settings
+    </a>
+  </nav>
+
+  <div class="border-t border-slate-100 p-4">
+    <div class="rounded-2xl bg-slate-50 p-4">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Signed in</p>
+      <p class="mt-1 truncate text-sm font-medium text-slate-900">{{ user.get_username }}</p>
+    </div>
+  </div>
+</aside>
+
+<div class="border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
+  <div class="flex items-center justify-between">
+    <a href="{% url 'crm:dashboard' %}" class="font-semibold text-slate-950">Therapist CRM</a>
+    <a href="{% url 'crm:patient_list' %}" class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white">Patients</a>
+  </div>
+</div>

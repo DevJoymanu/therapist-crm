@@ -1,0 +1,13 @@
+{% if is_paginated %}
+  <nav class="flex items-center justify-between border-t border-slate-100 px-5 py-4">
+    <p class="text-sm text-slate-500">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+    <div class="flex gap-2">
+      {% if page_obj.has_previous %}
+        <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" hx-get="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" hx-target="#patient-results" hx-select="#patient-results" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" hx-get="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" hx-target="#patient-results" hx-select="#patient-results" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">Next</a>
+      {% endif %}
+    </div>
+  </nav>
+{% endif %}

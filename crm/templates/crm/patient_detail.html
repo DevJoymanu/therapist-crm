@@ -1,0 +1,137 @@
+{% extends "crm/base.html" %}
+
+{% block title %}{{ patient.full_name }} | Therapist CRM{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+  <div>
+    <p class="text-sm font-medium text-blue-700">Patient profile</p>
+    <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">{{ patient.full_name }}</h1>
+    <p class="mt-2 text-sm text-slate-500">Clinical summary, session history, and progress tracking in one place.</p>
+  </div>
+  <div class="flex gap-3">
+    <a href="{% url 'crm:session_create' %}" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">Add session</a>
+    <a href="{% url 'crm:patient_update' patient.pk %}" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">Edit</a>
+  </div>
+</div>
+
+<div class="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
+  <aside class="space-y-6">
+    <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center gap-4">
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-lg font-bold text-blue-700">{{ patient.first_name|first }}{{ patient.last_name|first }}</div>
+        <div class="min-w-0">
+          <h2 class="truncate text-base font-semibold text-slate-950">{{ patient.full_name }}</h2>
+          <p class="text-sm text-slate-500">{% if patient.is_active %}Active patient{% else %}Inactive patient{% endif %}</p>
+        </div>
+      </div>
+      <dl class="mt-5 space-y-4 text-sm">
+        <div>
+          <dt class="font-medium text-slate-500">Email</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.email|default:"No email" }}</dd>
+        </div>
+        <div>
+          <dt class="font-medium text-slate-500">Phone</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.phone|default:"No phone" }}</dd>
+        </div>
+        <div>
+          <dt class="font-medium text-slate-500">Emergency contact</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.emergency_contact|default:"Not recorded" }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="text-base font-semibold text-slate-950">Medical history</h2>
+      <p class="mt-3 text-sm leading-6 text-slate-600">{{ patient.medical_history|linebreaksbr|default:"No medical history recorded." }}</p>
+    </section>
+  </aside>
+
+  <div class="space-y-6" x-data="{ tab: 'overview' }">
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="border-b border-slate-100 px-5 pt-4">
+        <nav class="-mb-px flex gap-6">
+          <button type="button" @click="tab = 'overview'" :class="tab === 'overview' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Overview</button>
+          <button type="button" @click="tab = 'notes'" :class="tab === 'notes' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Session Notes</button>
+          <button type="button" @click="tab = 'progress'; setTimeout(() => window.dispatchEvent(new Event('resize')), 40)" :class="tab === 'progress' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Progress Tracking</button>
+        </nav>
+      </div>
+
+      <section id="overview" x-show="tab === 'overview'" x-transition class="grid gap-4 p-5 sm:grid-cols-3">
+        {% if latest_algorithm %}
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p class="text-sm font-medium text-slate-500">Wellness score</p>
+            <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ latest_algorithm.wellness_score }}</p>
+            <p class="mt-2 text-xs text-slate-500">{{ latest_algorithm.trend }}</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p class="text-sm font-medium text-slate-500">Risk score</p>
+            <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ latest_algorithm.risk_score }}</p>
+            <div class="mt-2">{% include "crm/components/status_badge.html" with label=latest_algorithm.risk_level.label tone=latest_algorithm.risk_level.tone %}</div>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p class="text-sm font-medium text-slate-500">Alerts</p>
+            <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ latest_algorithm.alerts|length }}</p>
+            <p class="mt-2 text-xs text-slate-500">From latest session</p>
+          </div>
+        {% else %}
+          <p class="col-span-full text-sm text-slate-500">No score data yet.</p>
+        {% endif %}
+      </section>
+    </div>
+
+    <section id="progress" x-cloak x-show="tab === 'progress'" x-transition class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="border-b border-slate-100 px-5 py-4">
+        <h2 class="text-base font-semibold text-slate-950">Score visualization</h2>
+        <p class="mt-1 text-sm text-slate-500">Mood, progress, and risk over time.</p>
+      </div>
+      <div class="h-80 p-5">
+        {{ score_trends|json_script:"score-trends" }}
+        <canvas id="trendChart"></canvas>
+      </div>
+    </section>
+
+    <section id="notes" x-cloak x-show="tab === 'notes'" x-transition class="grid gap-6 xl:grid-cols-2">
+      <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+          <h2 class="text-base font-semibold text-slate-950">Session notes</h2>
+          <a href="{% url 'crm:session_create' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">Add</a>
+        </div>
+        <div class="divide-y divide-slate-100">
+          {% for session in sessions %}
+            <a href="{{ session.get_absolute_url }}" class="block px-5 py-4 hover:bg-slate-50">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-semibold text-slate-950">{{ session.session_date }}</p>
+                <span class="text-xs font-medium text-slate-500">{{ session.scores.count }} scores</span>
+              </div>
+              <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ session.plan|default:"No plan recorded." }}</p>
+            </a>
+          {% empty %}
+            <p class="px-5 py-10 text-center text-sm text-slate-500">No session notes recorded.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+          <h2 class="text-base font-semibold text-slate-950">Appointments</h2>
+          <a href="{% url 'crm:appointment_create' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">Add</a>
+        </div>
+        <div class="divide-y divide-slate-100">
+          {% for appointment in appointments %}
+            <a href="{{ appointment.get_absolute_url }}" class="flex items-center justify-between gap-4 px-5 py-4 hover:bg-slate-50">
+              <div>
+                <p class="text-sm font-semibold text-slate-950">{{ appointment.starts_at|date:"M j, H:i" }}</p>
+                <p class="mt-1 text-sm text-slate-500">{{ appointment.location|default:"No location" }}</p>
+              </div>
+              {% include "crm/components/status_badge.html" with label=appointment.get_status_display tone="muted" %}
+            </a>
+          {% empty %}
+            <p class="px-5 py-10 text-center text-sm text-slate-500">No appointments recorded.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

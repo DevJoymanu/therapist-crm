@@ -1,0 +1,55 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Session | Therapist CRM{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+  <div>
+    <p class="text-sm font-medium text-blue-700">Session note</p>
+    <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">{{ session.patient.full_name }}</h1>
+    <p class="mt-2 text-sm text-slate-500">{{ session.session_date }}</p>
+  </div>
+  <div class="flex gap-3">
+    <a class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50" href="{% url 'crm:session_update' session.pk %}">Edit</a>
+    <a class="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-rose-600/20 hover:bg-rose-700" href="{% url 'crm:session_delete' session.pk %}">Delete</a>
+  </div>
+</div>
+
+<section class="grid gap-4 sm:grid-cols-2">
+  <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <p class="text-sm font-medium text-slate-500">Wellness score</p>
+    <p class="mt-3 text-3xl font-semibold tracking-tight text-slate-950">{{ score_summary.average|default:"-" }}</p>
+    <p class="mt-2 text-sm text-slate-500">{{ score_summary.trend }}</p>
+  </article>
+  <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <p class="text-sm font-medium text-slate-500">Risk score</p>
+    <p class="mt-3 text-3xl font-semibold tracking-tight text-slate-950">{{ score_summary.risk_score|default:"-" }}</p>
+    <div class="mt-2">{% include "crm/components/status_badge.html" with label=score_summary.risk_level.label tone=score_summary.risk_level.tone %}</div>
+  </article>
+</section>
+
+<section class="mt-6 grid gap-6 xl:grid-cols-2">
+  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-base font-semibold text-slate-950">Concerns</h2><p class="mt-3 text-sm leading-6 text-slate-600">{{ session.presenting_concerns|linebreaksbr|default:"-" }}</p></div>
+  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-base font-semibold text-slate-950">Interventions</h2><p class="mt-3 text-sm leading-6 text-slate-600">{{ session.interventions|linebreaksbr|default:"-" }}</p></div>
+  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-base font-semibold text-slate-950">Plan</h2><p class="mt-3 text-sm leading-6 text-slate-600">{{ session.plan|linebreaksbr|default:"-" }}</p></div>
+  <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h2 class="text-base font-semibold text-slate-950">Private notes</h2><p class="mt-3 text-sm leading-6 text-slate-600">{{ session.private_notes|linebreaksbr|default:"-" }}</p></div>
+</section>
+
+<section class="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
+  <div class="border-b border-slate-100 px-5 py-4">
+    <h2 class="text-base font-semibold text-slate-950">Scoring algorithm</h2>
+    <p class="mt-1 text-sm text-slate-500">Raw values are normalized by range, adjusted for direction, and weighted into the final wellness score.</p>
+  </div>
+  <div class="grid gap-4 p-5 md:grid-cols-3">
+    {% for signal in score_summary.signals %}
+      <div class="rounded-2xl border {% if signal.alert %}border-rose-200 bg-rose-50{% else %}border-slate-200 bg-slate-50{% endif %} p-4">
+        <p class="text-sm font-medium text-slate-500">{{ signal.name }}</p>
+        <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{{ signal.raw }}</p>
+        <p class="mt-2 text-xs text-slate-500">Normalized {{ signal.wellness }} · Weight {{ signal.weight }}</p>
+      </div>
+    {% empty %}
+      <p class="text-sm text-slate-500">No scores recorded.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

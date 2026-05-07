@@ -1,0 +1,350 @@
+﻿{% load static %}
+<!doctype html>
+<html lang="en" class="h-full bg-slate-50" x-data="{ dark: localStorage.getItem('theme') === 'dark' }" x-bind:class="{ 'dark': dark }" x-effect="localStorage.setItem('theme', dark ? 'dark' : 'light')">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Therapist CRM{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+  <script src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <link rel="stylesheet" href="{% static 'css/modern.css' %}">
+  <script src="{% static 'crm/charts.js' %}" defer></script>
+  <script type="module">
+    import { animate, stagger } from "https://cdn.jsdelivr.net/npm/@motionone/dom@10.18.0/+esm";
+
+    const mainTarget = "#main-content";
+    const ignoredSchemes = ["mailto:", "tel:", "javascript:"];
+
+    htmx.config.historyCacheSize = 0;
+
+    function csrfToken() {
+      return document.cookie.match(/csrftoken=([^;]+)/)?.[1] ?? "";
+    }
+
+    function enhanceHtmx(root = document) {
+      root.querySelectorAll("a[href]").forEach((link) => {
+        const href = link.getAttribute("href") || "";
+        if (
+          href.startsWith("#") ||
+          ignoredSchemes.some((scheme) => href.startsWith(scheme)) ||
+          link.hasAttribute("download") ||
+          link.target === "_blank"
+        ) return;
+
+        let url;
+        try {
+          url = new URL(href, window.location.href);
+        } catch {
+          return;
+        }
+        if (url.origin !== window.location.origin) return;
+
+        link.setAttribute("hx-get", href);
+        link.setAttribute("hx-target", mainTarget);
+        link.setAttribute("hx-select", mainTarget);
+        link.setAttribute("hx-swap", "outerHTML");
+        link.setAttribute("hx-push-url", "true");
+        link.setAttribute("hx-indicator", "#page-spinner");
+      });
+
+      root.querySelectorAll("form[method='post' i]").forEach((form) => {
+        if (form.hasAttribute("data-full-reload")) return;
+        const action = form.getAttribute("action");
+        const postUrl = form.getAttribute("hx-post") || action || window.location.pathname;
+        form.setAttribute("hx-post", postUrl);
+        form.setAttribute("hx-target", mainTarget);
+        form.setAttribute("hx-select", mainTarget);
+        form.setAttribute("hx-swap", "outerHTML");
+        form.setAttribute("hx-indicator", "#page-spinner");
+      });
+
+      if (window.htmx) window.htmx.process(root);
+      enhanceSearchableSelects(root);
+      filterSessionAppointmentFields(root);
+    }
+
+    function enhanceSearchableSelects(root = document) {
+      root.querySelectorAll("select[data-searchable-select]").forEach((select) => {
+        if (select.dataset.searchableReady === "true") return;
+        select.dataset.searchableReady = "true";
+        const wasRequired = select.required;
+        select.required = false;
+        select.classList.add("sr-only");
+        select.tabIndex = -1;
+        let updatingFromInput = false;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "relative";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.autocomplete = "off";
+        input.role = "combobox";
+        input.setAttribute("aria-autocomplete", "list");
+        input.setAttribute("aria-expanded", "false");
+        input.required = wasRequired;
+        input.className = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
+        input.placeholder = `Search ${select.dataset.searchableLabel || "options"}`;
+
+        const list = document.createElement("div");
+        list.className = "absolute z-30 mt-2 hidden max-h-56 w-full overflow-auto rounded-xl border border-slate-200 bg-white p-1 text-sm shadow-lg";
+
+        function availableOptions() {
+          return Array.from(select.options).filter((option) => option.value !== "");
+        }
+
+        function selectedLabel() {
+          return select.selectedOptions[0]?.value ? select.selectedOptions[0].textContent.trim() : "";
+        }
+
+        function closeList() {
+          list.classList.add("hidden");
+          input.setAttribute("aria-expanded", "false");
+        }
+
+        function updateValidity() {
+          if (!input.value.trim() || select.value) {
+            input.setCustomValidity("");
+          } else {
+            input.setCustomValidity("Choose one of the suggested options.");
+          }
+        }
+
+        function choose(option) {
+          select.value = option.value;
+          input.value = option.textContent.trim();
+          updateValidity();
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+          closeList();
+        }
+
+        function renderList() {
+          const query = input.value.trim().toLowerCase();
+          const matches = availableOptions()
+            .filter((option) => option.textContent.toLowerCase().includes(query))
+            .slice(0, 12);
+
+          list.replaceChildren();
+          if (!matches.length) {
+            const empty = document.createElement("p");
+            empty.className = "px-3 py-2 text-slate-500";
+            empty.textContent = "No matching options";
+            list.append(empty);
+          } else {
+            matches.forEach((option) => {
+              const item = document.createElement("button");
+              item.type = "button";
+              item.className = "block w-full rounded-lg px-3 py-2 text-left text-slate-700 hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-50 focus:text-blue-700 focus:outline-none";
+              item.textContent = option.textContent.trim();
+              item.addEventListener("mousedown", (event) => event.preventDefault());
+              item.addEventListener("click", () => choose(option));
+              list.append(item);
+            });
+          }
+
+          list.classList.remove("hidden");
+          input.setAttribute("aria-expanded", "true");
+        }
+
+        input.value = selectedLabel();
+        select.insertAdjacentElement("afterend", wrapper);
+        wrapper.append(input, list);
+
+        input.addEventListener("focus", renderList);
+        input.addEventListener("input", () => {
+          const exact = availableOptions().find((option) => option.textContent.trim().toLowerCase() === input.value.trim().toLowerCase());
+          select.value = exact?.value || "";
+          updateValidity();
+          updatingFromInput = true;
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+          updatingFromInput = false;
+          renderList();
+        });
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            const first = list.querySelector("button");
+            if (first && !list.classList.contains("hidden")) {
+              event.preventDefault();
+              first.click();
+            }
+          }
+          if (event.key === "Escape") closeList();
+        });
+        input.addEventListener("blur", () => {
+          window.setTimeout(() => {
+            input.value = selectedLabel();
+            updateValidity();
+            closeList();
+          }, 120);
+        });
+        select.addEventListener("change", () => {
+          if (!updatingFromInput) {
+            input.value = selectedLabel();
+            updateValidity();
+          }
+        });
+        updateValidity();
+      });
+    }
+
+    function filterSessionAppointmentFields(root = document) {
+      const forms = [
+        ...(root.matches?.("form") ? [root] : []),
+        ...(root.querySelectorAll?.("form") ?? []),
+      ];
+
+      forms.forEach((form) => {
+        const patientSelect = form.querySelector("select[name='patient']");
+        const appointmentSelect = form.querySelector("select[name='appointment']");
+        if (!patientSelect || !appointmentSelect) return;
+
+        if (!appointmentSelect.allAppointmentOptions) {
+          appointmentSelect.allAppointmentOptions = Array.from(appointmentSelect.options).map((option) => option.cloneNode(true));
+        }
+
+        const patientId = patientSelect.value;
+        const currentValue = appointmentSelect.value;
+        const filteredOptions = appointmentSelect.allAppointmentOptions
+          .filter((option) => {
+            if (option.value === "") return true;
+            return patientId && option.dataset.patientId === patientId;
+          })
+          .map((option) => option.cloneNode(true));
+
+        appointmentSelect.replaceChildren(...filteredOptions);
+        appointmentSelect.value = filteredOptions.some((option) => option.value === currentValue) ? currentValue : "";
+        appointmentSelect.dispatchEvent(new Event("change", { bubbles: true }));
+
+        if (patientSelect.dataset.appointmentFilterReady === "true") return;
+        patientSelect.dataset.appointmentFilterReady = "true";
+        patientSelect.addEventListener("change", () => filterSessionAppointmentFields(form));
+      });
+    }
+
+    function syncNavigation() {
+      const path = window.location.pathname;
+      document.querySelectorAll("[data-nav-link]").forEach((link) => {
+        const section = link.dataset.navLink;
+        const active =
+          (section === "dashboard" && path === "/") ||
+          (section !== "dashboard" && path.startsWith(`/${section}/`));
+
+        link.classList.toggle("bg-blue-50", active);
+        link.classList.toggle("text-blue-700", active);
+        link.classList.toggle("text-slate-600", !active);
+        link.classList.toggle("hover:bg-slate-50", !active);
+        link.classList.toggle("hover:text-slate-950", !active);
+      });
+    }
+
+    function reveal(root = document) {
+      const scope = root.querySelector?.(mainTarget) || document.querySelector(mainTarget);
+      if (!scope) return;
+      const cards = scope.querySelectorAll(".card, section, article, .surface");
+      animate(cards, { opacity: [0, 1], y: [16, 0] }, { delay: stagger(0.05), duration: 0.35, easing: "ease-out" });
+    }
+
+    let historyNavigation = false;
+
+    document.body.addEventListener("htmx:configRequest", (event) => {
+      event.detail.headers["X-CSRFToken"] = csrfToken();
+      event.detail.headers["Cache-Control"] = "no-cache";
+      event.detail.headers["Pragma"] = "no-cache";
+    });
+
+    document.body.addEventListener("htmx:beforeRequest", () => {
+      if (historyNavigation) return;
+      document.querySelector(mainTarget)?.classList.add("is-transitioning");
+    });
+
+  document.body.addEventListener("htmx:afterSettle", (event) => {
+    historyNavigation = false;
+    document.querySelector(mainTarget)?.classList.remove("is-transitioning");
+    syncNavigation();
+    enhanceSearchableSelects(event.detail.target ?? document);
+    filterSessionAppointmentFields(event.detail.target ?? document);
+  });
+
+  document.body.addEventListener("htmx:afterSwap", (event) => {
+    const swapped = document.querySelector(mainTarget) ?? event.detail.target;
+    enhanceHtmx(swapped);
+    filterSessionAppointmentFields(swapped);
+    enhanceSearchableSelects(swapped);
+      if (!historyNavigation) reveal(document);
+      if (event.detail.target?.matches?.("form, #main-content")) {
+        animate(event.detail.target, { backgroundColor: ["#dcfce7", "rgba(255,255,255,0)"] }, { duration: 0.6 });
+      }
+    });
+
+    document.body.addEventListener("htmx:historyRestore", () => {
+      historyNavigation = false;
+      document.querySelector(mainTarget)?.classList.remove("is-transitioning");
+      enhanceHtmx();
+      filterSessionAppointmentFields();
+      enhanceSearchableSelects();
+      syncNavigation();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      enhanceHtmx();
+      filterSessionAppointmentFields();
+      enhanceSearchableSelects();
+      syncNavigation();
+      reveal();
+    });
+
+    window.addEventListener("popstate", () => {
+      historyNavigation = true;
+      syncNavigation();
+    });
+
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) {
+        document.querySelector(mainTarget)?.classList.remove("is-transitioning");
+        syncNavigation();
+      }
+    });
+  </script>
+</head>
+<body class="h-full text-slate-900 antialiased" hx-indicator="#page-spinner">
+  <div id="page-spinner" class="htmx-indicator fixed right-5 top-5 z-50 flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 shadow-lg">
+    <span class="spinner"></span>
+    Syncing
+  </div>
+  {% if user.is_authenticated %}
+    <div class="min-h-full lg:flex">
+      {% include "crm/components/sidebar.html" %}
+      <div class="flex min-w-0 flex-1 flex-col lg:pl-72">
+        {% include "crm/components/topbar.html" %}
+        <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+          <div id="main-content" class="mx-auto max-w-7xl">
+  {% else %}
+    <main class="flex min-h-full items-center justify-center px-4 py-12">
+      <div id="main-content" class="w-full">
+  {% endif %}
+
+  {% if messages %}
+    <div class="mb-5 space-y-2" x-data="{ show: true }" x-init="setTimeout(() => show = false, 4500)" x-show="show" x-transition>
+      {% for message in messages %}
+        <p class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+
+  {% if user.is_authenticated %}
+          </div>
+        </main>
+      </div>
+    </div>
+  {% else %}
+      </div>
+    </main>
+  {% endif %}
+</body>
+</html>
