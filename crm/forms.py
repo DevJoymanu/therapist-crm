@@ -1,7 +1,5 @@
 ﻿from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import DurationField, ExpressionWrapper, F
-from django.db.models.functions import Abs, Now
 from datetime import timedelta
 
 from .models import Appointment, Patient, ScoringCriterion, SessionNote
@@ -161,12 +159,7 @@ class SessionNoteForm(StyledModelForm):
         self.fields["appointment"].queryset = (
             Appointment.objects.filter(patient__therapist=therapist)
             .select_related("patient")
-            .annotate(
-                appointment_distance=Abs(
-                    ExpressionWrapper(F("starts_at") - Now(), output_field=DurationField())
-                )
-            )
-            .order_by("appointment_distance", "starts_at")
+            .order_by("-starts_at")
         )
 
     def clean(self):
