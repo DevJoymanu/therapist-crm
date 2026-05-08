@@ -124,10 +124,7 @@ class AppointmentDetailView(TherapistRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        try:
-            context["linked_session"] = self.object.sessionnote
-        except SessionNote.DoesNotExist:
-            context["linked_session"] = None
+        context["linked_session"] = SessionNote.objects.filter(appointment=self.object).first()
         return context
 
 
