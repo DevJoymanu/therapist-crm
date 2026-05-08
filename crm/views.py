@@ -122,6 +122,14 @@ class AppointmentDetailView(TherapistRequiredMixin, DetailView):
             "patient"
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context["linked_session"] = self.object.sessionnote
+        except SessionNote.DoesNotExist:
+            context["linked_session"] = None
+        return context
+
 
 class AppointmentCreateView(TherapistRequiredMixin, CreateView):
     model = Appointment
@@ -173,6 +181,32 @@ class SessionCreateView(TherapistRequiredMixin, CreateView):
     form_class = SessionNoteForm
     template_name = "crm/session_form.html"
 
+    def _appointment_from_param(self):
+        """Return the Appointment from ?appointment= if valid for this therapist (cached)."""
+        if hasattr(self, "_appt_param_cache"):
+            return self._appt_param_cache
+        pk = self.request.GET.get("appointment")
+        if not pk:
+            self._appt_param_cache = None
+        else:
+            try:
+                self._appt_param_cache = Appointment.objects.filter(
+                    patient__therapist=self.request.user, pk=pk
+                ).select_related("patient").get()
+            except (Appointment.DoesNotExist, ValueError):
+                self._appt_param_cache = None
+        return self._appt_param_cache
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if not getattr(self, "object", None):
+            appt = self._appointment_from_param()
+            if appt:
+                initial["appointment"] = appt.pk
+                initial["patient"] = appt.patient_id
+                initial["session_date"] = appt.starts_at.date()
+        return initial
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["therapist"] = self.request.user
@@ -190,6 +224,8 @@ class SessionCreateView(TherapistRequiredMixin, CreateView):
             {"criterion": criterion, "value": existing_scores.get(criterion.pk, "")}
             for criterion in criteria_for(self.request.user)
         ]
+        if not getattr(self, "object", None):
+            context["linked_appointment"] = self._appointment_from_param()
         return context
 
     def form_valid(self, form):

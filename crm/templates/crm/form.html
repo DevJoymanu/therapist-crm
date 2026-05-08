@@ -25,15 +25,21 @@
           <div class="dob-grid">
             <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="DD"
                    class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                   x-model="dd" @input="advance($event, 2, $refs.mm)" x-ref="dd">
+                   x-model="dd" @input="advance($event, 2, $refs.mm); ageInput = ''" x-ref="dd">
             <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="MM"
                    class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                   x-model="mm" @input="advance($event, 2, $refs.yyyy)" x-ref="mm">
+                   x-model="mm" @input="advance($event, 2, $refs.yyyy); ageInput = ''" x-ref="mm">
             <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="YYYY"
                    class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                   x-model="yyyy" x-ref="yyyy">
+                   x-model="yyyy" @input="ageInput = ''" x-ref="yyyy">
           </div>
-          <p class="dob-age" x-cloak x-show="age !== null" x-text="age + ' years old'"></p>
+          <div class="mt-2 flex items-center gap-2">
+            <span class="text-xs text-slate-400">or enter age:</span>
+            <input type="number" inputmode="numeric" min="0" max="130" placeholder="e.g. 35"
+                   class="h-8 w-20 rounded-lg border border-slate-200 bg-white px-2 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                   x-model.number="ageInput" @input="setFromAge()">
+            <span class="text-xs text-slate-500" x-cloak x-show="age !== null" x-text="age + ' yrs old'"></span>
+          </div>
           {% for error in field.errors %}
             <p class="mt-2 text-sm text-rose-600">{{ error }}</p>
           {% endfor %}

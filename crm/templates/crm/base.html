@@ -351,7 +351,7 @@
 
     window.dobWidget = function dobWidget(iso) {
       return {
-        dd: '', mm: '', yyyy: '',
+        dd: '', mm: '', yyyy: '', ageInput: '',
         get isoValue() {
           const d = parseInt(this.dd), m = parseInt(this.mm), y = parseInt(this.yyyy);
           if (!d || !m || isNaN(y) || String(y).length !== 4) return '';
@@ -368,6 +368,13 @@
           return a >= 0 ? a : null;
         },
         get currentYear() { return new Date().getFullYear(); },
+        setFromAge() {
+          const a = parseInt(this.ageInput);
+          if (isNaN(a) || a < 0 || a > 130) return;
+          this.yyyy = String(this.currentYear - a);
+          if (!this.mm) this.mm = '1';
+          if (!this.dd) this.dd = '1';
+        },
         init() {
           if (!iso) return;
           const parts = String(iso).split('-');

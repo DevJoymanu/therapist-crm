@@ -10,6 +10,11 @@
     <p class="mt-2 text-sm text-slate-500">{{ appointment.starts_at|date:"M j, Y H:i" }} to {{ appointment.ends_at|date:"H:i" }}</p>
   </div>
   <div class="detail-actions">
+    {% if linked_session %}
+      <a class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-100" href="{{ linked_session.get_absolute_url }}">View session notes</a>
+    {% else %}
+      <a class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:session_create' %}?appointment={{ appointment.pk }}">Add session</a>
+    {% endif %}
     <a class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50" href="{% url 'crm:appointment_update' appointment.pk %}">Reschedule</a>
     <a class="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-rose-600/20 hover:bg-rose-700" href="{% url 'crm:appointment_delete' appointment.pk %}">Cancel</a>
   </div>
@@ -33,5 +38,53 @@
 <section class="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
   <h2 class="text-base font-semibold text-slate-950">Internal notes</h2>
   <p class="mt-3 text-sm leading-6 text-slate-600">{{ appointment.internal_notes|linebreaksbr|default:"No notes." }}</p>
+</section>
+
+<section class="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
+  <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+    <div>
+      <h2 class="text-base font-semibold text-slate-950">Session notes</h2>
+      <p class="mt-1 text-sm text-slate-500">Clinical documentation linked to this appointment.</p>
+    </div>
+    {% if linked_session %}
+      <a class="text-sm font-semibold text-blue-700 hover:text-blue-800" href="{% url 'crm:session_update' linked_session.pk %}">Edit</a>
+    {% else %}
+      <a class="text-sm font-semibold text-blue-700 hover:text-blue-800" href="{% url 'crm:session_create' %}?appointment={{ appointment.pk }}">Add</a>
+    {% endif %}
+  </div>
+  {% if linked_session %}
+    <div class="divide-y divide-slate-100">
+      <div class="grid gap-4 p-5 sm:grid-cols-3">
+        <div>
+          <p class="text-xs font-medium text-slate-500">Date</p>
+          <p class="mt-1 text-sm font-semibold text-slate-950">{{ linked_session.session_date }}</p>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-slate-500">Scores</p>
+          <p class="mt-1 text-sm font-semibold text-slate-950">{{ linked_session.scores.count }} recorded</p>
+        </div>
+        <div class="sm:text-right">
+          <a class="inline-block rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50" href="{{ linked_session.get_absolute_url }}">View full notes</a>
+        </div>
+      </div>
+      {% if linked_session.presenting_concerns %}
+        <div class="px-5 py-4">
+          <p class="text-xs font-medium text-slate-500">Presenting concerns</p>
+          <p class="mt-2 text-sm leading-6 text-slate-600">{{ linked_session.presenting_concerns|truncatechars:300 }}</p>
+        </div>
+      {% endif %}
+      {% if linked_session.plan %}
+        <div class="px-5 py-4">
+          <p class="text-xs font-medium text-slate-500">Plan</p>
+          <p class="mt-2 text-sm leading-6 text-slate-600">{{ linked_session.plan|truncatechars:300 }}</p>
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="flex flex-col items-center gap-4 px-5 py-10 text-center">
+      <p class="text-sm text-slate-500">No session notes recorded for this appointment yet.</p>
+      <a class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:session_create' %}?appointment={{ appointment.pk }}">Add session notes</a>
+    </div>
+  {% endif %}
 </section>
 {% endblock %}
