@@ -17,10 +17,10 @@
   </div>
 
   <section class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-    {% include "crm/components/metric_card.html" with label="Total patients" value=patient_count hint="Active" tone="blue" %}
-    {% include "crm/components/metric_card.html" with label="Sessions this week" value=sessions_this_week hint="Clinical" tone="blue" %}
-    {% include "crm/components/metric_card.html" with label="High-risk patients" value=high_risk_scores|length hint="Review" tone="rose" %}
-    {% include "crm/components/metric_card.html" with label="Upcoming appointments" value=upcoming_appointments|length hint="Scheduled" tone="amber" %}
+    {% include "crm/components/metric_card.html" with label="Total patients" value=patient_count hint="Active" tone="blue" url="/patients/" %}
+    {% include "crm/components/metric_card.html" with label="Sessions this week" value=sessions_this_week hint="Clinical" tone="blue" url="/sessions/" %}
+    {% include "crm/components/metric_card.html" with label="High-risk patients" value=high_risk_scores|length hint="Review" tone="rose" url="/patients/" %}
+    {% include "crm/components/metric_card.html" with label="Upcoming appointments" value=upcoming_appointments|length hint="Scheduled" tone="amber" url="/appointments/" %}
   </section>
 
   <section class="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.8fr)]">
