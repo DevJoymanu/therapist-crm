@@ -48,7 +48,7 @@
       </div>
       <div class="divide-y divide-slate-100">
         {% for appointment in upcoming_appointments %}
-        <a href="{{ appointment.get_absolute_url }}" class="flex items-center justify-between gap-4 px-5 py-4 hover:bg-slate-50">
+        <a href="{{ appointment.get_absolute_url }}" class="flex items-center justify-between gap-4 px-5 py-4 hover:bg-slate-50 active:bg-slate-100">
           <div class="min-w-0">
             <p class="truncate text-sm font-semibold text-slate-950">{{ appointment.patient.full_name }}</p>
             <p class="mt-1 text-sm text-slate-500">{{ appointment.location|default:"No location" }}</p>
@@ -76,7 +76,7 @@
       </div>
       <div class="divide-y divide-slate-100">
         {% for session in recent_sessions %}
-        <a href="{{ session.get_absolute_url }}" class="block px-5 py-4 hover:bg-slate-50">
+        <a href="{{ session.get_absolute_url }}" class="block px-5 py-4 hover:bg-slate-50 active:bg-slate-100">
           <div class="flex items-center justify-between gap-4">
             <p class="text-sm font-semibold text-slate-950">{{ session.patient.full_name }}</p>
             <p class="text-sm text-slate-500">{{ session.session_date }}</p>
@@ -98,7 +98,7 @@
       </div>
       <div class="divide-y divide-slate-100">
         {% for score in high_risk_scores %}
-        <a href="{{ score.session.get_absolute_url }}" class="flex items-center justify-between gap-4 px-5 py-4 hover:bg-rose-50/50">
+        <a href="{{ score.session.get_absolute_url }}" class="flex items-center justify-between gap-4 px-5 py-4 hover:bg-rose-50/50 active:bg-rose-100/50">
           <div>
             <p class="text-sm font-semibold text-slate-950">{{ score.session.patient.full_name }}</p>
             <p class="mt-1 text-sm text-slate-500">{{ score.criterion.name }} score from {{ score.session.session_date }}</p>

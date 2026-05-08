@@ -17,7 +17,7 @@
   {# Mobile card list — hidden md+ #}
   <div class="md:hidden">
     {% for appointment in appointments %}
-      <a href="{{ appointment.get_absolute_url }}" class="flex items-center gap-4 border-b border-slate-100 px-5 py-4 last:border-0 hover:bg-slate-50">
+      <a href="{{ appointment.get_absolute_url }}" class="flex items-center gap-4 border-b border-slate-100 px-5 py-4 last:border-0 hover:bg-slate-50 active:bg-slate-100">
         <div class="min-w-0 flex-1">
           <p class="font-semibold text-slate-950">{{ appointment.patient.full_name }}</p>
           <p class="mt-1 text-sm text-slate-500">{{ appointment.starts_at|date:"M j, Y" }} · {{ appointment.starts_at|date:"H:i" }}–{{ appointment.ends_at|date:"H:i" }}</p>
@@ -46,7 +46,7 @@
       </thead>
       <tbody id="appointment-rows" class="divide-y divide-slate-100">
         {% for appointment in appointments %}
-          <tr class="hover:bg-slate-50">
+          <tr class="hover:bg-slate-50" onclick="if(!event.target.closest('a,button'))this.querySelector('td:last-child a').click()">
             <td class="px-5 py-4"><a class="font-semibold text-slate-950 hover:text-blue-700" href="{{ appointment.patient.get_absolute_url }}">{{ appointment.patient.full_name }}</a></td>
             <td class="px-5 py-4 text-sm text-slate-600">{{ appointment.starts_at|date:"M j, Y H:i" }}</td>
             <td class="px-5 py-4 text-sm text-slate-600">{{ appointment.starts_at|date:"H:i" }}-{{ appointment.ends_at|date:"H:i" }}</td>

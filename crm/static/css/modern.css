@@ -332,6 +332,16 @@ thead th:first-child {
   min-height: 1rem;
 }
 
+/* ── Clickable table rows ───────────────────────────────────────── */
+tbody tr[onclick] {
+  cursor: pointer;
+  user-select: none;
+}
+tbody tr[onclick]:active {
+  background-color: rgb(226 232 240);
+  transform: none;
+}
+
 /* ── Dashboard chart: constrain height on very small screens ────── */
 @media (max-width: 479px) {
   #dashboardChart,
