@@ -25,4 +25,6 @@ urlpatterns = [
     path("criteria/new/", views.CriterionCreateView.as_view(), name="criterion_create"),
     path("criteria/<int:pk>/edit/", views.CriterionUpdateView.as_view(), name="criterion_update"),
     path("criteria/<int:pk>/delete/", views.CriterionDeleteView.as_view(), name="criterion_delete"),
+    path("consent/<uuid:token>/", views.ConsentFormView.as_view(), name="consent_form"),
+    path("consent/<uuid:token>/done/", views.ConsentDoneView.as_view(), name="consent_done"),
 ]

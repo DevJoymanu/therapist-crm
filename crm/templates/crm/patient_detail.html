@@ -18,6 +18,8 @@
 
 <div class="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
   <aside class="space-y-6">
+
+    <!-- Profile card -->
     <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div class="flex items-center gap-4">
         <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-lg font-bold text-blue-700">{{ patient.first_name|first }}{{ patient.last_name|first }}</div>
@@ -27,10 +29,6 @@
         </div>
       </div>
       <dl class="mt-5 space-y-4 text-sm">
-        <div>
-          <dt class="font-medium text-slate-500">Email</dt>
-          <dd class="mt-1 text-slate-900">{{ patient.email|default:"No email" }}</dd>
-        </div>
         <div>
           <dt class="font-medium text-slate-500">Phone</dt>
           {% if patient.phone %}
@@ -57,16 +55,83 @@
           {% endif %}
         </div>
         <div>
-          <dt class="font-medium text-slate-500">Emergency contact</dt>
-          <dd class="mt-1 text-slate-900">{{ patient.emergency_contact|default:"Not recorded" }}</dd>
+          <dt class="font-medium text-slate-500">Email</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.email|default:"Not recorded" }}</dd>
         </div>
+        {% if patient.preferred_contact_method %}
+        <div>
+          <dt class="font-medium text-slate-500">Preferred contact</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.get_preferred_contact_method_display }}</dd>
+        </div>
+        {% endif %}
+        {% if patient.ok_to_leave_message %}
+        <div>
+          <dt class="font-medium text-slate-500">OK to leave message</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.get_ok_to_leave_message_display }}</dd>
+        </div>
+        {% endif %}
       </dl>
     </section>
 
+    <!-- Emergency contact -->
+    {% if patient.emergency_contact_name %}
     <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h2 class="text-base font-semibold text-slate-950">Medical history</h2>
-      <p class="mt-3 text-sm leading-6 text-slate-600">{{ patient.medical_history|linebreaksbr|default:"No medical history recorded." }}</p>
+      <h2 class="text-base font-semibold text-slate-950">Emergency Contact</h2>
+      <dl class="mt-4 space-y-3 text-sm">
+        <div>
+          <dt class="font-medium text-slate-500">Name</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.emergency_contact_name }}</dd>
+        </div>
+        {% if patient.emergency_contact_relationship %}
+        <div>
+          <dt class="font-medium text-slate-500">Relationship</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.emergency_contact_relationship }}</dd>
+        </div>
+        {% endif %}
+        {% if patient.emergency_contact_phone1 %}
+        <div>
+          <dt class="font-medium text-slate-500">Numbers</dt>
+          <dd class="mt-1 text-slate-900">{{ patient.emergency_contact_phone1 }}</dd>
+          {% if patient.emergency_contact_phone2 %}<dd class="mt-1 text-slate-900">{{ patient.emergency_contact_phone2 }}</dd>{% endif %}
+        </div>
+        {% endif %}
+      </dl>
     </section>
+    {% endif %}
+
+    <!-- Consent status -->
+    <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" x-data="{ copied: false }">
+      <h2 class="text-base font-semibold text-slate-950">Client Consent</h2>
+      {% if consent %}
+        {% if consent.is_signed %}
+          <div class="mt-3 flex items-center gap-2">
+            <span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100">
+              <svg class="h-3 w-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z" clip-rule="evenodd"/></svg>
+            </span>
+            <span class="text-sm font-medium text-emerald-700">Signed</span>
+          </div>
+          <dl class="mt-3 space-y-2 text-sm">
+            <div><dt class="font-medium text-slate-500">Client name</dt><dd class="mt-0.5 text-slate-900">{{ consent.client_name }}</dd></div>
+            <div><dt class="font-medium text-slate-500">Signed date</dt><dd class="mt-0.5 text-slate-900">{{ consent.client_signed_date }}</dd></div>
+            {% if consent.counsellor_signed_date %}<div><dt class="font-medium text-slate-500">Counsellor signed</dt><dd class="mt-0.5 text-slate-900">{{ consent.counsellor_signed_date }}</dd></div>{% endif %}
+          </dl>
+        {% else %}
+          <p class="mt-2 text-sm text-amber-700">Consent not yet signed.</p>
+        {% endif %}
+        <div class="mt-4">
+          <p class="mb-2 text-xs text-slate-500">Share consent form link with client:</p>
+          <button type="button"
+                  @click="navigator.clipboard.writeText('{{ request.scheme }}://{{ request.get_host }}{{ consent.get_form_url }}'); copied = true; setTimeout(() => copied = false, 2500)"
+                  class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs font-mono text-slate-600 hover:bg-white hover:border-blue-300 transition">
+            <span x-show="!copied">Copy link</span>
+            <span x-show="copied" x-cloak class="text-emerald-600">Copied!</span>
+          </button>
+        </div>
+      {% else %}
+        <p class="mt-2 text-sm text-slate-500">No consent record found.</p>
+      {% endif %}
+    </section>
+
   </aside>
 
   <div class="space-y-6" x-data="{ tab: 'overview' }">
@@ -74,12 +139,14 @@
       <div class="border-b border-slate-100 px-5 pt-4">
         <nav class="tab-bar -mb-px gap-6">
           <button type="button" @click="tab = 'overview'" :class="tab === 'overview' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Overview</button>
+          <button type="button" @click="tab = 'profile'" :class="tab === 'profile' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Intake Profile</button>
           <button type="button" @click="tab = 'notes'" :class="tab === 'notes' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Session Notes</button>
-          <button type="button" @click="tab = 'progress'; setTimeout(() => window.dispatchEvent(new Event('resize')), 40)" :class="tab === 'progress' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Progress Tracking</button>
+          <button type="button" @click="tab = 'progress'; setTimeout(() => window.dispatchEvent(new Event('resize')), 40)" :class="tab === 'progress' ? 'border-blue-600 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800'" class="border-b-2 px-1 pb-4 text-sm font-semibold">Progress</button>
         </nav>
       </div>
 
-      <section id="overview" x-show="tab === 'overview'" x-transition class="grid gap-4 p-5 sm:grid-cols-3">
+      <!-- Overview tab -->
+      <section x-show="tab === 'overview'" x-transition class="grid gap-4 p-5 sm:grid-cols-3">
         {% if latest_algorithm %}
           <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <p class="text-sm font-medium text-slate-500">Wellness score</p>
@@ -100,11 +167,62 @@
           <p class="col-span-full text-sm text-slate-500">No score data yet.</p>
         {% endif %}
       </section>
+
+      <!-- Intake Profile tab -->
+      <section x-show="tab === 'profile'" x-cloak x-transition class="p-5">
+        <div class="grid gap-8 sm:grid-cols-2">
+
+          <div>
+            <h3 class="mb-3 text-sm font-semibold text-slate-700 uppercase tracking-wide">Personal Details</h3>
+            <dl class="space-y-3 text-sm">
+              {% if patient.date_of_birth %}<div><dt class="text-slate-500">Date of birth</dt><dd class="mt-0.5 text-slate-900">{{ patient.date_of_birth }}</dd></div>{% endif %}
+              {% if patient.gender %}<div><dt class="text-slate-500">Gender</dt><dd class="mt-0.5 text-slate-900">{{ patient.get_gender_display }}</dd></div>{% endif %}
+              {% if patient.nationality %}<div><dt class="text-slate-500">Nationality</dt><dd class="mt-0.5 text-slate-900">{{ patient.nationality }}</dd></div>{% endif %}
+              {% if patient.marital_status %}<div><dt class="text-slate-500">Marital status</dt><dd class="mt-0.5 text-slate-900">{{ patient.get_marital_status_display }}</dd></div>{% endif %}
+              {% if patient.religion %}<div><dt class="text-slate-500">Religion</dt><dd class="mt-0.5 text-slate-900">{{ patient.religion }}</dd></div>{% endif %}
+              {% if patient.occupation %}<div><dt class="text-slate-500">Occupation</dt><dd class="mt-0.5 text-slate-900">{{ patient.occupation }}</dd></div>{% endif %}
+              {% if patient.address %}<div><dt class="text-slate-500">Address</dt><dd class="mt-0.5 text-slate-900 whitespace-pre-line">{{ patient.address }}</dd></div>{% endif %}
+            </dl>
+          </div>
+
+          <div>
+            <h3 class="mb-3 text-sm font-semibold text-slate-700 uppercase tracking-wide">Referral & History</h3>
+            <dl class="space-y-3 text-sm">
+              {% if patient.referral_source %}<div><dt class="text-slate-500">Referred by</dt><dd class="mt-0.5 text-slate-900">{{ patient.get_referral_source_display }}</dd></div>{% endif %}
+              {% if patient.used_counselling_before %}<div><dt class="text-slate-500">Used counselling before</dt><dd class="mt-0.5 text-slate-900">{{ patient.get_used_counselling_before_display }}</dd></div>{% endif %}
+              {% if patient.ok_to_contact_by_email %}<div><dt class="text-slate-500">Contact by email</dt><dd class="mt-0.5 text-slate-900">{{ patient.get_ok_to_contact_by_email_display }}</dd></div>{% endif %}
+            </dl>
+          </div>
+
+          <div class="sm:col-span-2">
+            <h3 class="mb-3 text-sm font-semibold text-slate-700 uppercase tracking-wide">Health & Medical</h3>
+            <div class="space-y-4">
+              <div>
+                <p class="text-xs font-medium text-slate-500 mb-1">Previous treatment / counselling / therapy</p>
+                <p class="text-sm text-slate-700 leading-6">{{ patient.previous_treatment|linebreaksbr|default:"Not recorded." }}</p>
+              </div>
+              <div>
+                <p class="text-xs font-medium text-slate-500 mb-1">Current medication</p>
+                <p class="text-sm text-slate-700 leading-6">{{ patient.current_medication|linebreaksbr|default:"None recorded." }}</p>
+              </div>
+            </div>
+          </div>
+
+          {% if patient.notes %}
+          <div class="sm:col-span-2">
+            <h3 class="mb-3 text-sm font-semibold text-slate-700 uppercase tracking-wide">Internal Notes</h3>
+            <p class="text-sm text-slate-700 leading-6">{{ patient.notes|linebreaksbr }}</p>
+          </div>
+          {% endif %}
+
+        </div>
+      </section>
     </div>
 
-    <section id="progress" x-cloak x-show="tab === 'progress'" x-transition class="rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <!-- Progress tab (outside the white card) -->
+    <section x-cloak x-show="tab === 'progress'" x-transition class="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div class="border-b border-slate-100 px-5 py-4">
-        <h2 class="text-base font-semibold text-slate-950">Score visualization</h2>
+        <h2 class="text-base font-semibold text-slate-950">Score visualisation</h2>
         <p class="mt-1 text-sm text-slate-500">Mood, progress, and risk over time.</p>
       </div>
       <div class="h-80 p-5">
@@ -113,7 +231,8 @@
       </div>
     </section>
 
-    <section id="notes" x-cloak x-show="tab === 'notes'" x-transition class="grid gap-6 xl:grid-cols-2">
+    <!-- Session notes + appointments (outside the white card) -->
+    <section x-cloak x-show="tab === 'notes'" x-transition class="grid gap-6 xl:grid-cols-2">
       <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h2 class="text-base font-semibold text-slate-950">Session notes</h2>
@@ -154,6 +273,7 @@
         </div>
       </div>
     </section>
+
   </div>
 </div>
 {% endblock %}

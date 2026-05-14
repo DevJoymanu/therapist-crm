@@ -1,0 +1,221 @@
+{% extends "crm/base.html" %}
+
+{% block title %}{% if form.instance.pk %}Edit {{ form.instance.full_name }}{% else %}New Client Intake{% endif %} | Therapist CRM{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+  <p class="text-sm font-medium text-blue-700">Pre-Counselling</p>
+  <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">
+    {% if form.instance.pk %}Update client details{% else %}New client intake{% endif %}
+  </h1>
+  <p class="mt-2 text-sm text-slate-500">
+    {% if form.instance.pk %}Update the client's intake information.{% else %}Complete the client intake form. All information is confidential under the Data Protection Act.{% endif %}
+  </p>
+</div>
+
+<form method="post" class="space-y-6" hx-post="{{ request.path }}" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <!-- CLIENT INFORMATION -->
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="mb-5 border-b border-slate-100 pb-4">
+      <h2 class="text-base font-semibold text-slate-950">Client Information</h2>
+      <p class="mt-1 text-sm text-slate-500">Basic personal details.</p>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.first_name.id_for_label }}">Surname <span class="text-rose-500">*</span></label>
+        {{ form.last_name }}
+        {% for error in form.last_name.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.first_name.id_for_label }}">First Name <span class="text-rose-500">*</span></label>
+        {{ form.first_name }}
+        {% for error in form.first_name.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.gender.id_for_label }}">M / F</label>
+        {{ form.gender }}
+        {% for error in form.gender.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div x-data="dobWidget('{{ form.date_of_birth.value|default:'' }}')" x-init="init()">
+        <label class="mb-2 block text-sm font-medium text-slate-700">Date of Birth</label>
+        <input type="hidden" name="date_of_birth" :value="isoValue">
+        <div class="dob-grid">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="DD"
+                 class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                 x-model="dd" @input="advance($event, 2, $refs.mm); ageInput = ''" x-ref="dd">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="MM"
+                 class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                 x-model="mm" @input="advance($event, 2, $refs.yyyy); ageInput = ''" x-ref="mm">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="YYYY"
+                 class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                 x-model="yyyy" @input="ageInput = ''" x-ref="yyyy">
+        </div>
+        <div class="mt-2 flex items-center gap-2">
+          <span class="text-xs text-slate-400">or enter age:</span>
+          <input type="number" inputmode="numeric" min="0" max="130" placeholder="e.g. 35"
+                 class="h-8 w-20 rounded-lg border border-slate-200 bg-white px-2 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                 x-model.number="ageInput" @input="setFromAge()">
+          <span class="text-xs text-slate-500" x-cloak x-show="age !== null" x-text="age + ' yrs old'"></span>
+        </div>
+        {% for error in form.date_of_birth.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.nationality.id_for_label }}">Nationality</label>
+        {{ form.nationality }}
+        {% for error in form.nationality.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.marital_status.id_for_label }}">Marital Status</label>
+        {{ form.marital_status }}
+        {% for error in form.marital_status.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.religion.id_for_label }}">Religion</label>
+        {{ form.religion }}
+        {% for error in form.religion.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.occupation.id_for_label }}">Occupation</label>
+        {{ form.occupation }}
+        {% for error in form.occupation.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+
+      <div class="sm:col-span-2">
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.address.id_for_label }}">Address</label>
+        {{ form.address }}
+        {% for error in form.address.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.phone.id_for_label }}">Contact Number</label>
+        {{ form.phone }}
+        {% for error in form.phone.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.email.id_for_label }}">Email</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMERGENCY CONTACT -->
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="mb-5 border-b border-slate-100 pb-4">
+      <h2 class="text-base font-semibold text-slate-950">Emergency Contact</h2>
+      <p class="mt-1 text-sm text-slate-500">Please provide at least 2 contact numbers.</p>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_name.id_for_label }}">Full Name</label>
+        {{ form.emergency_contact_name }}
+        {% for error in form.emergency_contact_name.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_relationship.id_for_label }}">Relationship</label>
+        {{ form.emergency_contact_relationship }}
+        {% for error in form.emergency_contact_relationship.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone1.id_for_label }}">Contact Number 1</label>
+        {{ form.emergency_contact_phone1 }}
+        {% for error in form.emergency_contact_phone1.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone2.id_for_label }}">Contact Number 2</label>
+        {{ form.emergency_contact_phone2 }}
+        {% for error in form.emergency_contact_phone2.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- HEALTH & MEDICAL -->
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="mb-5 border-b border-slate-100 pb-4">
+      <h2 class="text-base font-semibold text-slate-950">Health & Medical Information</h2>
+    </div>
+    <div class="space-y-5">
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.previous_treatment.id_for_label }}">Previous Treatment / Counselling / Therapy Received</label>
+        {{ form.previous_treatment }}
+        {% for error in form.previous_treatment.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.current_medication.id_for_label }}">Are you taking any medication? If yes, provide details.</label>
+        {{ form.current_medication }}
+        {% for error in form.current_medication.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMUNICATION & REFERRAL -->
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="mb-5 border-b border-slate-100 pb-4">
+      <h2 class="text-base font-semibold text-slate-950">Communication & Referral</h2>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.ok_to_leave_message.id_for_label }}">Is it OK to leave a message on the phone?</label>
+        {{ form.ok_to_leave_message }}
+        {% for error in form.ok_to_leave_message.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.ok_to_contact_by_email.id_for_label }}">Can we contact by email?</label>
+        {{ form.ok_to_contact_by_email }}
+        {% for error in form.ok_to_contact_by_email.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.preferred_contact_method.id_for_label }}">Best way to contact</label>
+        {{ form.preferred_contact_method }}
+        {% for error in form.preferred_contact_method.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.referral_source.id_for_label }}">Who suggested this counselling?</label>
+        {{ form.referral_source }}
+        {% for error in form.referral_source.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.used_counselling_before.id_for_label }}">Have you used counselling services before?</label>
+        {{ form.used_counselling_before }}
+        {% for error in form.used_counselling_before.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERNAL -->
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div class="mb-5 border-b border-slate-100 pb-4">
+      <h2 class="text-base font-semibold text-slate-950">Internal Notes</h2>
+      <p class="mt-1 text-sm text-slate-500">Not shared with the client.</p>
+    </div>
+    <div class="space-y-5">
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.notes.id_for_label }}">Notes</label>
+        {{ form.notes }}
+        {% for error in form.notes.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="flex items-center gap-3">
+        {{ form.is_active }}
+        <label class="text-sm font-medium text-slate-700" for="{{ form.is_active.id_for_label }}">Active client</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3">
+    <a class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" href="{{ request.META.HTTP_REFERER|default:'/' }}">Cancel</a>
+    <button class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" type="submit">Save</button>
+  </div>
+</form>
+{% endblock %}

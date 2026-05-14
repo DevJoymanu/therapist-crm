@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from crm.models import Appointment, Patient, ScoreEntry, SessionNote
+from crm.models import Appointment, ClientConsent, Patient, ScoreEntry, SessionNote
 from crm.services import criteria_for
 
 
@@ -28,21 +28,21 @@ class Command(BaseCommand):
                 "last_name": "Singh",
                 "email": "maya@example.com",
                 "phone": "+1 555 0101",
-                "medical_history": "Generalized anxiety; no current medication changes.",
+                "previous_treatment": "Generalized anxiety; no current medication changes.",
             },
             {
                 "first_name": "Jonah",
                 "last_name": "Reed",
                 "email": "jonah@example.com",
                 "phone": "+1 555 0102",
-                "medical_history": "Depression history; safety plan reviewed.",
+                "previous_treatment": "Depression history; safety plan reviewed.",
             },
             {
                 "first_name": "Elena",
                 "last_name": "Morales",
                 "email": "elena@example.com",
                 "phone": "+1 555 0103",
-                "medical_history": "Work stress and sleep disruption.",
+                "previous_treatment": "Work stress and sleep disruption.",
             },
         ]
 
@@ -53,6 +53,7 @@ class Command(BaseCommand):
                 last_name=data["last_name"],
                 defaults=data,
             )
+            ClientConsent.objects.get_or_create(patient=patient)
             starts_at = timezone.now() + timedelta(days=index, hours=2)
             Appointment.objects.get_or_create(
                 patient=patient,

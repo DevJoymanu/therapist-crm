@@ -1,19 +1,28 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.http import Http404
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
+    FormView,
     ListView,
     TemplateView,
     UpdateView,
 )
 
-from .forms import AppointmentForm, PatientForm, ScoringCriterionForm, SessionNoteForm
-from .models import Appointment, Patient, ScoringCriterion, SessionNote
+from .forms import (
+    AppointmentForm,
+    ClientConsentForm,
+    PatientForm,
+    ScoringCriterionForm,
+    SessionNoteForm,
+)
+from .models import Appointment, ClientConsent, Patient, ScoringCriterion, SessionNote
 from .services import (
-    criteria_for,
     calculate_session_score,
+    criteria_for,
     dashboard_context,
     patient_queryset_for,
     patient_score_trends,
@@ -62,7 +71,7 @@ class PatientDetailView(TherapistRequiredMixin, DetailView):
     context_object_name = "patient"
 
     def get_queryset(self):
-        return patient_queryset_for(self.request.user)
+        return patient_queryset_for(self.request.user).select_related("consent")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,22 +83,28 @@ class PatientDetailView(TherapistRequiredMixin, DetailView):
         context["latest_algorithm"] = (
             calculate_session_score(latest_session) if latest_session else None
         )
+        try:
+            context["consent"] = patient.consent
+        except Exception:
+            context["consent"] = None
         return context
 
 
 class PatientCreateView(TherapistRequiredMixin, CreateView):
     model = Patient
     form_class = PatientForm
-    template_name = "crm/form.html"
+    template_name = "crm/patient_form.html"
 
     def form_valid(self, form):
         form.instance.therapist = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        ClientConsent.objects.create(patient=self.object)
+        return response
 
 
 class PatientUpdateView(TherapistRequiredMixin, UpdateView):
     form_class = PatientForm
-    template_name = "crm/form.html"
+    template_name = "crm/patient_form.html"
 
     def get_queryset(self):
         return patient_queryset_for(self.request.user)
@@ -179,7 +194,6 @@ class SessionCreateView(TherapistRequiredMixin, CreateView):
     template_name = "crm/session_form.html"
 
     def _appointment_from_param(self):
-        """Return the Appointment from ?appointment= if valid for this therapist (cached)."""
         if hasattr(self, "_appt_param_cache"):
             return self._appt_param_cache
         pk = self.request.GET.get("appointment")
@@ -187,9 +201,13 @@ class SessionCreateView(TherapistRequiredMixin, CreateView):
             self._appt_param_cache = None
         else:
             try:
-                self._appt_param_cache = Appointment.objects.filter(
-                    patient__therapist=self.request.user, pk=pk
-                ).select_related("patient").get()
+                self._appt_param_cache = (
+                    Appointment.objects.filter(
+                        patient__therapist=self.request.user, pk=pk
+                    )
+                    .select_related("patient")
+                    .get()
+                )
             except (Appointment.DoesNotExist, ValueError):
                 self._appt_param_cache = None
         return self._appt_param_cache
@@ -278,3 +296,45 @@ class CriterionDeleteView(TherapistRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return ScoringCriterion.objects.filter(therapist=self.request.user)
+
+
+class ConsentFormView(FormView):
+    template_name = "crm/consent_form.html"
+    form_class = ClientConsentForm
+
+    def _get_consent(self):
+        try:
+            return ClientConsent.objects.select_related("patient").get(
+                token=self.kwargs["token"]
+            )
+        except ClientConsent.DoesNotExist:
+            raise Http404
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        consent = self._get_consent()
+        context["consent"] = consent
+        context["already_signed"] = consent.is_signed
+        return context
+
+    def form_valid(self, form):
+        consent = self._get_consent()
+        if not consent.is_signed:
+            consent.client_name = form.cleaned_data["client_name"]
+            consent.client_signed_date = form.cleaned_data["client_signed_date"]
+            consent.save(update_fields=["client_name", "client_signed_date", "updated_at"])
+        return redirect(reverse("crm:consent_done", kwargs={"token": consent.token}))
+
+
+class ConsentDoneView(TemplateView):
+    template_name = "crm/consent_done.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context["consent"] = ClientConsent.objects.select_related("patient").get(
+                token=self.kwargs["token"]
+            )
+        except ClientConsent.DoesNotExist:
+            raise Http404
+        return context

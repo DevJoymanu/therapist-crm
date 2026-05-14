@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -14,18 +16,64 @@ class TimeStampedModel(models.Model):
 
 
 class Patient(TimeStampedModel):
+    class Gender(models.TextChoices):
+        MALE = "M", "Male"
+        FEMALE = "F", "Female"
+
+    class MaritalStatus(models.TextChoices):
+        SINGLE = "single", "Single"
+        MARRIED = "married", "Married"
+        DIVORCED = "divorced", "Divorced"
+        WIDOWED = "widowed", "Widowed"
+        SEPARATED = "separated", "Separated"
+        OTHER = "other", "Other"
+
+    class ContactMethod(models.TextChoices):
+        EMAIL = "email", "Email"
+        PHONE = "phone", "Phone"
+
+    class ReferralSource(models.TextChoices):
+        SELF = "self", "No one (Self Referral)"
+        FRIEND = "friend", "Friend"
+        FAMILY = "family", "Family Member"
+        PARTNER = "partner", "Partner"
+
+    class YesNo(models.TextChoices):
+        YES = "yes", "Yes"
+        NO = "no", "No"
+
     therapist = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="patients",
     )
+    # Client Information
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
-    email = models.EmailField(blank=True)
-    phone = models.CharField(max_length=40, blank=True)
+    gender = models.CharField(max_length=1, choices=Gender.choices, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    emergency_contact = models.CharField(max_length=160, blank=True)
-    medical_history = models.TextField(blank=True)
+    nationality = models.CharField(max_length=80, blank=True)
+    marital_status = models.CharField(max_length=10, choices=MaritalStatus.choices, blank=True)
+    religion = models.CharField(max_length=80, blank=True)
+    occupation = models.CharField(max_length=80, blank=True)
+    address = models.TextField(blank=True)
+    phone = models.CharField(max_length=40, blank=True)
+    email = models.EmailField(blank=True)
+    # Emergency Contact
+    emergency_contact_name = models.CharField(max_length=160, blank=True)
+    emergency_contact_relationship = models.CharField(max_length=80, blank=True)
+    emergency_contact_phone1 = models.CharField(max_length=40, blank=True)
+    emergency_contact_phone2 = models.CharField(max_length=40, blank=True)
+    # Health & Medical
+    previous_treatment = models.TextField(blank=True)
+    current_medication = models.TextField(blank=True)
+    # Communication
+    ok_to_leave_message = models.CharField(max_length=3, choices=YesNo.choices, blank=True)
+    ok_to_contact_by_email = models.CharField(max_length=3, choices=YesNo.choices, blank=True)
+    preferred_contact_method = models.CharField(max_length=5, choices=ContactMethod.choices, blank=True)
+    referral_source = models.CharField(max_length=7, choices=ReferralSource.choices, blank=True)
+    used_counselling_before = models.CharField(max_length=3, choices=YesNo.choices, blank=True)
+    # Internal
     notes = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
 
@@ -45,6 +93,28 @@ class Patient(TimeStampedModel):
 
     def get_absolute_url(self):
         return reverse("crm:patient_detail", kwargs={"pk": self.pk})
+
+
+class ClientConsent(TimeStampedModel):
+    patient = models.OneToOneField(
+        Patient,
+        on_delete=models.CASCADE,
+        related_name="consent",
+    )
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    client_name = models.CharField(max_length=160, blank=True)
+    client_signed_date = models.DateField(null=True, blank=True)
+    counsellor_signed_date = models.DateField(null=True, blank=True)
+
+    @property
+    def is_signed(self):
+        return bool(self.client_name and self.client_signed_date)
+
+    def get_form_url(self):
+        return reverse("crm:consent_form", kwargs={"token": self.token})
+
+    def __str__(self):
+        return f"Consent – {self.patient}"
 
 
 class Appointment(TimeStampedModel):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Appointment, Patient, ScoreEntry, ScoringCriterion, SessionNote
+from .models import Appointment, ClientConsent, Patient, ScoreEntry, ScoringCriterion, SessionNote
 
 
 class ScoreEntryInline(admin.TabularInline):
@@ -40,3 +40,11 @@ class ScoringCriterionAdmin(admin.ModelAdmin):
 class ScoreEntryAdmin(admin.ModelAdmin):
     list_display = ("session", "criterion", "value", "is_alert")
     list_filter = ("criterion",)
+
+
+@admin.register(ClientConsent)
+class ClientConsentAdmin(admin.ModelAdmin):
+    list_display = ("patient", "is_signed", "client_signed_date", "counsellor_signed_date")
+    list_filter = ("client_signed_date",)
+    search_fields = ("patient__first_name", "patient__last_name", "client_name")
+    readonly_fields = ("token",)
