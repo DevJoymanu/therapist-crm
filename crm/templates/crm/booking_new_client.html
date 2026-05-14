@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Client Registration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>.pot-field{position:absolute;left:-9999px;top:-9999px;overflow:hidden;height:1px;width:1px;}</style>
+</head>
+<body class="min-h-full text-slate-900 antialiased">
+<div class="mx-auto max-w-2xl px-4 py-10">
+
+  <div class="mb-8 text-center">
+    <p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Yanrol Systemic Family</p>
+    <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">Counselling Services &amp; Therapy</h1>
+    <div class="mx-auto mt-4 h-0.5 w-16 rounded bg-slate-300"></div>
+    <h2 class="mt-4 text-lg font-semibold text-slate-800">New Client Registration</h2>
+  </div>
+
+  <div class="mb-6 rounded-xl border border-blue-200 bg-blue-50 px-5 py-4 text-sm text-blue-800 leading-6">
+    {% if id_not_found %}
+      <strong>That Client ID wasn't found in our system.</strong> Please complete the form below — it only takes a few minutes and helps us provide the best possible care.
+    {% else %}
+      Welcome! Please fill in your details below. This information is kept strictly confidential.
+    {% endif %}
+  </div>
+
+  {% if intake_form.non_field_errors or consent_form.non_field_errors or appt_form.non_field_errors %}
+    <div class="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+      Please correct the errors highlighted below.
+    </div>
+  {% endif %}
+
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+    <div class="pot-field" aria-hidden="true">
+      <label for="id_pot_new">Website</label>
+      <input type="text" id="id_pot_new" name="pot" tabindex="-1" autocomplete="off" value="">
+    </div>
+
+    {# ── 1. Personal Details ── #}
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">1. Personal Details</h2>
+      <p class="mb-4 text-xs text-slate-500">Your basic personal information. Fields marked * are required.</p>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.last_name.id_for_label }}">Surname *</label>
+          {{ intake_form.last_name }}{% for e in intake_form.last_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.first_name.id_for_label }}">First Name *</label>
+          {{ intake_form.first_name }}{% for e in intake_form.first_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.gender.id_for_label }}">M / F</label>
+          {{ intake_form.gender }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.date_of_birth.id_for_label }}">Date of Birth</label>
+          {{ intake_form.date_of_birth }}{% for e in intake_form.date_of_birth.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.nationality.id_for_label }}">Nationality</label>
+          {{ intake_form.nationality }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.marital_status.id_for_label }}">Marital Status</label>
+          {{ intake_form.marital_status }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.religion.id_for_label }}">Religion</label>
+          {{ intake_form.religion }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.occupation.id_for_label }}">Occupation</label>
+          {{ intake_form.occupation }}
+        </div>
+        <div class="sm:col-span-2">
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.address.id_for_label }}">Address</label>
+          {{ intake_form.address }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.phone.id_for_label }}">Contact Number *</label>
+          {{ intake_form.phone }}{% for e in intake_form.phone.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.email.id_for_label }}">Email</label>
+          {{ intake_form.email }}{% for e in intake_form.email.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {# ── 2. Emergency Contact ── #}
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">2. Emergency Contact</h2>
+      <p class="mb-4 text-xs text-slate-500">Please provide at least two contact numbers.</p>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.emergency_contact_name.id_for_label }}">{{ intake_form.emergency_contact_name.label }}</label>
+          {{ intake_form.emergency_contact_name }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.emergency_contact_relationship.id_for_label }}">{{ intake_form.emergency_contact_relationship.label }}</label>
+          {{ intake_form.emergency_contact_relationship }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.emergency_contact_phone1.id_for_label }}">{{ intake_form.emergency_contact_phone1.label }}</label>
+          {{ intake_form.emergency_contact_phone1 }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.emergency_contact_phone2.id_for_label }}">{{ intake_form.emergency_contact_phone2.label }}</label>
+          {{ intake_form.emergency_contact_phone2 }}
+        </div>
+      </div>
+    </div>
+
+    {# ── 3. Health & Medical ── #}
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">3. Health &amp; Medical</h2>
+      <p class="mb-4 text-xs text-slate-500">This information is strictly confidential and helps us provide the best care.</p>
+      <div class="space-y-4">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.previous_treatment.id_for_label }}">{{ intake_form.previous_treatment.label }}</label>
+          {{ intake_form.previous_treatment }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.current_medication.id_for_label }}">{{ intake_form.current_medication.label }}</label>
+          {{ intake_form.current_medication }}
+        </div>
+      </div>
+    </div>
+
+    {# ── 4. Communication & Referral ── #}
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">4. Communication &amp; Referral</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.ok_to_leave_message.id_for_label }}">{{ intake_form.ok_to_leave_message.label }}</label>
+          {{ intake_form.ok_to_leave_message }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.ok_to_contact_by_email.id_for_label }}">{{ intake_form.ok_to_contact_by_email.label }}</label>
+          {{ intake_form.ok_to_contact_by_email }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.preferred_contact_method.id_for_label }}">{{ intake_form.preferred_contact_method.label }}</label>
+          {{ intake_form.preferred_contact_method }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.referral_source.id_for_label }}">{{ intake_form.referral_source.label }}</label>
+          {{ intake_form.referral_source }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.used_counselling_before.id_for_label }}">{{ intake_form.used_counselling_before.label }}</label>
+          {{ intake_form.used_counselling_before }}
+        </div>
+      </div>
+    </div>
+
+    {# ── 5. Consent ── #}
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">5. Client Consent</h2>
+      <div class="space-y-3 text-xs text-slate-600 leading-5 mt-3">
+        <p><strong class="text-slate-800">Confidentiality:</strong> All sessions are confidential, except where required by law (e.g. risk of harm to self or others).</p>
+        <p><strong class="text-slate-800">Sessions:</strong> 45–60 minutes. Frequency depends on your needs.</p>
+        <p><strong class="text-slate-800">Cancellation:</strong> 24 hours' notice required for cancellations.</p>
+        <p><strong class="text-slate-800">Payment:</strong> Cash, bank transfer, or mobile money — due before each session.</p>
+      </div>
+      <div class="mt-4 space-y-4">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ consent_form.client_name.id_for_label }}">{{ consent_form.client_name.label }}</label>
+          {{ consent_form.client_name }}
+          {% for e in consent_form.client_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ consent_form.client_signed_date.id_for_label }}">{{ consent_form.client_signed_date.label }}</label>
+          {{ consent_form.client_signed_date }}
+          {% for e in consent_form.client_signed_date.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          {{ consent_form.agreed }}
+          <label class="text-xs text-slate-600 leading-5" for="{{ consent_form.agreed.id_for_label }}">{{ consent_form.agreed.label }}</label>
+          {% for e in consent_form.agreed.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {# ── 6. Appointment Request ── #}
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">6. Preferred Appointment</h2>
+      <p class="mb-4 text-xs text-slate-500">Your counsellor will review availability and confirm with you directly. This is a request, not a confirmed booking.</p>
+
+      {% if appt_form.non_field_errors %}
+        <div class="mb-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{{ appt_form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="space-y-4">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ appt_form.preferred_date.id_for_label }}">{{ appt_form.preferred_date.label }} *</label>
+          {{ appt_form.preferred_date }}
+          {% for e in appt_form.preferred_date.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ appt_form.preferred_time_slot.id_for_label }}">{{ appt_form.preferred_time_slot.label }}</label>
+          {{ appt_form.preferred_time_slot }}
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ appt_form.reason.id_for_label }}">{{ appt_form.reason.label }}</label>
+          {{ appt_form.reason }}
+        </div>
+      </div>
+    </div>
+
+    <button type="submit"
+            class="w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
+      Submit Registration &amp; Request Appointment
+    </button>
+    <p class="text-center text-xs text-slate-400">Your counsellor will review your request and contact you to confirm your appointment.</p>
+  </form>
+
+  <p class="mt-8 text-center text-xs text-slate-400">All information is handled confidentially. &mdash; Yanrol Systemic Family Counselling Services &amp; Therapy</p>
+</div>
+</body>
+</html>

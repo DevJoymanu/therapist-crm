@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if link.link_type == 'consent' %}Client Consent Form{% else %}Book an Appointment{% endif %}</title>
+  <title>{% if link.link_type == 'consent' %}Client Consent Form{% elif link.link_type == 'intake' %}Client Intake Form{% else %}Book an Appointment{% endif %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
   <style>.pot-field{position:absolute;left:-9999px;top:-9999px;overflow:hidden;height:1px;width:1px;}</style>
@@ -17,6 +17,9 @@
     <div class="mx-auto mt-4 h-0.5 w-16 rounded bg-slate-300"></div>
     {% if link.link_type == 'consent' %}
       <h2 class="mt-4 text-lg font-semibold text-slate-800">Client Consent Form</h2>
+    {% elif link.link_type == 'intake' %}
+      <h2 class="mt-4 text-lg font-semibold text-slate-800">Client Intake Form</h2>
+      <p class="mt-1 text-sm text-slate-500">For: <span class="font-medium text-slate-700">{{ link.patient.full_name }}</span></p>
     {% else %}
       <h2 class="mt-4 text-lg font-semibold text-slate-800">Book an Appointment</h2>
     {% endif %}
@@ -119,6 +122,141 @@
         </form>
       </div>
     {% endif %}
+
+  {# ── INTAKE ── #}
+  {% elif link.link_type == 'intake' %}
+
+    {% if already_submitted %}
+    <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+      Your intake details were previously submitted on <strong>{{ link.patient.intake_submitted_at|date:"M j, Y" }}</strong>. You may update anything that has changed below.
+    </div>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+    <div class="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      <div class="pot-field" aria-hidden="true"><label for="id_pot_i">Website</label><input type="text" id="id_pot_i" name="pot" tabindex="-1" autocomplete="off" value=""></div>
+
+      {# ── Personal Details ── #}
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">Personal Details</h3>
+        <p class="mb-4 text-xs text-slate-500">Your basic information. All fields are optional except where marked.</p>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+            {{ form.gender }}{% for e in form.gender.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.date_of_birth.id_for_label }}">{{ form.date_of_birth.label }}</label>
+            {{ form.date_of_birth }}{% for e in form.date_of_birth.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.nationality.id_for_label }}">{{ form.nationality.label }}</label>
+            {{ form.nationality }}{% for e in form.nationality.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.marital_status.id_for_label }}">{{ form.marital_status.label }}</label>
+            {{ form.marital_status }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.religion.id_for_label }}">{{ form.religion.label }}</label>
+            {{ form.religion }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.occupation.id_for_label }}">{{ form.occupation.label }}</label>
+            {{ form.occupation }}
+          </div>
+          <div class="sm:col-span-2">
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+            {{ form.address }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+            {{ form.phone }}{% for e in form.phone.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            {{ form.email }}{% for e in form.email.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {# ── Emergency Contact ── #}
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">Emergency Contact</h3>
+        <p class="mb-4 text-xs text-slate-500">Please provide at least two contact numbers.</p>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_name.id_for_label }}">{{ form.emergency_contact_name.label }}</label>
+            {{ form.emergency_contact_name }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_relationship.id_for_label }}">{{ form.emergency_contact_relationship.label }}</label>
+            {{ form.emergency_contact_relationship }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone1.id_for_label }}">{{ form.emergency_contact_phone1.label }}</label>
+            {{ form.emergency_contact_phone1 }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone2.id_for_label }}">{{ form.emergency_contact_phone2.label }}</label>
+            {{ form.emergency_contact_phone2 }}
+          </div>
+        </div>
+      </div>
+
+      {# ── Health & Medical ── #}
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">Health & Medical</h3>
+        <p class="mb-4 text-xs text-slate-500">This information is kept strictly confidential.</p>
+        <div class="space-y-4">
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.previous_treatment.id_for_label }}">{{ form.previous_treatment.label }}</label>
+            {{ form.previous_treatment }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.current_medication.id_for_label }}">{{ form.current_medication.label }}</label>
+            {{ form.current_medication }}
+          </div>
+        </div>
+      </div>
+
+      {# ── Communication & Referral ── #}
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-600">Communication & Referral</h3>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.ok_to_leave_message.id_for_label }}">{{ form.ok_to_leave_message.label }}</label>
+            {{ form.ok_to_leave_message }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.ok_to_contact_by_email.id_for_label }}">{{ form.ok_to_contact_by_email.label }}</label>
+            {{ form.ok_to_contact_by_email }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.preferred_contact_method.id_for_label }}">{{ form.preferred_contact_method.label }}</label>
+            {{ form.preferred_contact_method }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.referral_source.id_for_label }}">{{ form.referral_source.label }}</label>
+            {{ form.referral_source }}
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.used_counselling_before.id_for_label }}">{{ form.used_counselling_before.label }}</label>
+            {{ form.used_counselling_before }}
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button type="submit" class="w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
+          {% if already_submitted %}Update My Details{% else %}Submit Intake Form{% endif %}
+        </button>
+      </div>
+    </form>
 
   {# ── BOOKING ── #}
   {% else %}

@@ -117,6 +117,31 @@
     </section>
     {% endif %}
 
+    <!-- Intake form status -->
+    <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 class="text-base font-semibold text-slate-950">Intake Form</h2>
+      {% if patient.intake_submitted_at %}
+        <div class="mt-3 flex items-center gap-2">
+          <span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100">
+            <svg class="h-3 w-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z" clip-rule="evenodd"/></svg>
+          </span>
+          <span class="text-sm font-medium text-emerald-700">Received</span>
+        </div>
+        <p class="mt-1 text-xs text-slate-500">Submitted by client on {{ patient.intake_submitted_at|date:"M j, Y" }}.</p>
+      {% else %}
+        <p class="mt-2 text-sm text-amber-700">Client has not filled in their intake form yet.</p>
+      {% endif %}
+      <div class="mt-4 link-generate-area">
+        <button type="button"
+                hx-post="{% url 'crm:generate_link' patient.pk 'intake' %}"
+                hx-target="closest .link-generate-area"
+                hx-swap="innerHTML"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-white hover:border-blue-300 transition">
+          {% if patient.intake_submitted_at %}Re-send intake link{% else %}Generate intake link{% endif %}
+        </button>
+      </div>
+    </section>
+
     <!-- Consent status -->
     <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h2 class="text-base font-semibold text-slate-950">Client Consent</h2>

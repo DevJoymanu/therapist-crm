@@ -378,6 +378,104 @@ class PersonalizedBookingForm(forms.Form):
     )
 
 
+class ClientIntakeForm(StyledModelForm):
+    """
+    Public-facing form for clients to fill in their own WellMind intake details.
+    Excludes therapist-only fields (notes, is_active) and identity fields
+    (first_name, last_name) that the therapist already recorded.
+    All searchable-select enhancements are disabled because this form is
+    rendered on standalone pages that do not include that JavaScript.
+    """
+
+    class Meta:
+        model = Patient
+        fields = [
+            "gender", "date_of_birth", "nationality", "marital_status",
+            "religion", "occupation", "address", "phone", "email",
+            "emergency_contact_name", "emergency_contact_relationship",
+            "emergency_contact_phone1", "emergency_contact_phone2",
+            "previous_treatment", "current_medication",
+            "ok_to_leave_message", "ok_to_contact_by_email",
+            "preferred_contact_method", "referral_source",
+            "used_counselling_before",
+        ]
+        widgets = {
+            "date_of_birth": DateInput(),
+            "address": forms.Textarea(attrs={"rows": 3}),
+            "previous_treatment": forms.Textarea(attrs={"rows": 4}),
+            "current_medication": forms.Textarea(attrs={"rows": 3}),
+        }
+        labels = {
+            "emergency_contact_name": "Full name",
+            "emergency_contact_relationship": "Relationship",
+            "emergency_contact_phone1": "Contact number 1",
+            "emergency_contact_phone2": "Contact number 2",
+            "previous_treatment": "Previous treatment / counselling / therapy received",
+            "current_medication": "Current medication (if any)",
+            "ok_to_leave_message": "Is it OK to leave a message on the phone?",
+            "ok_to_contact_by_email": "Can we contact by email?",
+            "preferred_contact_method": "Best way to contact",
+            "referral_source": "Who suggested this counselling?",
+            "used_counselling_before": "Have you used counselling services before?",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.pop("data-searchable-select", None)
+            field.widget.attrs.pop("data-searchable-label", None)
+
+
+class NewClientFullForm(StyledModelForm):
+    """
+    Used on the public booking portal when a Client ID is not found.
+    Captures all WellMind intake fields plus first/last name so a full
+    Patient record can be created on submission.
+    Searchable-select is disabled because this form lives on a standalone page.
+    """
+
+    class Meta:
+        model = Patient
+        fields = [
+            "first_name", "last_name",
+            "gender", "date_of_birth", "nationality", "marital_status",
+            "religion", "occupation", "address", "phone", "email",
+            "emergency_contact_name", "emergency_contact_relationship",
+            "emergency_contact_phone1", "emergency_contact_phone2",
+            "previous_treatment", "current_medication",
+            "ok_to_leave_message", "ok_to_contact_by_email",
+            "preferred_contact_method", "referral_source",
+            "used_counselling_before",
+        ]
+        widgets = {
+            "date_of_birth": DateInput(),
+            "address": forms.Textarea(attrs={"rows": 3}),
+            "previous_treatment": forms.Textarea(attrs={"rows": 3}),
+            "current_medication": forms.Textarea(attrs={"rows": 2}),
+        }
+        labels = {
+            "first_name": "First Name",
+            "last_name": "Surname",
+            "emergency_contact_name": "Full name",
+            "emergency_contact_relationship": "Relationship",
+            "emergency_contact_phone1": "Contact number 1",
+            "emergency_contact_phone2": "Contact number 2",
+            "previous_treatment": "Previous counselling / therapy received",
+            "current_medication": "Current medication (if any)",
+            "ok_to_leave_message": "Is it OK to leave a message on your phone?",
+            "ok_to_contact_by_email": "Can we contact you by email?",
+            "preferred_contact_method": "Best way to contact you",
+            "referral_source": "Who suggested this counselling?",
+            "used_counselling_before": "Have you had counselling before?",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.pop("data-searchable-select", None)
+            field.widget.attrs.pop("data-searchable-label", None)
+
+
 class ApproveRequestForm(forms.Form):
     starts_at = forms.DateTimeField(
         label="Appointment date & time",

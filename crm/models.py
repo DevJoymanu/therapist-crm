@@ -77,6 +77,7 @@ class Patient(TimeStampedModel):
     notes = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
     booking_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    intake_submitted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["last_name", "first_name"]
@@ -329,6 +330,7 @@ class ShareableLink(TimeStampedModel):
     class LinkType(models.TextChoices):
         CONSENT = "consent", "Consent Form"
         BOOKING = "booking", "Appointment Booking"
+        INTAKE = "intake", "Intake Form"
 
     token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     link_type = models.CharField(max_length=10, choices=LinkType.choices)

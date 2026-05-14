@@ -27,7 +27,9 @@ from .forms import (
     AppointmentForm,
     ApproveRequestForm,
     ClientConsentForm,
+    ClientIntakeForm,
     NewClientBookingForm,
+    NewClientFullForm,
     PatientForm,
     PersonalizedBookingForm,
     ReturningClientBookingForm,
@@ -87,6 +89,26 @@ def _honeypot_response() -> HttpResponse:
     )
 
 
+def _has_appointment_conflict(therapist, preferred_date, preferred_time_slot: str) -> bool:
+    """Return True when there is already a scheduled appointment in the same time block."""
+    slot_ranges = {"morning": (8, 12), "afternoon": (12, 17), "evening": (17, 23)}
+    if not preferred_time_slot or preferred_time_slot not in slot_ranges:
+        return False
+    start_h, end_h = slot_ranges[preferred_time_slot]
+    start_dt = timezone.make_aware(
+        datetime.datetime.combine(preferred_date, datetime.time(start_h, 0))
+    )
+    end_dt = timezone.make_aware(
+        datetime.datetime.combine(preferred_date, datetime.time(end_h, 0))
+    )
+    return Appointment.objects.filter(
+        patient__therapist=therapist,
+        starts_at__gte=start_dt,
+        starts_at__lt=end_dt,
+        status=Appointment.Status.SCHEDULED,
+    ).exists()
+
+
 # ── CRM views ─────────────────────────────────────────────────────────────────
 
 class DashboardView(TherapistRequiredMixin, TemplateView):
@@ -98,6 +120,12 @@ class DashboardView(TherapistRequiredMixin, TemplateView):
         context["pending_requests"] = AppointmentRequest.objects.filter(
             therapist=self.request.user, status=AppointmentRequest.Status.PENDING
         ).order_by("preferred_date")[:5]
+        context["active_patients"] = patient_queryset_for(self.request.user).filter(
+            is_active=True
+        ).order_by("last_name", "first_name")
+        context["booking_portal_url"] = self.request.build_absolute_uri(
+            reverse("crm:booking_portal", kwargs={"username": self.request.user.username})
+        )
         return context
 
 
@@ -410,6 +438,11 @@ class ConsentDoneView(TemplateView):
 # ── Public booking portal ─────────────────────────────────────────────────────
 
 class BookingPortalView(View):
+    """
+    Landing page: single Client ID field.
+    POST checks whether the ID belongs to an active patient under this therapist
+    and redirects to the appropriate booking flow.
+    """
     template_name = "crm/booking_portal.html"
 
     def _get_therapist(self, username):
@@ -418,12 +451,7 @@ class BookingPortalView(View):
 
     def get(self, request, username):
         therapist = self._get_therapist(username)
-        return render(request, self.template_name, {
-            "therapist": therapist,
-            "new_form": NewClientBookingForm(),
-            "returning_form": ReturningClientBookingForm(),
-            "active_tab": "new",
-        })
+        return render(request, self.template_name, {"therapist": therapist})
 
     def post(self, request, username):
         if _honeypot_triggered(request):
@@ -436,42 +464,88 @@ class BookingPortalView(View):
         ):
             return rate_limited_response(request)
         therapist = self._get_therapist(username)
-        client_type = request.POST.get("client_type", "new")
+        client_id_str = request.POST.get("client_id", "").strip()
 
-        if client_type == "new":
-            form = NewClientBookingForm(request.POST)
-            if form.is_valid():
-                req = AppointmentRequest.objects.create(
-                    therapist=therapist,
-                    is_new_client=True,
-                    client_first_name=form.cleaned_data["first_name"],
-                    client_last_name=form.cleaned_data["last_name"],
-                    client_phone=form.cleaned_data["phone"],
-                    client_email=form.cleaned_data.get("email", ""),
-                    preferred_date=form.cleaned_data["preferred_date"],
-                    preferred_time_slot=form.cleaned_data.get("preferred_time_slot", ""),
-                    reason=form.cleaned_data.get("reason", ""),
-                )
-                return redirect(reverse("crm:booking_confirm", kwargs={"token": req.token}))
-            return render(request, self.template_name, {
-                "therapist": therapist,
-                "new_form": form,
-                "returning_form": ReturningClientBookingForm(),
-                "active_tab": "new",
-            })
-
-        # returning client
-        form = ReturningClientBookingForm(request.POST)
-        if form.is_valid():
+        if client_id_str:
             try:
                 patient = Patient.objects.get(
-                    pk=form.cleaned_data["client_id"],
-                    last_name__iexact=form.cleaned_data["last_name"],
+                    pk=int(client_id_str),
                     therapist=therapist,
+                    is_active=True,
                 )
-            except Patient.DoesNotExist:
-                form.add_error("client_id", "Client ID and surname do not match our records.")
+                return redirect(
+                    reverse("crm:booking_returning", kwargs={
+                        "username": username, "patient_pk": patient.pk,
+                    })
+                )
+            except (ValueError, Patient.DoesNotExist):
+                pass
+
+        # ID blank or not found → new client flow
+        qs = "?id_not_found=1" if client_id_str else ""
+        return redirect(
+            reverse("crm:booking_new_client", kwargs={"username": username}) + qs
+        )
+
+
+class BookingReturningView(View):
+    """Appointment request form for a client whose ID was found."""
+    template_name = "crm/booking_returning.html"
+
+    def _get_objects(self, username, patient_pk):
+        User = get_user_model()
+        therapist = get_object_or_404(User, username=username)
+        patient = get_object_or_404(Patient, pk=patient_pk, therapist=therapist, is_active=True)
+        try:
+            consent_signed = patient.consent.is_signed
+        except Exception:
+            consent_signed = False
+        return therapist, patient, consent_signed
+
+    def get(self, request, username, patient_pk):
+        therapist, patient, consent_signed = self._get_objects(username, patient_pk)
+        return render(request, self.template_name, {
+            "therapist": therapist,
+            "patient": patient,
+            "appt_form": PersonalizedBookingForm(),
+            "consent_form": ClientConsentForm() if not consent_signed else None,
+            "consent_signed": consent_signed,
+        })
+
+    def post(self, request, username, patient_pk):
+        if _honeypot_triggered(request):
+            return _honeypot_response()
+        if is_rate_limited(
+            request,
+            prefix="booking_returning",
+            max_hits=settings.RATE_LIMIT_PUBLIC_ATTEMPTS,
+            window_seconds=settings.RATE_LIMIT_PUBLIC_WINDOW,
+        ):
+            return rate_limited_response(request)
+        therapist, patient, consent_signed = self._get_objects(username, patient_pk)
+        appt_form = PersonalizedBookingForm(request.POST)
+        consent_form = ClientConsentForm(request.POST) if not consent_signed else None
+
+        forms_valid = appt_form.is_valid() and (consent_form.is_valid() if consent_form else True)
+
+        if forms_valid:
+            preferred_date = appt_form.cleaned_data["preferred_date"]
+            preferred_slot = appt_form.cleaned_data.get("preferred_time_slot", "")
+            if _has_appointment_conflict(therapist, preferred_date, preferred_slot):
+                appt_form.add_error(
+                    "preferred_date",
+                    "That time slot already has an appointment booked. "
+                    "Please choose a different date or time.",
+                )
             else:
+                if consent_form:
+                    try:
+                        c = patient.consent
+                    except Exception:
+                        c = ClientConsent(patient=patient)
+                    c.client_name = consent_form.cleaned_data["client_name"]
+                    c.client_signed_date = consent_form.cleaned_data["client_signed_date"]
+                    c.save()
                 req = AppointmentRequest.objects.create(
                     therapist=therapist,
                     patient=patient,
@@ -480,16 +554,94 @@ class BookingPortalView(View):
                     client_last_name=patient.last_name,
                     client_phone=patient.phone,
                     client_email=patient.email,
-                    preferred_date=form.cleaned_data["preferred_date"],
-                    preferred_time_slot=form.cleaned_data.get("preferred_time_slot", ""),
-                    reason=form.cleaned_data.get("reason", ""),
+                    preferred_date=preferred_date,
+                    preferred_time_slot=preferred_slot,
+                    reason=appt_form.cleaned_data.get("reason", ""),
                 )
                 return redirect(reverse("crm:booking_confirm", kwargs={"token": req.token}))
+
         return render(request, self.template_name, {
             "therapist": therapist,
-            "new_form": NewClientBookingForm(),
-            "returning_form": form,
-            "active_tab": "returning",
+            "patient": patient,
+            "appt_form": appt_form,
+            "consent_form": consent_form,
+            "consent_signed": consent_signed,
+        })
+
+
+class BookingNewClientView(View):
+    """Full intake form + consent + appointment request for clients without a Client ID."""
+    template_name = "crm/booking_new_client.html"
+
+    def _get_therapist(self, username):
+        User = get_user_model()
+        return get_object_or_404(User, username=username)
+
+    def get(self, request, username):
+        therapist = self._get_therapist(username)
+        return render(request, self.template_name, {
+            "therapist": therapist,
+            "id_not_found": request.GET.get("id_not_found") == "1",
+            "intake_form": NewClientFullForm(),
+            "consent_form": ClientConsentForm(),
+            "appt_form": PersonalizedBookingForm(),
+        })
+
+    def post(self, request, username):
+        if _honeypot_triggered(request):
+            return _honeypot_response()
+        if is_rate_limited(
+            request,
+            prefix="booking_new_client",
+            max_hits=settings.RATE_LIMIT_PUBLIC_ATTEMPTS,
+            window_seconds=settings.RATE_LIMIT_PUBLIC_WINDOW,
+        ):
+            return rate_limited_response(request)
+        therapist = self._get_therapist(username)
+        intake_form = NewClientFullForm(request.POST)
+        consent_form = ClientConsentForm(request.POST)
+        appt_form = PersonalizedBookingForm(request.POST)
+
+        all_valid = intake_form.is_valid() and consent_form.is_valid() and appt_form.is_valid()
+        if all_valid:
+            preferred_date = appt_form.cleaned_data["preferred_date"]
+            preferred_slot = appt_form.cleaned_data.get("preferred_time_slot", "")
+            if _has_appointment_conflict(therapist, preferred_date, preferred_slot):
+                appt_form.add_error(
+                    "preferred_date",
+                    "That time slot already has an appointment booked. "
+                    "Please choose a different date or time.",
+                )
+                all_valid = False
+
+        if all_valid:
+            patient = intake_form.save(commit=False)
+            patient.therapist = therapist
+            patient.save()
+            c = ClientConsent(patient=patient)
+            c.client_name = consent_form.cleaned_data["client_name"]
+            c.client_signed_date = consent_form.cleaned_data["client_signed_date"]
+            c.save()
+            req = AppointmentRequest.objects.create(
+                therapist=therapist,
+                patient=patient,
+                is_new_client=True,
+                client_first_name=patient.first_name,
+                client_last_name=patient.last_name,
+                client_phone=patient.phone,
+                client_email=patient.email,
+                preferred_date=preferred_date,
+                preferred_time_slot=preferred_slot,
+                reason=appt_form.cleaned_data.get("reason", ""),
+            )
+            return redirect(reverse("crm:booking_confirm", kwargs={"token": req.token}))
+
+        return render(request, self.template_name, {
+            "therapist": therapist,
+            "id_not_found": False,
+            "intake_form": intake_form,
+            "consent_form": consent_form,
+            "appt_form": appt_form,
         })
 
 
@@ -540,8 +692,10 @@ class BookingConfirmView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["booking_request"] = get_object_or_404(
-            AppointmentRequest, token=self.kwargs["token"]
+        req = get_object_or_404(AppointmentRequest, token=self.kwargs["token"])
+        context["booking_request"] = req
+        context["has_conflict"] = _has_appointment_conflict(
+            req.therapist, req.preferred_date, req.preferred_time_slot
         )
         return context
 
@@ -593,7 +747,9 @@ class ApproveRequestView(TherapistRequiredMixin, View):
             duration = int(form.cleaned_data["duration_minutes"])
             ends_at = starts_at + datetime.timedelta(minutes=duration)
 
-            if req.is_new_client:
+            if req.is_new_client and req.patient is None:
+                # Only create a new patient if one wasn't already created
+                # (e.g. via BookingNewClientView which creates the patient on submission)
                 patient = Patient.objects.create(
                     therapist=request.user,
                     first_name=req.client_first_name,
@@ -638,6 +794,56 @@ class DeclineRequestView(TherapistRequiredMixin, View):
         return redirect(reverse("crm:booking_requests"))
 
 
+# ── Dashboard send-booking-link ───────────────────────────────────────────────
+
+class DashboardSendBookingLinkView(TherapistRequiredMixin, View):
+    """
+    HTMX endpoint: generates a fresh booking ShareableLink for the selected
+    patient and returns an HTML partial with a ready-to-click WhatsApp button.
+    """
+
+    def post(self, request):
+        patient_pk = request.POST.get("patient_pk", "").strip()
+        if not patient_pk:
+            return HttpResponse(
+                "<p class='text-sm text-rose-600 py-2'>Please select a client first.</p>"
+            )
+        if is_rate_limited(
+            request,
+            prefix="gen_link",
+            max_hits=settings.RATE_LIMIT_GENLINK_ATTEMPTS,
+            window_seconds=settings.RATE_LIMIT_GENLINK_WINDOW,
+            per_user=True,
+        ):
+            return HttpResponse(
+                "<p class='text-sm text-rose-600 py-2'>Too many link generations. Please wait.</p>",
+                status=429,
+            )
+        patient = get_object_or_404(Patient, pk=patient_pk, therapist=request.user)
+        link = ShareableLink.objects.create(
+            patient=patient,
+            link_type=ShareableLink.LinkType.BOOKING,
+            expires_at=timezone.now() + datetime.timedelta(days=_LINK_EXPIRY_DAYS),
+        )
+        url = request.build_absolute_uri(link.get_absolute_url())
+        message = (
+            f"Hello {patient.first_name},\n\n"
+            f"Please use the link below to request your appointment with "
+            f"Yanrol Systemic Family Counselling Services & Therapy:\n\n"
+            f"{url}\n\n"
+            f"This link expires on {link.expires_at.strftime('%d %B %Y')}."
+        )
+        phone = _clean_phone_for_wa(patient.phone)
+        wa_base = f"https://wa.me/{phone}" if phone else "https://wa.me"
+        wa_url = f"{wa_base}?text={urllib.parse.quote(message)}"
+        return render(request, "crm/partials/send_booking_link_result.html", {
+            "patient": patient,
+            "url": url,
+            "wa_url": wa_url,
+            "link": link,
+        })
+
+
 # ── Shareable expiring links ──────────────────────────────────────────────────
 
 _LINK_EXPIRY_DAYS = 7
@@ -651,7 +857,11 @@ class GenerateLinkView(TherapistRequiredMixin, View):
     """
 
     def post(self, request, pk, link_type):
-        if link_type not in (ShareableLink.LinkType.CONSENT, ShareableLink.LinkType.BOOKING):
+        if link_type not in (
+            ShareableLink.LinkType.CONSENT,
+            ShareableLink.LinkType.BOOKING,
+            ShareableLink.LinkType.INTAKE,
+        ):
             raise Http404
         if is_rate_limited(
             request,
@@ -707,6 +917,9 @@ class SharedLinkView(View):
             context["already_signed"] = consent.is_signed
             if not consent.is_signed:
                 context["form"] = ClientConsentForm()
+        elif link.link_type == ShareableLink.LinkType.INTAKE:
+            context["form"] = ClientIntakeForm(instance=link.patient)
+            context["already_submitted"] = bool(link.patient.intake_submitted_at)
         else:
             context["form"] = PersonalizedBookingForm()
         return render(request, "crm/shared_link.html", context)
@@ -737,6 +950,19 @@ class SharedLinkView(View):
                 return redirect(reverse("crm:consent_done", kwargs={"token": consent.token}))
             return render(request, "crm/shared_link.html", {
                 "link": link, "consent": consent, "form": form,
+            })
+
+        if link.link_type == ShareableLink.LinkType.INTAKE:
+            form = ClientIntakeForm(request.POST, instance=link.patient)
+            if form.is_valid():
+                patient = form.save(commit=False)
+                patient.intake_submitted_at = timezone.now()
+                patient.save()
+                return redirect(link.get_absolute_url())
+            return render(request, "crm/shared_link.html", {
+                "link": link,
+                "form": form,
+                "already_submitted": bool(link.patient.intake_submitted_at),
             })
 
         # booking

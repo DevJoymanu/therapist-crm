@@ -29,8 +29,12 @@ urlpatterns = [
     path("consent/<uuid:token>/done/", views.ConsentDoneView.as_view(), name="consent_done"),
     # Public booking portal
     path("book/<str:username>/", views.BookingPortalView.as_view(), name="booking_portal"),
+    path("book/<str:username>/returning/<int:patient_pk>/", views.BookingReturningView.as_view(), name="booking_returning"),
+    path("book/<str:username>/new/", views.BookingNewClientView.as_view(), name="booking_new_client"),
     path("book/p/<uuid:token>/", views.PersonalizedBookingView.as_view(), name="booking_personal"),
     path("book/confirm/<uuid:token>/", views.BookingConfirmView.as_view(), name="booking_confirm"),
+    # Dashboard send-link
+    path("dashboard/send-booking-link/", views.DashboardSendBookingLinkView.as_view(), name="dashboard_send_booking_link"),
     # Therapist booking management
     path("booking/", views.BookingRequestsView.as_view(), name="booking_requests"),
     path("booking/<int:pk>/approve/", views.ApproveRequestView.as_view(), name="request_approve"),

@@ -5,160 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Book an Appointment</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
   <style>.pot-field{position:absolute;left:-9999px;top:-9999px;overflow:hidden;height:1px;width:1px;}</style>
 </head>
-<body class="min-h-full text-slate-900 antialiased">
-<div class="mx-auto max-w-xl px-4 py-10 sm:py-14">
+<body class="min-h-full flex items-center justify-center text-slate-900 antialiased px-4 py-12">
+<div class="mx-auto w-full max-w-sm">
 
   <div class="mb-8 text-center">
-    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Book an Appointment</h1>
-    <p class="mt-2 text-sm text-slate-500">Yanrol Systemic Family Counselling Services &amp; Therapy</p>
-    <p class="mt-1 text-xs text-slate-400">Counsellor: <span class="font-medium text-slate-600">{{ therapist.get_full_name|default:therapist.username }}</span></p>
+    <p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Yanrol Systemic Family</p>
+    <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">Counselling Services &amp; Therapy</h1>
+    <div class="mx-auto mt-4 h-0.5 w-16 rounded bg-slate-300"></div>
+    <h2 class="mt-4 text-lg font-semibold text-slate-800">Book an Appointment</h2>
   </div>
 
-  <div x-data="{ tab: '{{ active_tab }}' }" class="space-y-6">
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <p class="mb-5 text-sm text-slate-600 leading-6">
+      Enter your <strong>Client ID</strong> to continue. Your Client ID is shown on your profile and is provided by your counsellor.
+    </p>
 
-    <!-- Tab selector -->
-    <div class="flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-      <button type="button" @click="tab = 'new'"
-              :class="tab === 'new' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
-              class="flex-1 rounded-xl py-2.5 text-sm font-semibold transition">
-        I'm a new client
-      </button>
-      <button type="button" @click="tab = 'returning'"
-              :class="tab === 'returning' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
-              class="flex-1 rounded-xl py-2.5 text-sm font-semibold transition">
-        I'm a returning client
-      </button>
-    </div>
-
-    <!-- New client form -->
-    <div x-show="tab === 'new'" x-transition>
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 class="text-base font-semibold text-slate-900">New client — request an appointment</h2>
-        <p class="mt-1 text-sm text-slate-500">Fill in your details and we'll be in touch to confirm.</p>
-
-        {% if active_tab == 'new' and new_form.errors %}
-          <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-            Please correct the errors below.
-          </div>
-        {% endif %}
-
-        <form method="post" class="mt-5 space-y-4">
-          {% csrf_token %}
-          <input type="hidden" name="client_type" value="new">
-          <div class="pot-field" aria-hidden="true"><label for="id_pot_n">Website</label><input type="text" id="id_pot_n" name="pot" tabindex="-1" autocomplete="off" value=""></div>
-
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Surname *</label>
-              {{ new_form.last_name }}
-              {% for e in new_form.last_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-            </div>
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">First Name *</label>
-              {{ new_form.first_name }}
-              {% for e in new_form.first_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-            </div>
-          </div>
-
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Phone *</label>
-              {{ new_form.phone }}
-              {% for e in new_form.phone.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-            </div>
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Email</label>
-              {{ new_form.email }}
-              {% for e in new_form.email.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-            </div>
-          </div>
-
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred date *</label>
-              {{ new_form.preferred_date }}
-              {% for e in new_form.preferred_date.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-            </div>
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred time</label>
-              {{ new_form.preferred_time_slot }}
-            </div>
-          </div>
-
-          <div>
-            <label class="mb-1.5 block text-sm font-medium text-slate-700">Reason for seeking counselling</label>
-            {{ new_form.reason }}
-          </div>
-
-          <div class="pt-2">
-            <button type="submit" class="w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
-              Submit Request
-            </button>
-          </div>
-        </form>
+    <form method="post">
+      {% csrf_token %}
+      <div class="pot-field" aria-hidden="true">
+        <label for="id_pot_portal">Website</label>
+        <input type="text" id="id_pot_portal" name="pot" tabindex="-1" autocomplete="off" value="">
       </div>
-    </div>
 
-    <!-- Returning client form -->
-    <div x-show="tab === 'returning'" x-transition x-cloak>
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 class="text-base font-semibold text-slate-900">Returning client — request an appointment</h2>
-        <p class="mt-1 text-sm text-slate-500">Enter your client ID and surname to identify yourself, then choose your preferred date.</p>
+      <label class="mb-2 block text-sm font-medium text-slate-700" for="id_client_id">Client ID</label>
+      <input type="number" id="id_client_id" name="client_id"
+             inputmode="numeric" autocomplete="off"
+             class="w-full rounded-xl border border-slate-200 bg-white px-3 py-3.5 text-xl text-center font-mono text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+             placeholder="e.g. 42">
 
-        {% if active_tab == 'returning' and returning_form.errors %}
-          <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-            Please correct the errors below.
-          </div>
-        {% endif %}
+      <p class="mt-2 text-center text-xs text-slate-400">
+        No Client ID? Leave it blank — we'll ask for your details instead.
+      </p>
 
-        <form method="post" class="mt-5 space-y-4">
-          {% csrf_token %}
-          <input type="hidden" name="client_type" value="returning">
-          <div class="pot-field" aria-hidden="true"><label for="id_pot_r">Website</label><input type="text" id="id_pot_r" name="pot" tabindex="-1" autocomplete="off" value=""></div>
-
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Client ID *</label>
-              {{ returning_form.client_id }}
-              {% for e in returning_form.client_id.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-              <p class="mt-1 text-xs text-slate-400">Provided by your counsellor.</p>
-            </div>
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Surname *</label>
-              {{ returning_form.last_name }}
-              {% for e in returning_form.last_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-            </div>
-          </div>
-
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred date *</label>
-              {{ returning_form.preferred_date }}
-              {% for e in returning_form.preferred_date.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
-            </div>
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred time</label>
-              {{ returning_form.preferred_time_slot }}
-            </div>
-          </div>
-
-          <div>
-            <label class="mb-1.5 block text-sm font-medium text-slate-700">Notes for your counsellor</label>
-            {{ returning_form.reason }}
-          </div>
-
-          <div class="pt-2">
-            <button type="submit" class="w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
-              Submit Request
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
+      <button type="submit"
+              class="mt-5 w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
+        Continue &rarr;
+      </button>
+    </form>
   </div>
 
   <p class="mt-8 text-center text-xs text-slate-400">All information is handled confidentially. &mdash; Yanrol Systemic Family Counselling Services &amp; Therapy</p>

@@ -40,6 +40,12 @@
     </dl>
   </div>
 
+  {% if has_conflict %}
+  <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+    <strong>Note:</strong> There may already be an appointment in that time slot. Your counsellor will contact you if a different time is needed.
+  </div>
+  {% endif %}
+
   <p class="mt-8 text-sm text-slate-500">You may close this page. We look forward to seeing you.</p>
   <p class="mt-4 text-xs text-slate-400">Yanrol Systemic Family Counselling Services &amp; Therapy</p>
 </div>
