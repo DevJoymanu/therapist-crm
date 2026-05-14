@@ -178,8 +178,10 @@ CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = "Lax"
 
 # HTTPS-only flags — enabled automatically when not in DEBUG mode.
-# When deployed behind a reverse proxy (Nginx, Heroku, etc.) also set:
-#   SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_PROXY_SSL_HEADER tells Django to trust the X-Forwarded-Proto header
+# set by Railway's (and most PaaS) reverse proxy. Without this, SECURE_SSL_REDIRECT
+# sees every proxied request as plain HTTP and loops infinitely.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_SSL_REDIRECT = not DEBUG
