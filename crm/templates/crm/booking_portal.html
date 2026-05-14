@@ -78,17 +78,8 @@
     <div id="id-check-result" class="mt-3 empty:hidden"></div>
   </div>
 
-  {# Divider #}
-  <div class="mb-5 flex items-center gap-3">
-    <div class="flex-1 h-px bg-slate-200"></div>
-    <p class="text-xs font-medium text-slate-400">New client? Fill in the form below</p>
-    <div class="flex-1 h-px bg-slate-200"></div>
-  </div>
-
-  {# Main booking area — wizard by default; replaced by returning-client form when ID is found #}
-  <div id="booking-form-area">
-    {% include "crm/partials/booking_new_client_wizard.html" %}
-  </div>
+  {# Booking form area — hidden until ID check resolves #}
+  <div id="booking-form-area"></div>
 
   <p class="mt-8 text-center text-xs text-slate-400">
     All information is handled confidentially. &mdash; Yanrol Systemic Family Counselling Services &amp; Therapy

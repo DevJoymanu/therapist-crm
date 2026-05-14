@@ -135,7 +135,11 @@
 
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.phone.id_for_label }}">Contact Number</label>
-        {% include "crm/components/tel_input.html" with field=form.phone %}
+        <div class="flex gap-2" x-data>
+          <div class="min-w-0 flex-1" x-ref="wrap_phone">{{ form.phone }}</div>
+          <button type="button" x-show="!!navigator.contacts?.select" x-cloak @click="window.pickFromContacts($refs.wrap_phone.querySelector('input,textarea'))" class="sm:hidden shrink-0 flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition" title="Import from contacts"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></button>
+        </div>
+        {% for error in form.phone.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
       </div>
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.email.id_for_label }}">Email</label>
@@ -172,11 +176,19 @@
       </div>
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone1.id_for_label }}">Contact Number 1</label>
-        {% include "crm/components/tel_input.html" with field=form.emergency_contact_phone1 %}
+        <div class="flex gap-2" x-data>
+          <div class="min-w-0 flex-1" x-ref="wrap_ec1">{{ form.emergency_contact_phone1 }}</div>
+          <button type="button" x-show="!!navigator.contacts?.select" x-cloak @click="window.pickFromContacts($refs.wrap_ec1.querySelector('input,textarea'))" class="sm:hidden shrink-0 flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition" title="Import from contacts"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></button>
+        </div>
+        {% for error in form.emergency_contact_phone1.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
       </div>
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone2.id_for_label }}">Contact Number 2</label>
-        {% include "crm/components/tel_input.html" with field=form.emergency_contact_phone2 %}
+        <div class="flex gap-2" x-data>
+          <div class="min-w-0 flex-1" x-ref="wrap_ec2">{{ form.emergency_contact_phone2 }}</div>
+          <button type="button" x-show="!!navigator.contacts?.select" x-cloak @click="window.pickFromContacts($refs.wrap_ec2.querySelector('input,textarea'))" class="sm:hidden shrink-0 flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition" title="Import from contacts"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></button>
+        </div>
+        {% for error in form.emergency_contact_phone2.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
       </div>
     </div>
     </div>

@@ -4,3 +4,12 @@
   </svg>
   <span>Client ID <strong>{{ client_id_str }}</strong> wasn't found. Please complete the registration form below.</span>
 </div>
+
+<div hx-swap-oob="innerHTML:#booking-form-area">
+  <div class="mb-5 flex items-center gap-3">
+    <div class="flex-1 h-px bg-slate-200"></div>
+    <p class="text-xs font-medium text-slate-400">New client? Fill in the form below</p>
+    <div class="flex-1 h-px bg-slate-200"></div>
+  </div>
+  {% include "crm/partials/booking_new_client_wizard.html" %}
+</div>
