@@ -1,0 +1,19 @@
+<div x-data="{ copied: false }" class="space-y-2 mt-3">
+  <div class="rounded-xl border border-blue-200 bg-blue-50 px-3 py-3">
+    <p class="text-xs font-semibold text-blue-700">Link generated &mdash; expires {{ link.expires_at|date:"M j, Y g:i A" }}</p>
+    <p class="mt-1 font-mono text-xs text-blue-900 break-all leading-5">{{ url }}</p>
+  </div>
+  <button type="button"
+          @click="navigator.clipboard.writeText('{{ url }}'); copied = true; setTimeout(() => copied = false, 2500)"
+          class="w-full rounded-xl border border-slate-200 bg-white py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+    <span x-show="!copied">Copy link</span>
+    <span x-cloak x-show="copied" class="text-emerald-600">Copied!</span>
+  </button>
+  <button type="button"
+          hx-post="{{ generate_url }}"
+          hx-target="closest .link-generate-area"
+          hx-swap="innerHTML"
+          class="w-full rounded-xl border border-slate-200 bg-white py-1.5 text-xs font-medium text-slate-500 hover:bg-slate-50 transition">
+    Generate new link
+  </button>
+</div>

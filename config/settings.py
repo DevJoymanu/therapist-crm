@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'crm.middleware.SecurityHeadersMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'crm.middleware.NoStoreHtmlMiddleware',
@@ -150,8 +151,49 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 LOGIN_REDIRECT_URL = "crm:dashboard"
 LOGOUT_REDIRECT_URL = "login"
+
+# ── Cache (used by the rate limiter) ──────────────────────────────────────────
+# LocMemCache is per-process. For multi-worker production deployments, switch to
+# Redis or Memcached so limits are enforced across all workers.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "therapist-crm-cache",
+    }
+}
+
+# ── Security hardening ────────────────────────────────────────────────────────
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = "DENY"
+
+# Session settings
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_AGE = 28800  # 8 hours of inactivity before forced logout
+
+# CSRF: must be False so HTMX can read the token via document.cookie.
+# (Setting this True silently breaks all hx-post buttons that are not inside a <form>.)
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = "Lax"
+
+# HTTPS-only flags — enabled automatically when not in DEBUG mode.
+# When deployed behind a reverse proxy (Nginx, Heroku, etc.) also set:
+#   SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = 0 if DEBUG else 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
+
+# ── Rate limiting thresholds (override via environment variables) ─────────────
+RATE_LIMIT_LOGIN_ATTEMPTS = int(os.getenv("RATE_LIMIT_LOGIN_ATTEMPTS", "10"))
+RATE_LIMIT_LOGIN_WINDOW = int(os.getenv("RATE_LIMIT_LOGIN_WINDOW", "300"))     # 5 min
+RATE_LIMIT_PUBLIC_ATTEMPTS = int(os.getenv("RATE_LIMIT_PUBLIC_ATTEMPTS", "5"))
+RATE_LIMIT_PUBLIC_WINDOW = int(os.getenv("RATE_LIMIT_PUBLIC_WINDOW", "600"))   # 10 min
+RATE_LIMIT_GENLINK_ATTEMPTS = int(os.getenv("RATE_LIMIT_GENLINK_ATTEMPTS", "30"))
+RATE_LIMIT_GENLINK_WINDOW = int(os.getenv("RATE_LIMIT_GENLINK_WINDOW", "3600"))  # 1 hr
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -27,4 +27,15 @@ urlpatterns = [
     path("criteria/<int:pk>/delete/", views.CriterionDeleteView.as_view(), name="criterion_delete"),
     path("consent/<uuid:token>/", views.ConsentFormView.as_view(), name="consent_form"),
     path("consent/<uuid:token>/done/", views.ConsentDoneView.as_view(), name="consent_done"),
+    # Public booking portal
+    path("book/<str:username>/", views.BookingPortalView.as_view(), name="booking_portal"),
+    path("book/p/<uuid:token>/", views.PersonalizedBookingView.as_view(), name="booking_personal"),
+    path("book/confirm/<uuid:token>/", views.BookingConfirmView.as_view(), name="booking_confirm"),
+    # Therapist booking management
+    path("booking/", views.BookingRequestsView.as_view(), name="booking_requests"),
+    path("booking/<int:pk>/approve/", views.ApproveRequestView.as_view(), name="request_approve"),
+    path("booking/<int:pk>/decline/", views.DeclineRequestView.as_view(), name="request_decline"),
+    # Expiring shareable links
+    path("link/<uuid:token>/", views.SharedLinkView.as_view(), name="shared_link"),
+    path("patients/<int:pk>/links/<str:link_type>/", views.GenerateLinkView.as_view(), name="generate_link"),
 ]

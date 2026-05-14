@@ -16,6 +16,26 @@
     </div>
   </div>
 
+  {% if pending_requests %}
+  <section class="rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-white">{{ pending_requests|length }}</span>
+        <p class="text-sm font-semibold text-amber-900">Pending appointment requests</p>
+      </div>
+      <a href="{% url 'crm:booking_requests' %}" class="text-sm font-semibold text-amber-700 hover:text-amber-900">Review all</a>
+    </div>
+    <div class="mt-3 space-y-2">
+      {% for req in pending_requests %}
+        <div class="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-sm shadow-sm">
+          <span class="font-medium text-slate-900">{{ req.client_full_name }}</span>
+          <span class="text-slate-500">{{ req.preferred_date }}{% if req.preferred_time_slot %} &mdash; {{ req.get_preferred_time_slot_display }}{% endif %}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
   <section class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
     {% include "crm/components/metric_card.html" with label="Total patients" value=patient_count hint="Active" tone="blue" url="/patients/" %}
     {% include "crm/components/metric_card.html" with label="Sessions this week" value=sessions_this_week hint="Clinical" tone="blue" url="/sessions/" %}

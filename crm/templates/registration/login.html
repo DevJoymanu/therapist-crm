@@ -30,6 +30,11 @@
     {% if form.non_field_errors %}
       <div class="rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{{ form.non_field_errors }}</div>
     {% endif %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="rounded-xl bg-amber-50 p-3 text-sm text-amber-800 border border-amber-200">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
     <button class="w-full rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" type="submit">Login</button>
   </form>
 </section>

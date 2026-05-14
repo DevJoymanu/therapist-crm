@@ -18,6 +18,9 @@
     <a href="{% url 'crm:appointment_list' %}" data-nav-link="appointments" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if 'appointment' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
       <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Appointments
     </a>
+    <a href="{% url 'crm:booking_requests' %}" data-nav-link="booking" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if 'booking' in request.resolver_match.url_name or 'request' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
+      <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Bookings{% if pending_request_count %}<span class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-white">{{ pending_request_count }}</span>{% endif %}
+    </a>
     <a href="{% url 'crm:session_list' %}" data-nav-link="sessions" class="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium {% if 'session' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
       <span class="mr-3 h-2 w-2 rounded-full bg-current"></span>Reports
     </a>
@@ -95,6 +98,13 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
       </svg>
       Appointments
+    </a>
+    <a href="{% url 'crm:booking_requests' %}" @click="mobileNav = false" data-nav-link="booking"
+       class="flex items-center rounded-xl px-3 py-3 text-sm font-medium {% if 'booking' in request.resolver_match.url_name or 'request' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">
+      <svg class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
+      </svg>
+      Bookings{% if pending_request_count %}<span class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-white">{{ pending_request_count }}</span>{% endif %}
     </a>
     <a href="{% url 'crm:session_list' %}" @click="mobileNav = false" data-nav-link="sessions"
        class="flex items-center rounded-xl px-3 py-3 text-sm font-medium {% if 'session' in request.resolver_match.url_name %}bg-blue-50 text-blue-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}">

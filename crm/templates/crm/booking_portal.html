@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book an Appointment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
+  <style>.pot-field{position:absolute;left:-9999px;top:-9999px;overflow:hidden;height:1px;width:1px;}</style>
+</head>
+<body class="min-h-full text-slate-900 antialiased">
+<div class="mx-auto max-w-xl px-4 py-10 sm:py-14">
+
+  <div class="mb-8 text-center">
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Book an Appointment</h1>
+    <p class="mt-2 text-sm text-slate-500">Yanrol Systemic Family Counselling Services &amp; Therapy</p>
+    <p class="mt-1 text-xs text-slate-400">Counsellor: <span class="font-medium text-slate-600">{{ therapist.get_full_name|default:therapist.username }}</span></p>
+  </div>
+
+  <div x-data="{ tab: '{{ active_tab }}' }" class="space-y-6">
+
+    <!-- Tab selector -->
+    <div class="flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
+      <button type="button" @click="tab = 'new'"
+              :class="tab === 'new' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+              class="flex-1 rounded-xl py-2.5 text-sm font-semibold transition">
+        I'm a new client
+      </button>
+      <button type="button" @click="tab = 'returning'"
+              :class="tab === 'returning' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+              class="flex-1 rounded-xl py-2.5 text-sm font-semibold transition">
+        I'm a returning client
+      </button>
+    </div>
+
+    <!-- New client form -->
+    <div x-show="tab === 'new'" x-transition>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-base font-semibold text-slate-900">New client — request an appointment</h2>
+        <p class="mt-1 text-sm text-slate-500">Fill in your details and we'll be in touch to confirm.</p>
+
+        {% if active_tab == 'new' and new_form.errors %}
+          <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            Please correct the errors below.
+          </div>
+        {% endif %}
+
+        <form method="post" class="mt-5 space-y-4">
+          {% csrf_token %}
+          <input type="hidden" name="client_type" value="new">
+          <div class="pot-field" aria-hidden="true"><label for="id_pot_n">Website</label><input type="text" id="id_pot_n" name="pot" tabindex="-1" autocomplete="off" value=""></div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Surname *</label>
+              {{ new_form.last_name }}
+              {% for e in new_form.last_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+            </div>
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">First Name *</label>
+              {{ new_form.first_name }}
+              {% for e in new_form.first_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+            </div>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Phone *</label>
+              {{ new_form.phone }}
+              {% for e in new_form.phone.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+            </div>
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Email</label>
+              {{ new_form.email }}
+              {% for e in new_form.email.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+            </div>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred date *</label>
+              {{ new_form.preferred_date }}
+              {% for e in new_form.preferred_date.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+            </div>
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred time</label>
+              {{ new_form.preferred_time_slot }}
+            </div>
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700">Reason for seeking counselling</label>
+            {{ new_form.reason }}
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
+              Submit Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Returning client form -->
+    <div x-show="tab === 'returning'" x-transition x-cloak>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-base font-semibold text-slate-900">Returning client — request an appointment</h2>
+        <p class="mt-1 text-sm text-slate-500">Enter your client ID and surname to identify yourself, then choose your preferred date.</p>
+
+        {% if active_tab == 'returning' and returning_form.errors %}
+          <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            Please correct the errors below.
+          </div>
+        {% endif %}
+
+        <form method="post" class="mt-5 space-y-4">
+          {% csrf_token %}
+          <input type="hidden" name="client_type" value="returning">
+          <div class="pot-field" aria-hidden="true"><label for="id_pot_r">Website</label><input type="text" id="id_pot_r" name="pot" tabindex="-1" autocomplete="off" value=""></div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Client ID *</label>
+              {{ returning_form.client_id }}
+              {% for e in returning_form.client_id.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+              <p class="mt-1 text-xs text-slate-400">Provided by your counsellor.</p>
+            </div>
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Surname *</label>
+              {{ returning_form.last_name }}
+              {% for e in returning_form.last_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+            </div>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred date *</label>
+              {{ returning_form.preferred_date }}
+              {% for e in returning_form.preferred_date.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
+            </div>
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-slate-700">Preferred time</label>
+              {{ returning_form.preferred_time_slot }}
+            </div>
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-sm font-medium text-slate-700">Notes for your counsellor</label>
+            {{ returning_form.reason }}
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
+              Submit Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="mt-8 text-center text-xs text-slate-400">All information is handled confidentially. &mdash; Yanrol Systemic Family Counselling Services &amp; Therapy</p>
+</div>
+</body>
+</html>
