@@ -6,7 +6,7 @@
 <div class="flex gap-2" x-data>
   <div class="min-w-0 flex-1" x-ref="wrap">{{ field }}</div>
   <button type="button"
-          x-show="'contacts' in navigator"
+          x-show="!!navigator.contacts?.select"
           x-cloak
           @click="window.pickFromContacts($refs.wrap.querySelector('input,textarea'))"
           class="sm:hidden shrink-0 flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition"

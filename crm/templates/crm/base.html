@@ -393,20 +393,45 @@
     }
 
     /**
-     * Contacts API picker — opens the device address book and fills an input
-     * with the selected phone number.  Silently does nothing on browsers that
-     * don't support navigator.contacts (desktop, Firefox, older iOS/Android).
+     * Contacts API picker — opens the device's native contacts app
+     * (Apple Contacts on iOS, Google/Samsung/etc. on Android) and fills
+     * an input with the selected phone number.
+     *
+     * Works on:  Safari iOS 14.5+, Chrome Android 80+
+     * Silently no-ops on: desktop browsers, Firefox, Chrome for iOS
+     *
+     * The API always uses the OS-level default contacts app — there is no
+     * way (nor need) to specify a different app.
      */
     window.pickFromContacts = async function (inputEl) {
-      if (!navigator.contacts) return;
+      // Specific method check — 'contacts' in navigator can be true on old
+      // OS versions where .select() was not yet implemented.
+      if (!navigator?.contacts?.select) return;
       try {
-        const results = await navigator.contacts.select(["tel", "name"], { multiple: false });
-        if (results.length && results[0].tel?.length) {
-          inputEl.value = results[0].tel[0];
+        // getProperties() lists supported fields; use optional chaining
+        // because it may not exist on all platform/browser combinations.
+        let props = ["tel"];
+        if (typeof navigator.contacts.getProperties === "function") {
+          const available = await navigator.contacts.getProperties();
+          props = available.filter(p => p === "tel" || p === "name");
+          if (!props.includes("tel")) return; // platform doesn't expose tel
+        }
+        const results = await navigator.contacts.select(props, { multiple: false });
+        if (!results.length) return;
+
+        const telList = results[0]?.tel;
+        if (!Array.isArray(telList) || !telList.length) return;
+
+        // Spec says tel is DOMString[], but defensively handle {value:"..."} too
+        const first = telList[0];
+        const phone = typeof first === "string" ? first : (first?.value ?? "");
+        if (phone) {
+          inputEl.value = phone;
           inputEl.dispatchEvent(new Event("input",  { bubbles: true }));
           inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+          inputEl.focus();
         }
-      } catch (_) { /* user cancelled or permission denied — ignore */ }
+      } catch (_) { /* user cancelled or OS denied permission — ignore */ }
     };
   </script>
 </head>

@@ -6,66 +6,93 @@
   <title>Book an Appointment</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+  <script src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js" defer></script>
   <style>
     .pot-field{position:absolute;left:-9999px;top:-9999px;overflow:hidden;height:1px;width:1px;}
+    [x-cloak]{display:none!important;}
     .htmx-indicator{opacity:0;transition:opacity 200ms ease;}
     .htmx-request .htmx-indicator{opacity:1;}
   </style>
+  <script>
+    window.pickFromContacts = async function (inputEl) {
+      if (!navigator?.contacts?.select) return;
+      try {
+        let props = ["tel"];
+        if (typeof navigator.contacts.getProperties === "function") {
+          const avail = await navigator.contacts.getProperties();
+          props = avail.filter(p => p === "tel" || p === "name");
+          if (!props.includes("tel")) return;
+        }
+        const results = await navigator.contacts.select(props, { multiple: false });
+        if (!results.length) return;
+        const telList = results[0]?.tel;
+        if (!Array.isArray(telList) || !telList.length) return;
+        const first = telList[0];
+        const phone = typeof first === "string" ? first : (first?.value ?? "");
+        if (phone) {
+          inputEl.value = phone;
+          inputEl.dispatchEvent(new Event("input",  { bubbles: true }));
+          inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+          inputEl.focus();
+        }
+      } catch (_) {}
+    };
+  </script>
 </head>
 <body class="min-h-full text-slate-900 antialiased">
-<div class="mx-auto w-full max-w-md px-4 py-12">
+<div class="mx-auto max-w-xl px-4 py-8 sm:py-12">
 
-  <div class="mb-8 text-center">
+  {# Header #}
+  <div class="mb-6 text-center">
     <p class="text-xs font-semibold uppercase tracking-widest text-slate-500">Yanrol Systemic Family</p>
     <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">Counselling Services &amp; Therapy</h1>
-    <div class="mx-auto mt-4 h-0.5 w-16 rounded bg-slate-300"></div>
-    <h2 class="mt-4 text-lg font-semibold text-slate-800">Book an Appointment</h2>
+    <div class="mx-auto mt-3 h-0.5 w-14 rounded bg-slate-300"></div>
   </div>
 
-  <!-- Client ID lookup card -->
-  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-    <p class="mb-5 text-sm text-slate-600 leading-6">
-      Enter your <strong>Client ID</strong> below. The system will look you up automatically.<br>
-      <span class="text-xs text-slate-400">Your Client ID is shown on your profile and provided by your counsellor.</span>
-    </p>
-
-    <!-- CSRF form wrapper so HTMX can include the token -->
+  {# Optional: Client ID shortcut for returning clients #}
+  <div class="mb-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <p class="mb-3 text-sm font-medium text-slate-700">Already a client? Enter your Client ID to skip the form.</p>
     <form id="id-form">
       {% csrf_token %}
       <div class="pot-field" aria-hidden="true">
         <label for="id_pot_portal">Website</label>
         <input type="text" id="id_pot_portal" name="pot" tabindex="-1" autocomplete="off" value="">
       </div>
-
-      <label class="mb-2 block text-sm font-medium text-slate-700" for="id_client_id">Client ID</label>
-      <input type="number"
-             id="id_client_id"
-             name="client_id"
-             inputmode="numeric"
-             autocomplete="off"
-             class="w-full rounded-xl border border-slate-200 bg-white px-3 py-3.5 text-xl text-center font-mono text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-             placeholder="e.g. 42"
-             hx-post="{% url 'crm:booking_check' therapist.username %}"
-             hx-target="#booking-content"
-             hx-swap="innerHTML"
-             hx-trigger="keyup changed delay:500ms, input changed delay:500ms"
-             hx-include="#id-form"
-             hx-indicator="#id-checking">
-
-      <div id="id-checking" class="htmx-indicator mt-2 text-center text-xs text-slate-400">
-        <span class="inline-block animate-pulse">Looking up…</span>
+      <div class="flex items-center gap-3">
+        <input type="number"
+               id="id_client_id"
+               name="client_id"
+               inputmode="numeric"
+               autocomplete="off"
+               class="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-lg font-mono text-center text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+               placeholder="e.g. 42"
+               hx-post="{% url 'crm:booking_check' therapist.username %}"
+               hx-target="#id-check-result"
+               hx-swap="innerHTML"
+               hx-trigger="keyup changed delay:500ms, input changed delay:500ms"
+               hx-include="#id-form"
+               hx-indicator="#id-checking">
+        <span id="id-checking" class="htmx-indicator text-xs text-slate-400 whitespace-nowrap">Checking…</span>
       </div>
     </form>
+    <div id="id-check-result" class="mt-3 empty:hidden"></div>
   </div>
 
-  <!-- HTMX swaps content here as user types -->
-  <div id="booking-content" class="mt-5">
-    <p class="text-center text-sm text-slate-500">
-      No Client ID? <a href="{% url 'crm:booking_new_client' therapist.username %}" class="font-medium text-blue-600 hover:text-blue-800">Register as a new client &rarr;</a>
-    </p>
+  {# Divider #}
+  <div class="mb-5 flex items-center gap-3">
+    <div class="flex-1 h-px bg-slate-200"></div>
+    <p class="text-xs font-medium text-slate-400">New client? Fill in the form below</p>
+    <div class="flex-1 h-px bg-slate-200"></div>
   </div>
 
-  <p class="mt-10 text-center text-xs text-slate-400">All information is handled confidentially. &mdash; Yanrol Systemic Family Counselling Services &amp; Therapy</p>
+  {# Main booking area — wizard by default; replaced by returning-client form when ID is found #}
+  <div id="booking-form-area">
+    {% include "crm/partials/booking_new_client_wizard.html" %}
+  </div>
+
+  <p class="mt-8 text-center text-xs text-slate-400">
+    All information is handled confidentially. &mdash; Yanrol Systemic Family Counselling Services &amp; Therapy
+  </p>
 </div>
 </body>
 </html>

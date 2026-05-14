@@ -451,7 +451,12 @@ class BookingPortalView(View):
 
     def get(self, request, username):
         therapist = self._get_therapist(username)
-        return render(request, self.template_name, {"therapist": therapist})
+        return render(request, self.template_name, {
+            "therapist": therapist,
+            "intake_form": NewClientFullForm(),
+            "consent_form": ClientConsentForm(),
+            "appt_form": PersonalizedBookingForm(),
+        })
 
     def post(self, request, username):
         if _honeypot_triggered(request):
@@ -523,13 +528,17 @@ class BookingCheckView(View):
         except Exception:
             consent_signed = False
 
-        return render(request, "crm/partials/booking_check_found.html", {
+        response = render(request, "crm/partials/booking_check_found.html", {
             "therapist": therapist,
             "patient": patient,
             "appt_form": PersonalizedBookingForm(),
             "consent_form": ClientConsentForm() if not consent_signed else None,
             "consent_signed": consent_signed,
         })
+        # Retarget: replace the wizard area instead of the small notice div
+        response["HX-Retarget"] = "#booking-form-area"
+        response["HX-Reswap"] = "innerHTML"
+        return response
 
 
 class BookingReturningView(View):

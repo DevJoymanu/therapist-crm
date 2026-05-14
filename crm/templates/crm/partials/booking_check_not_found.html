@@ -1,18 +1,6 @@
-<div class="space-y-4">
-  <div class="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-    <svg class="mt-0.5 h-4 w-4 shrink-0 text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
-    </svg>
-    <div>
-      <p class="text-sm font-semibold text-amber-800">Client ID "{{ client_id_str }}" not found.</p>
-      <p class="mt-0.5 text-xs text-amber-700">Double-check the number with your counsellor, or register below if you're new to our practice.</p>
-    </div>
-  </div>
-
-  <a href="{% url 'crm:booking_new_client' therapist.username %}?id_not_found=1"
-     class="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 active:scale-95 transition">
-    Register as a New Client &rarr;
-  </a>
-
-  <p class="text-center text-xs text-slate-400">Already registered? Check your Client ID on your profile or ask your counsellor.</p>
+<div class="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-800">
+  <svg class="h-4 w-4 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/>
+  </svg>
+  <span>Client ID <strong>{{ client_id_str }}</strong> wasn't found. Please complete the registration form below.</span>
 </div>

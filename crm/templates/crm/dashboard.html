@@ -78,7 +78,7 @@
                  class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                  placeholder="+263 77…">
           <button type="button"
-                  x-show="'contacts' in navigator" x-cloak
+                  x-show="!!navigator.contacts?.select" x-cloak
                   @click="window.pickFromContacts($refs.phoneInput); $nextTick(() => phone = $refs.phoneInput.value)"
                   class="sm:hidden shrink-0 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition"
                   title="Import from contacts">
