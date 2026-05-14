@@ -391,6 +391,23 @@
         }
       };
     }
+
+    /**
+     * Contacts API picker — opens the device address book and fills an input
+     * with the selected phone number.  Silently does nothing on browsers that
+     * don't support navigator.contacts (desktop, Firefox, older iOS/Android).
+     */
+    window.pickFromContacts = async function (inputEl) {
+      if (!navigator.contacts) return;
+      try {
+        const results = await navigator.contacts.select(["tel", "name"], { multiple: false });
+        if (results.length && results[0].tel?.length) {
+          inputEl.value = results[0].tel[0];
+          inputEl.dispatchEvent(new Event("input",  { bubbles: true }));
+          inputEl.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      } catch (_) { /* user cancelled or permission denied — ignore */ }
+    };
   </script>
 </head>
 <body class="h-full text-slate-900 antialiased" hx-indicator="#page-spinner">

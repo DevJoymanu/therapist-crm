@@ -1,0 +1,20 @@
+{#
+  Reusable telephone field wrapper with a "Pick from contacts" button.
+  Usage: {% include "crm/components/tel_input.html" with field=form.phone %}
+  The button appears only on touch devices when navigator.contacts is available.
+#}
+<div class="flex gap-2" x-data>
+  <div class="min-w-0 flex-1" x-ref="wrap">{{ field }}</div>
+  <button type="button"
+          x-show="'contacts' in navigator"
+          x-cloak
+          @click="window.pickFromContacts($refs.wrap.querySelector('input,textarea'))"
+          class="sm:hidden shrink-0 flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition"
+          title="Import from contacts">
+    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+    </svg>
+  </button>
+</div>
+{% for error in field.errors %}<p class="mt-1 text-sm text-rose-600">{{ error }}</p>{% endfor %}

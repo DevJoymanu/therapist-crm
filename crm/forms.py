@@ -14,6 +14,11 @@ class DateTimeInput(forms.DateTimeInput):
     input_type = "datetime-local"
 
 
+class TelInput(forms.TextInput):
+    """Renders as <input type="tel"> — triggers mobile contact suggestions and the Contacts API."""
+    input_type = "tel"
+
+
 class AppointmentSelect(forms.Select):
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
@@ -86,6 +91,9 @@ class PatientForm(StyledModelForm):
         ]
         widgets = {
             "date_of_birth": DateInput(),
+            "phone": TelInput(),
+            "emergency_contact_phone1": TelInput(),
+            "emergency_contact_phone2": TelInput(),
             "address": forms.Textarea(attrs={"rows": 3}),
             "previous_treatment": forms.Textarea(attrs={"rows": 4}),
             "current_medication": forms.Textarea(attrs={"rows": 3}),
@@ -403,6 +411,9 @@ class ClientIntakeForm(StyledModelForm):
         ]
         widgets = {
             "date_of_birth": DateInput(),
+            "phone": TelInput(),
+            "emergency_contact_phone1": TelInput(),
+            "emergency_contact_phone2": TelInput(),
             "address": forms.Textarea(attrs={"rows": 3}),
             "previous_treatment": forms.Textarea(attrs={"rows": 4}),
             "current_medication": forms.Textarea(attrs={"rows": 3}),
@@ -452,6 +463,9 @@ class NewClientFullForm(StyledModelForm):
         ]
         widgets = {
             "date_of_birth": DateInput(),
+            "phone": TelInput(),
+            "emergency_contact_phone1": TelInput(),
+            "emergency_contact_phone2": TelInput(),
             "address": forms.Textarea(attrs={"rows": 3}),
             "previous_treatment": forms.Textarea(attrs={"rows": 3}),
             "current_medication": forms.Textarea(attrs={"rows": 2}),

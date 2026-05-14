@@ -135,8 +135,7 @@
 
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.phone.id_for_label }}">Contact Number</label>
-        {{ form.phone }}
-        {% for error in form.phone.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+        {% include "crm/components/tel_input.html" with field=form.phone %}
       </div>
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.email.id_for_label }}">Email</label>
@@ -173,13 +172,11 @@
       </div>
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone1.id_for_label }}">Contact Number 1</label>
-        {{ form.emergency_contact_phone1 }}
-        {% for error in form.emergency_contact_phone1.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+        {% include "crm/components/tel_input.html" with field=form.emergency_contact_phone1 %}
       </div>
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.emergency_contact_phone2.id_for_label }}">Contact Number 2</label>
-        {{ form.emergency_contact_phone2 }}
-        {% for error in form.emergency_contact_phone2.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+        {% include "crm/components/tel_input.html" with field=form.emergency_contact_phone2 %}
       </div>
     </div>
     </div>

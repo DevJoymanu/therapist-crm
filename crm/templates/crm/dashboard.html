@@ -73,9 +73,20 @@
 
       {# Phone number → client-side WhatsApp link with general booking URL #}
       <div x-show="mode === 'phone'" x-cloak x-data="{ phone: '' }">
-        <input type="tel" x-model="phone"
-               class="mb-3 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-               placeholder="+263 77…">
+        <div class="mb-3 flex gap-2">
+          <input type="tel" x-model="phone" x-ref="phoneInput" autocomplete="tel"
+                 class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                 placeholder="+263 77…">
+          <button type="button"
+                  x-show="'contacts' in navigator" x-cloak
+                  @click="window.pickFromContacts($refs.phoneInput); $nextTick(() => phone = $refs.phoneInput.value)"
+                  class="sm:hidden shrink-0 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition"
+                  title="Import from contacts">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+            </svg>
+          </button>
+        </div>
         <p class="mb-3 text-xs text-slate-500 break-all">Will open WhatsApp with: <span class="font-mono">{{ booking_portal_url }}</span></p>
         <a :href="'https://wa.me/' + phone.replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent('Hello!\n\nHere is our appointment booking link:\n\n{{ booking_portal_url }}\n\nPlease enter your Client ID if you have one, or follow the steps to register.')"
            target="_blank" rel="noopener noreferrer"
