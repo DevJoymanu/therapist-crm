@@ -29,6 +29,7 @@ urlpatterns = [
     path("consent/<uuid:token>/done/", views.ConsentDoneView.as_view(), name="consent_done"),
     # Public booking portal
     path("book/<str:username>/", views.BookingPortalView.as_view(), name="booking_portal"),
+    path("book/<str:username>/check/", views.BookingCheckView.as_view(), name="booking_check"),
     path("book/<str:username>/returning/<int:patient_pk>/", views.BookingReturningView.as_view(), name="booking_returning"),
     path("book/<str:username>/new/", views.BookingNewClientView.as_view(), name="booking_new_client"),
     path("book/p/<uuid:token>/", views.PersonalizedBookingView.as_view(), name="booking_personal"),

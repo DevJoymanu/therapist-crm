@@ -145,6 +145,11 @@
         <h3 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">Personal Details</h3>
         <p class="mb-4 text-xs text-slate-500">Your basic information. All fields are optional except where marked.</p>
         <div class="grid gap-4 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.national_id.id_for_label }}">{{ form.national_id.label }}</label>
+            {{ form.national_id }}
+            <p class="mt-1 text-xs text-slate-400">Helps prevent duplicate records. Leave blank if unavailable.</p>
+          </div>
           <div>
             <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
             {{ form.gender }}{% for e in form.gender.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}

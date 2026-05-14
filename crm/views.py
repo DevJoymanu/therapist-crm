@@ -488,6 +488,50 @@ class BookingPortalView(View):
         )
 
 
+class BookingCheckView(View):
+    """
+    HTMX endpoint called automatically as the user types their Client ID.
+    Returns a small HTML partial — no full page, no redirect.
+    """
+
+    def post(self, request, username):
+        if is_rate_limited(request, "booking_check", max_hits=20, window_seconds=60):
+            return HttpResponse(
+                "<p class='mt-3 text-center text-xs text-rose-500'>Too many requests — please slow down.</p>"
+            )
+        User = get_user_model()
+        therapist = get_object_or_404(User, username=username)
+        client_id_str = request.POST.get("client_id", "").strip()
+
+        if not client_id_str:
+            return render(request, "crm/partials/booking_check_empty.html", {
+                "therapist": therapist,
+            })
+
+        try:
+            patient = Patient.objects.get(
+                pk=int(client_id_str), therapist=therapist, is_active=True
+            )
+        except (ValueError, Patient.DoesNotExist):
+            return render(request, "crm/partials/booking_check_not_found.html", {
+                "therapist": therapist,
+                "client_id_str": client_id_str,
+            })
+
+        try:
+            consent_signed = patient.consent.is_signed
+        except Exception:
+            consent_signed = False
+
+        return render(request, "crm/partials/booking_check_found.html", {
+            "therapist": therapist,
+            "patient": patient,
+            "appt_form": PersonalizedBookingForm(),
+            "consent_form": ClientConsentForm() if not consent_signed else None,
+            "consent_signed": consent_signed,
+        })
+
+
 class BookingReturningView(View):
     """Appointment request form for a client whose ID was found."""
     template_name = "crm/booking_returning.html"

@@ -51,6 +51,11 @@
           <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.first_name.id_for_label }}">First Name *</label>
           {{ intake_form.first_name }}{% for e in intake_form.first_name.errors %}<p class="mt-1 text-xs text-rose-600">{{ e }}</p>{% endfor %}
         </div>
+        <div class="sm:col-span-2">
+          <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.national_id.id_for_label }}">{{ intake_form.national_id.label }}</label>
+          {{ intake_form.national_id }}
+          <p class="mt-1 text-xs text-slate-400">Helps prevent duplicate records. Leave blank if unavailable.</p>
+        </div>
         <div>
           <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ intake_form.gender.id_for_label }}">M / F</label>
           {{ intake_form.gender }}

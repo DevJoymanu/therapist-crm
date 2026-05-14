@@ -70,6 +70,12 @@
         {% for error in form.first_name.errors %}<p class="mt-2 text-sm text-rose-600">{{ error }}</p>{% endfor %}
       </div>
 
+      <div class="sm:col-span-2">
+        <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.national_id.id_for_label }}">{{ form.national_id.label }}</label>
+        {{ form.national_id }}
+        <p class="mt-1 text-xs text-slate-400">{{ form.national_id.field.help_text }}</p>
+        {% for error in form.national_id.errors %}<p class="mt-1 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+      </div>
       <div>
         <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ form.gender.id_for_label }}">M / F</label>
         {{ form.gender }}

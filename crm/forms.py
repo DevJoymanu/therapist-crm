@@ -60,6 +60,7 @@ class PatientForm(StyledModelForm):
         fields = [
             "first_name",
             "last_name",
+            "national_id",
             "gender",
             "date_of_birth",
             "nationality",
@@ -390,6 +391,7 @@ class ClientIntakeForm(StyledModelForm):
     class Meta:
         model = Patient
         fields = [
+            "national_id",
             "gender", "date_of_birth", "nationality", "marital_status",
             "religion", "occupation", "address", "phone", "email",
             "emergency_contact_name", "emergency_contact_relationship",
@@ -406,6 +408,7 @@ class ClientIntakeForm(StyledModelForm):
             "current_medication": forms.Textarea(attrs={"rows": 3}),
         }
         labels = {
+            "national_id": "National ID / Passport No.",
             "emergency_contact_name": "Full name",
             "emergency_contact_relationship": "Relationship",
             "emergency_contact_phone1": "Contact number 1",
@@ -437,7 +440,7 @@ class NewClientFullForm(StyledModelForm):
     class Meta:
         model = Patient
         fields = [
-            "first_name", "last_name",
+            "first_name", "last_name", "national_id",
             "gender", "date_of_birth", "nationality", "marital_status",
             "religion", "occupation", "address", "phone", "email",
             "emergency_contact_name", "emergency_contact_relationship",
@@ -456,6 +459,7 @@ class NewClientFullForm(StyledModelForm):
         labels = {
             "first_name": "First Name",
             "last_name": "Surname",
+            "national_id": "National ID / Passport No.",
             "emergency_contact_name": "Full name",
             "emergency_contact_relationship": "Relationship",
             "emergency_contact_phone1": "Contact number 1",

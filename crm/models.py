@@ -50,6 +50,12 @@ class Patient(TimeStampedModel):
     # Client Information
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
+    national_id = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name="National ID / Passport No.",
+        help_text="Government-issued ID or passport number. Used to prevent duplicate records.",
+    )
     gender = models.CharField(max_length=1, choices=Gender.choices, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     nationality = models.CharField(max_length=80, blank=True)
