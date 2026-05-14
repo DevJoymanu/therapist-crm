@@ -1,11 +1,13 @@
 import datetime
+import re
+import urllib.parse
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as _DjangoLoginView
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -743,3 +745,59 @@ class SharedLinkView(View):
             )
             return redirect(reverse("crm:booking_confirm", kwargs={"token": req.token}))
         return render(request, "crm/shared_link.html", {"link": link, "form": form})
+
+
+# ── WhatsApp booking link ─────────────────────────────────────────────────────
+
+def _clean_phone_for_wa(raw: str) -> str:
+    """
+    Strip everything except digits from the phone number.
+    wa.me expects the international number without the leading +.
+    Returns an empty string if the result is too short to be valid.
+    """
+    digits = re.sub(r"[^\d]", "", raw or "")
+    return digits if len(digits) >= 7 else ""
+
+
+class WhatsAppBookingLinkView(TherapistRequiredMixin, View):
+    """
+    GET /patients/<pk>/whatsapp/
+    Creates a fresh expiring booking ShareableLink, builds a pre-filled
+    WhatsApp message, and redirects to wa.me so WhatsApp opens directly.
+    Opens in a new tab from the patient list (target="_blank" bypasses HTMX).
+    """
+
+    def get(self, request, pk):
+        if is_rate_limited(
+            request,
+            prefix="wa_link",
+            max_hits=settings.RATE_LIMIT_GENLINK_ATTEMPTS,
+            window_seconds=settings.RATE_LIMIT_GENLINK_WINDOW,
+            per_user=True,
+        ):
+            return HttpResponse("Too many link generations. Please wait before sending more.", status=429)
+
+        patient = get_object_or_404(Patient, pk=pk, therapist=request.user)
+
+        link = ShareableLink.objects.create(
+            patient=patient,
+            link_type=ShareableLink.LinkType.BOOKING,
+            expires_at=timezone.now() + datetime.timedelta(days=_LINK_EXPIRY_DAYS),
+        )
+        booking_url = request.build_absolute_uri(link.get_absolute_url())
+        expiry = link.expires_at.strftime("%d %B %Y")
+
+        message = (
+            f"Hello {patient.first_name},\n\n"
+            f"Please use the link below to request your appointment with "
+            f"Yanrol Systemic Family Counselling Services & Therapy:\n\n"
+            f"{booking_url}\n\n"
+            f"This link expires on {expiry}.\n\n"
+            f"Please reply or call us if you have any questions."
+        )
+
+        phone = _clean_phone_for_wa(patient.phone)
+        base = f"https://wa.me/{phone}" if phone else "https://wa.me"
+        whatsapp_url = f"{base}?text={urllib.parse.quote(message)}"
+
+        return HttpResponseRedirect(whatsapp_url)

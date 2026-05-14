@@ -122,10 +122,15 @@
         </button>
       </div>
 
-      <!-- QR code generated client-side -->
+      <!-- QR code — server-rendered via api.qrserver.com (no JS required) -->
       <div class="mt-5">
         <p class="mb-2 text-xs font-medium text-slate-500 uppercase tracking-wide">QR Code</p>
-        <div id="booking-qr" class="flex justify-center rounded-xl border border-slate-200 bg-white p-4"></div>
+        <div class="flex justify-center rounded-xl border border-slate-200 bg-white p-4">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ booking_url|urlencode }}&qzone=1&format=png"
+               alt="Booking page QR code"
+               width="200" height="200"
+               class="rounded-lg">
+        </div>
         <p class="mt-2 text-center text-xs text-slate-400">Clients can scan this to open the booking form.</p>
       </div>
     </section>
@@ -144,17 +149,4 @@
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    new QRCode(document.getElementById("booking-qr"), {
-      text: "{{ booking_url }}",
-      width: 200,
-      height: 200,
-      colorDark: "#1e293b",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M,
-    });
-  });
-</script>
 {% endblock %}

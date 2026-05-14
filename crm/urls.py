@@ -38,4 +38,6 @@ urlpatterns = [
     # Expiring shareable links
     path("link/<uuid:token>/", views.SharedLinkView.as_view(), name="shared_link"),
     path("patients/<int:pk>/links/<str:link_type>/", views.GenerateLinkView.as_view(), name="generate_link"),
+    # WhatsApp booking link
+    path("patients/<int:pk>/whatsapp/", views.WhatsAppBookingLinkView.as_view(), name="whatsapp_booking"),
 ]
