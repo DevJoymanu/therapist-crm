@@ -28,9 +28,22 @@
     <h2 class="text-base font-semibold text-slate-950">Session details</h2>
     <div class="mt-5 grid gap-5 md:grid-cols-2">
       {% for field in form %}
-        <div class="{% if field.field.widget.input_type == 'textarea' %}md:col-span-2{% endif %}">
+        <div class="{% if field.field.widget.input_type == 'textarea' %}md:col-span-2{% endif %}"
+             {% if field.field.widget.input_type == 'textarea' %}x-data="{ charcount: 0 }" @input="charcount = $event.target.value.length" x-init="charcount = $el.querySelector('textarea')?.value?.length || 0"{% endif %}>
           <label class="mb-2 block text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {% if field.html_name == 'presenting_concerns' %}
+            <p class="mb-2 text-xs text-slate-500">What did the client bring to this session? What are they struggling with right now?</p>
+          {% elif field.html_name == 'interventions' %}
+            <p class="mb-2 text-xs text-slate-500">What did you do together? (e.g. CBT exercises, grounding, role play, reflection)</p>
+          {% elif field.html_name == 'plan' %}
+            <p class="mb-2 text-xs text-slate-500">What's the next step? (e.g. homework, follow-up topic, referral)</p>
+          {% elif field.html_name == 'private_notes' %}
+            <p class="mb-2 text-xs text-slate-500">Your internal clinical observations — not shared with the client.</p>
+          {% endif %}
           {{ field }}
+          {% if field.field.widget.input_type == 'textarea' %}
+            <p class="mt-1 text-right text-xs text-slate-400" x-text="charcount + ' characters'"></p>
+          {% endif %}
           {% if field.field.required %}
             <p class="mt-2 text-xs text-amber-700" x-show="submitted && !$el.parentElement.querySelector('input, select, textarea')?.value" x-transition>Please complete this field.</p>
           {% endif %}
@@ -50,7 +63,7 @@
         <label class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <span class="block text-sm font-semibold text-slate-950">{{ item.criterion.name }}</span>
           <span class="mt-1 block text-xs text-slate-500">{{ item.criterion.min_score }} to {{ item.criterion.max_score }}</span>
-          <input class="mt-3 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" type="number" name="score_{{ item.criterion.pk }}" min="{{ item.criterion.min_score }}" max="{{ item.criterion.max_score }}" value="{{ item.value }}" x-model.number="score_{{ item.criterion.pk }}">
+          <input class="mt-3 h-14 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 sm:h-11" type="number" name="score_{{ item.criterion.pk }}" min="{{ item.criterion.min_score }}" max="{{ item.criterion.max_score }}" value="{{ item.value }}" x-model.number="score_{{ item.criterion.pk }}">
           <span class="mt-2 block text-xs text-amber-700" x-show="score_{{ item.criterion.pk }} !== '' && (score_{{ item.criterion.pk }} < {{ item.criterion.min_score }} || score_{{ item.criterion.pk }} > {{ item.criterion.max_score }})" x-transition>Use {{ item.criterion.min_score }} to {{ item.criterion.max_score }}.</span>
         </label>
       {% empty %}

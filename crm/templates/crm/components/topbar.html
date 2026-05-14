@@ -53,7 +53,7 @@
       </button>
       <div x-cloak x-show="open" x-transition @click.outside="open = false"
            class="absolute right-0 mt-2 w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
-        <a href="{% url 'crm:criterion_list' %}" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">Settings</a>
+        <a href="{% url 'crm:criterion_list' %}" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">Scoring</a>
         <button @click="dark = !dark; open = false"
                 class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 md:hidden">
           <span x-show="!dark">Switch to dark mode</span>
@@ -68,3 +68,12 @@
 
   </div>
 </header>
+
+{# Floating action button — mobile only, sits above the bottom nav bar #}
+<a href="{% url 'crm:session_create' %}"
+   class="fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-lg shadow-blue-600/30 hover:bg-blue-700 active:scale-95 sm:hidden"
+   aria-label="Add session note">
+  <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+  </svg>
+</a>

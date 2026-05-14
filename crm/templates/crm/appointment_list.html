@@ -12,6 +12,29 @@
   <a class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:appointment_create' %}">New appointment</a>
 </div>
 
+{# Today's appointments highlighted section #}
+<div class="mb-6 overflow-hidden rounded-2xl border-l-4 border-amber-400 bg-amber-50 shadow-sm">
+  <div class="flex items-center justify-between px-5 py-3">
+    <h2 class="text-sm font-semibold text-amber-900">Today</h2>
+    <span class="text-xs text-amber-700">{% now "l, N j" %}</span>
+  </div>
+  {% if today_appointments %}
+    <div class="divide-y divide-amber-100 border-t border-amber-200">
+      {% for appt in today_appointments %}
+        <a href="{{ appt.get_absolute_url }}" class="flex items-center justify-between gap-4 bg-white px-5 py-3 hover:bg-amber-50">
+          <div>
+            <p class="text-sm font-semibold text-slate-900">{{ appt.patient.full_name }}</p>
+            <p class="text-xs text-slate-500">{{ appt.starts_at|date:"H:i" }}–{{ appt.ends_at|date:"H:i" }}{% if appt.location %} &middot; {{ appt.location }}{% endif %}</p>
+          </div>
+          {% include "crm/components/status_badge.html" with label=appt.get_status_display tone="muted" %}
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="border-t border-amber-200 bg-white px-5 py-4 text-sm text-slate-400">Nothing scheduled today.</p>
+  {% endif %}
+</div>
+
 <section id="appointment-results" class="skeleton-target overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
   {# Mobile card list — hidden md+ #}

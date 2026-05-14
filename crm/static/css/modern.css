@@ -130,7 +130,10 @@ textarea {
   button,
   a[href][class*="rounded"],
   input[type="submit"],
-  input[type="button"] {
+  input[type="button"],
+  .detail-actions > a,
+  .detail-actions > button,
+  .detail-actions > div > button {
     min-height: 44px;
   }
 }
@@ -347,5 +350,12 @@ tbody tr[onclick]:active {
   #dashboardChart,
   #trendChart {
     max-height: 200px;
+  }
+}
+
+/* ── Textarea: readable minimum height on mobile ─────────────────── */
+@media (max-width: 640px) {
+  textarea {
+    min-height: 100px;
   }
 }

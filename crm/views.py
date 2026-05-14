@@ -182,6 +182,18 @@ class AppointmentListView(TherapistRequiredMixin, ListView):
             "patient"
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["today_appointments"] = (
+            Appointment.objects.filter(
+                patient__therapist=self.request.user,
+                starts_at__date=timezone.localdate(),
+            )
+            .select_related("patient")
+            .order_by("starts_at")
+        )
+        return context
+
 
 class AppointmentDetailView(TherapistRequiredMixin, DetailView):
     template_name = "crm/appointment_detail.html"

@@ -7,7 +7,8 @@
   <div class="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
     <div class="min-w-0">
       <p class="text-sm font-medium text-blue-700">Dashboard</p>
-      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Good day, {{ user.get_username }}</h1>
+      {% now "G" as current_hour %}
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">{% if current_hour|add:0 < 12 %}Good morning{% elif current_hour|add:0 < 17 %}Good afternoon{% else %}Good evening{% endif %}, {{ user.get_username }}</h1>
       <p class="mt-2 max-w-2xl text-sm text-slate-500">A focused view of today's clinical work and patient risk signals.</p>
     </div>
     <div class="detail-actions">
@@ -39,7 +40,9 @@
   <section class="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
     {% include "crm/components/metric_card.html" with label="Total patients" value=patient_count hint="Active" tone="blue" url="/patients/" %}
     {% include "crm/components/metric_card.html" with label="Sessions this week" value=sessions_this_week hint="Clinical" tone="blue" url="/sessions/" %}
-    {% include "crm/components/metric_card.html" with label="High-risk patients" value=high_risk_scores|length hint="Review" tone="rose" url="/patients/" %}
+    <div class="{% if high_risk_scores %}order-first sm:order-none{% endif %}">
+      {% include "crm/components/metric_card.html" with label="High-risk patients" value=high_risk_scores|length hint="Review" tone="rose" url="/patients/" %}
+    </div>
     {% include "crm/components/metric_card.html" with label="Upcoming appointments" value=upcoming_appointments|length hint="Scheduled" tone="amber" url="/appointments/" %}
   </section>
 
@@ -79,7 +82,10 @@
           </div>
         </a>
         {% empty %}
-        <p class="px-5 py-10 text-center text-sm text-slate-500">No upcoming appointments.</p>
+        <div class="m-4 rounded-xl border border-blue-200 bg-blue-50 px-5 py-6 text-center">
+          <p class="text-sm font-medium text-blue-800">No sessions scheduled today — add one to get started</p>
+          <a href="{% url 'crm:appointment_create' %}" class="mt-3 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">Schedule session</a>
+        </div>
         {% endfor %}
       </div>
     </div>
