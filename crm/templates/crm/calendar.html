@@ -16,7 +16,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
       </svg>
     </a>
-    <a href="{% url 'crm:calendar' %}"
+    <a href="{% url 'appointments:calendar' %}"
        class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
       Today
     </a>
@@ -26,12 +26,14 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
       </svg>
     </a>
-    <a href="{% url 'crm:appointment_create' %}"
+    <a href="{% url 'appointments:appointment_create' %}"
        class="ml-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">
       New appointment
     </a>
   </div>
 </div>
+
+{% include "crm/partials/send_booking_link_card.html" %}
 
 <div class="lg:grid lg:grid-cols-[1fr_320px] lg:items-start lg:gap-6">
 
@@ -55,7 +57,7 @@
       {% for day in week %}
       <button
         data-calendar-day
-        hx-get="{% url 'crm:calendar_day' day.date_str %}"
+        hx-get="{% url 'appointments:calendar_day' day.date_str %}"
         hx-target="#day-panel"
         hx-swap="innerHTML"
         class="group relative min-h-[72px] p-1.5 text-left transition-colors hover:bg-slate-50 focus:outline-none sm:min-h-[100px] sm:p-2 {% if not day.in_month %}opacity-40{% endif %}"

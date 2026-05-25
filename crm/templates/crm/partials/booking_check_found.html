@@ -14,7 +14,7 @@
     </svg>
   </div>
 
-  <form method="post" action="{% url 'crm:booking_returning' therapist.username patient.pk %}" class="space-y-5">
+  <form method="post" action="{% url 'booking:booking_returning' therapist.username patient.pk %}" class="space-y-5">
     {% csrf_token %}
     <div class="pot-field" aria-hidden="true">
       <label for="id_pot_found">Website</label>

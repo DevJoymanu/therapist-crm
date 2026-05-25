@@ -9,8 +9,10 @@
     <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Schedule</h1>
     <p class="mt-2 text-sm text-slate-500">View, reschedule, and prepare for upcoming sessions.</p>
   </div>
-  <a class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:appointment_create' %}">New appointment</a>
+  <a class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'appointments:appointment_create' %}">New appointment</a>
 </div>
+
+{% include "crm/partials/send_booking_link_card.html" %}
 
 {# Today's appointments highlighted section #}
 <div class="mb-6 overflow-hidden rounded-2xl border-l-4 border-amber-400 bg-amber-50 shadow-sm">
@@ -77,8 +79,8 @@
             <td class="px-5 py-4 text-right">
               <div class="flex justify-end gap-2">
                 <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{{ appointment.get_absolute_url }}">View</a>
-                <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{% url 'crm:appointment_update' appointment.pk %}">Edit</a>
-                <a class="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50" href="{% url 'crm:appointment_delete' appointment.pk %}">Delete</a>
+                <a class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white" href="{% url 'appointments:appointment_update' appointment.pk %}">Edit</a>
+                <a class="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50" href="{% url 'appointments:appointment_delete' appointment.pk %}">Delete</a>
               </div>
             </td>
           </tr>

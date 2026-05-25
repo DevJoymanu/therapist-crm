@@ -13,12 +13,14 @@
     {% if linked_session %}
       <a class="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm hover:bg-blue-100" href="{{ linked_session.get_absolute_url }}">View session notes</a>
     {% else %}
-      <a class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:session_create' %}?appointment={{ appointment.pk }}">Add session</a>
+      <a class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'notes:session_create' %}?appointment={{ appointment.pk }}">Add session</a>
     {% endif %}
-    <a class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50" href="{% url 'crm:appointment_update' appointment.pk %}">Reschedule</a>
-    <a class="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-rose-600/20 hover:bg-rose-700" href="{% url 'crm:appointment_delete' appointment.pk %}">Cancel</a>
+    <a class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50" href="{% url 'appointments:appointment_update' appointment.pk %}">Reschedule</a>
+    <a class="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-rose-600/20 hover:bg-rose-700" href="{% url 'appointments:appointment_delete' appointment.pk %}">Cancel</a>
   </div>
 </div>
+
+{% include "crm/partials/send_booking_link_card.html" %}
 
 <section class="grid gap-6 lg:grid-cols-3">
   <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -47,9 +49,9 @@
       <p class="mt-1 text-sm text-slate-500">Clinical documentation linked to this appointment.</p>
     </div>
     {% if linked_session %}
-      <a class="text-sm font-semibold text-blue-700 hover:text-blue-800" href="{% url 'crm:session_update' linked_session.pk %}">Edit</a>
+      <a class="text-sm font-semibold text-blue-700 hover:text-blue-800" href="{% url 'notes:session_update' linked_session.pk %}">Edit</a>
     {% else %}
-      <a class="text-sm font-semibold text-blue-700 hover:text-blue-800" href="{% url 'crm:session_create' %}?appointment={{ appointment.pk }}">Add</a>
+      <a class="text-sm font-semibold text-blue-700 hover:text-blue-800" href="{% url 'notes:session_create' %}?appointment={{ appointment.pk }}">Add</a>
     {% endif %}
   </div>
   {% if linked_session %}
@@ -83,7 +85,7 @@
   {% else %}
     <div class="flex flex-col items-center gap-4 px-5 py-10 text-center">
       <p class="text-sm text-slate-500">No session notes recorded for this appointment yet.</p>
-      <a class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'crm:session_create' %}?appointment={{ appointment.pk }}">Add session notes</a>
+      <a class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700" href="{% url 'notes:session_create' %}?appointment={{ appointment.pk }}">Add session notes</a>
     </div>
   {% endif %}
 </section>

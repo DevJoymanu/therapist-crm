@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"d:\\\\CRMs\\\\therapist-crm\" -Force | Select-Object Name, @{Name=\"Type\"; Expression={if \\($_.PSIsContainer\\) { \"DIR\" } else { \"FILE\" }}} | Sort-Object Type, Name)",
+      "Bash(Get-ChildItem -Path \"d:\\\\CRMs\\\\therapist-crm\" -Directory -Exclude \"venv\",\"__pycache__\",\".git\")",
+      "Bash(Select-Object Name)",
+      "Bash(\"venv/Scripts/python.exe\" manage.py test crm --verbosity=2)",
+      "Bash(\"venv/Scripts/python.exe\" manage.py check)",
+      "Bash(rm -rf crm/models crm/forms crm/services crm/views crm/tests)",
+      "Bash(rm -f crm/admin.py crm/context_processors.py crm/middleware.py crm/ratelimit.py crm/urls.py)",
+      "Bash(rm -rf crm/management)",
+      "Bash(python manage.py makemigrations)",
+      "Bash(python manage.py test notes)"
+    ]
+  }
+}

@@ -12,93 +12,13 @@
       <p class="mt-2 max-w-2xl text-sm text-slate-500">A focused view of today's clinical work and patient risk signals.</p>
     </div>
     <div class="detail-actions">
-      <a href="{% url 'crm:patient_create' %}" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">Add patient</a>
-      <a href="{% url 'crm:appointment_create' %}" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">Schedule</a>
+      <a href="{% url 'patients:patient_create' %}" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50">Add patient</a>
+      <a href="{% url 'appointments:appointment_create' %}" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">Schedule</a>
     </div>
   </div>
 
   {# ── Send Booking Link quick action ── #}
-  <div class="rounded-2xl border border-slate-200 bg-white shadow-sm" x-data="{ open: false, mode: 'client' }">
-    <button type="button" @click="open = !open"
-            class="flex w-full items-center justify-between px-5 py-4 text-left">
-      <div class="flex items-center gap-3">
-        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-green-100">
-          <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
-          </svg>
-        </div>
-        <div>
-          <p class="text-sm font-semibold text-slate-900">Send Booking Link</p>
-          <p class="text-xs text-slate-500">Generate and send via WhatsApp</p>
-        </div>
-      </div>
-      <svg class="h-5 w-5 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': open }"
-           fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
-      </svg>
-    </button>
-
-    <div x-show="open" x-transition class="border-t border-slate-100 p-5">
-      {# Mode toggle #}
-      <div class="mb-4 flex rounded-xl border border-slate-200 p-1">
-        <button type="button" @click="mode = 'client'"
-                :class="mode === 'client' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
-                class="flex-1 rounded-lg py-1.5 text-sm font-medium transition">Choose client</button>
-        <button type="button" @click="mode = 'phone'"
-                :class="mode === 'phone' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
-                class="flex-1 rounded-lg py-1.5 text-sm font-medium transition">Enter number</button>
-      </div>
-
-      {# Existing client → HTMX generates link #}
-      <div x-show="mode === 'client'">
-        <div id="send-link-patient-area">
-          <form hx-post="{% url 'crm:dashboard_send_booking_link' %}"
-                hx-target="#send-link-patient-area"
-                hx-swap="innerHTML">
-            {% csrf_token %}
-            <select name="patient_pk"
-                    class="mb-3 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-              <option value="">Choose a client…</option>
-              {% for p in active_patients %}
-                <option value="{{ p.pk }}">{{ p.full_name }} &mdash; {{ p.client_ref }}</option>
-              {% endfor %}
-            </select>
-            <button type="submit"
-                    class="w-full rounded-xl bg-green-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 active:scale-95 transition">
-              Generate &amp; Send via WhatsApp
-            </button>
-          </form>
-        </div>
-      </div>
-
-      {# Phone number → client-side WhatsApp link with general booking URL #}
-      <div x-show="mode === 'phone'" x-cloak x-data="{ phone: '' }">
-        <div class="mb-3 flex gap-2">
-          <input type="tel" x-model="phone" x-ref="phoneInput" autocomplete="tel"
-                 class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-                 placeholder="+263 77…">
-          <button type="button"
-                  x-show="!!navigator.contacts?.select" x-cloak
-                  @click="window.pickFromContacts($refs.phoneInput); $nextTick(() => phone = $refs.phoneInput.value)"
-                  class="sm:hidden shrink-0 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition"
-                  title="Import from contacts">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
-            </svg>
-          </button>
-        </div>
-        <p class="mb-3 text-xs text-slate-500 break-all">Will open WhatsApp with: <span class="font-mono">{{ booking_portal_url }}</span></p>
-        <a :href="'https://wa.me/' + phone.replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent('Hello!\n\nHere is our appointment booking link:\n\n{{ booking_portal_url }}\n\nPlease enter your Client ID if you have one, or follow the steps to register.')"
-           target="_blank" rel="noopener noreferrer"
-           class="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 active:scale-95 transition">
-          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
-          </svg>
-          Open WhatsApp
-        </a>
-      </div>
-    </div>
-  </div>
+  {% include "crm/partials/send_booking_link_card.html" %}
 
   {% if pending_requests %}
   <section class="rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-sm">
@@ -107,7 +27,7 @@
         <span class="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-white">{{ pending_requests|length }}</span>
         <p class="text-sm font-semibold text-amber-900">Pending appointment requests</p>
       </div>
-      <a href="{% url 'crm:booking_requests' %}" class="text-sm font-semibold text-amber-700 hover:text-amber-900">Review all</a>
+      <a href="{% url 'booking:booking_requests' %}" class="text-sm font-semibold text-amber-700 hover:text-amber-900">Review all</a>
     </div>
     <div class="mt-3 space-y-2">
       {% for req in pending_requests %}
@@ -136,7 +56,7 @@
           <h2 class="text-base font-semibold text-slate-950">Patient progress</h2>
           <p class="mt-1 text-sm text-slate-500">Mood, progress, and risk trends across recent sessions.</p>
         </div>
-        <a href="{% url 'crm:session_list' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">View reports</a>
+        <a href="{% url 'notes:session_list' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">View reports</a>
       </div>
       <div class="h-72 p-5">
         {{ dashboard_chart|json_script:"dashboard-chart-data" }}
@@ -150,7 +70,7 @@
           <h2 class="text-base font-semibold text-slate-950">Upcoming appointments</h2>
           <p class="mt-1 text-sm text-slate-500">Next sessions that need attention.</p>
         </div>
-        <a href="{% url 'crm:appointment_create' %}" class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Add</a>
+        <a href="{% url 'appointments:appointment_create' %}" class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Add</a>
       </div>
       <div class="divide-y divide-slate-100">
         {% for appointment in upcoming_appointments %}
@@ -167,7 +87,7 @@
         {% empty %}
         <div class="m-4 rounded-xl border border-blue-200 bg-blue-50 px-5 py-6 text-center">
           <p class="text-sm font-medium text-blue-800">No sessions scheduled today — add one to get started</p>
-          <a href="{% url 'crm:appointment_create' %}" class="mt-3 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">Schedule session</a>
+          <a href="{% url 'appointments:appointment_create' %}" class="mt-3 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">Schedule session</a>
         </div>
         {% endfor %}
       </div>
@@ -181,7 +101,7 @@
           <h2 class="text-base font-semibold text-slate-950">Recent activity</h2>
           <p class="mt-1 text-sm text-slate-500">Latest notes and treatment plan updates.</p>
         </div>
-        <a href="{% url 'crm:session_create' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">Add note</a>
+        <a href="{% url 'notes:session_create' %}" class="text-sm font-semibold text-blue-700 hover:text-blue-800">Add note</a>
       </div>
       <div class="divide-y divide-slate-100">
         {% for session in recent_sessions %}

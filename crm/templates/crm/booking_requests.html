@@ -46,7 +46,7 @@
               <p class="mt-2 text-xs text-slate-400">Received {{ req.created_at|date:"M j, H:i" }}</p>
             </div>
             <div class="flex gap-2 sm:shrink-0">
-              <a href="{% url 'crm:request_approve' req.pk %}"
+              <a href="{% url 'booking:request_approve' req.pk %}"
                  class="flex-1 rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 sm:flex-none sm:py-1.5 sm:text-xs">
                 Approve
               </a>
@@ -59,7 +59,7 @@
 
           <!-- Inline decline form -->
           <div x-show="declining" x-cloak x-transition class="mt-4 rounded-xl border border-rose-100 bg-rose-50 p-4">
-            <form method="post" action="{% url 'crm:request_decline' req.pk %}">
+            <form method="post" action="{% url 'booking:request_decline' req.pk %}">
               {% csrf_token %}
               <label class="mb-2 block text-sm font-medium text-rose-800">Reason for declining (optional)</label>
               <textarea name="decline_reason" rows="2"
@@ -104,8 +104,9 @@
 
   </div>
 
-  <!-- Booking link & QR code -->
+  <!-- Booking link, send card & QR code -->
   <div class="space-y-5">
+    {% include "crm/partials/send_booking_link_card.html" %}
     <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm" x-data="{ copied: false }">
       <h2 class="text-base font-semibold text-slate-950">Your booking link</h2>
       <p class="mt-1 text-sm text-slate-500">Share this link or QR code with clients so they can request appointments.</p>

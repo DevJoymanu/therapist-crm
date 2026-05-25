@@ -91,7 +91,7 @@
   </div>
 
   {# ── Form ── #}
-  <form method="post" action="{% url 'crm:booking_new_client' therapist.username %}" class="px-5 py-5">
+  <form method="post" action="{% url 'booking:booking_new_client' therapist.username %}" class="px-5 py-5">
     {% csrf_token %}
     <div class="pot-field" aria-hidden="true">
       <label for="id_pot_wiz">Website</label>

@@ -66,7 +66,7 @@
                autocomplete="off"
                class="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-lg font-mono text-center text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                placeholder="e.g. 42"
-               hx-post="{% url 'crm:booking_check' therapist.username %}"
+               hx-post="{% url 'booking:booking_check' therapist.username %}"
                hx-target="#id-check-result"
                hx-swap="innerHTML"
                hx-trigger="keyup changed delay:500ms, input changed delay:500ms"

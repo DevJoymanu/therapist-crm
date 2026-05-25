@@ -38,7 +38,7 @@
     {% if consent_form %}
     <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <h2 class="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-600">Consent</h2>
-      <p class="mb-4 text-xs text-slate-500">Before booking, please confirm you have read and agree to our <a href="{% url 'crm:booking_portal' therapist.username %}" class="underline">counselling terms</a>.</p>
+      <p class="mb-4 text-xs text-slate-500">Before booking, please confirm you have read and agree to our <a href="{% url 'booking:booking_portal' therapist.username %}" class="underline">counselling terms</a>.</p>
       <div class="space-y-4">
         <div>
           <label class="mb-1.5 block text-sm font-medium text-slate-700" for="{{ consent_form.client_name.id_for_label }}">{{ consent_form.client_name.label }}</label>

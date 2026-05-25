@@ -12,16 +12,16 @@
     </button>
 
     {# Global search #}
-    <form method="get" action="{% url 'crm:patient_list' %}" class="min-w-0 flex-1" hx-get="{% url 'crm:patient_list' %}" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">
+    <form method="get" action="{% url 'patients:patient_list' %}" class="min-w-0 flex-1" hx-get="{% url 'patients:patient_list' %}" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">
       <label class="sr-only" for="global-search">Search</label>
       <input id="global-search" name="q" value="{{ request.GET.q }}"
-             hx-get="{% url 'crm:patient_list' %}" hx-trigger="keyup changed delay:300ms" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner"
+             hx-get="{% url 'patients:patient_list' %}" hx-trigger="keyup changed delay:300ms" hx-target="#main-content" hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner"
              class="h-10 w-full max-w-xl rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100"
              placeholder="Search patients...">
     </form>
 
     {# Add session — hidden on mobile, visible sm+ #}
-    <a href="{% url 'crm:session_create' %}" hx-get="{% url 'crm:session_create' %}" hx-target="#main-content"
+    <a href="{% url 'notes:session_create' %}" hx-get="{% url 'notes:session_create' %}" hx-target="#main-content"
        hx-select="#main-content" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner"
        class="hidden shrink-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700 sm:inline-flex">
       Add session
@@ -53,7 +53,7 @@
       </button>
       <div x-cloak x-show="open" x-transition @click.outside="open = false"
            class="absolute right-0 mt-2 w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
-        <a href="{% url 'crm:criterion_list' %}" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">Scoring</a>
+        <a href="{% url 'notes:criterion_list' %}" class="block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">Scoring</a>
         <button @click="dark = !dark; open = false"
                 class="w-full rounded-lg px-3 py-2 text-left text-sm text-slate-600 hover:bg-slate-50 md:hidden">
           <span x-show="!dark">Switch to dark mode</span>
@@ -70,7 +70,7 @@
 </header>
 
 {# Floating action button — mobile only, sits above the bottom nav bar #}
-<a href="{% url 'crm:session_create' %}"
+<a href="{% url 'notes:session_create' %}"
    class="fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 shadow-lg shadow-blue-600/30 hover:bg-blue-700 active:scale-95 sm:hidden"
    aria-label="Add session note">
   <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">

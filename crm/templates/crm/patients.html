@@ -9,17 +9,19 @@
     <h1 class="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Care roster</h1>
     <p class="mt-2 text-sm text-slate-500">Find patient records, risk status, and recent session history quickly.</p>
   </div>
-  <a href="{% url 'crm:patient_create' %}" class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">Add Patient</a>
+  <a href="{% url 'patients:patient_create' %}" class="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700">Add Patient</a>
 </div>
+
+{% include "crm/partials/send_booking_link_card.html" %}
 
 <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
   <div class="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
-    <form method="get" class="flex max-w-2xl flex-1 gap-3" hx-get="{% url 'crm:patient_list' %}" hx-target="#patient-results" hx-select="#patient-results" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">
-      <input name="q" value="{{ request.GET.q }}" hx-get="{% url 'crm:patient_list' %}" hx-trigger="keyup changed delay:300ms" hx-target="#patient-results" hx-select="#patient-results" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner" class="h-10 min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100" placeholder="Search by patient name">
+    <form method="get" class="flex max-w-2xl flex-1 gap-3" hx-get="{% url 'patients:patient_list' %}" hx-target="#patient-results" hx-select="#patient-results" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner">
+      <input name="q" value="{{ request.GET.q }}" hx-get="{% url 'patients:patient_list' %}" hx-trigger="keyup changed delay:300ms" hx-target="#patient-results" hx-select="#patient-results" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#page-spinner" class="h-10 min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100" placeholder="Search by patient name">
       <button class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" type="submit">Search</button>
     </form>
     <div class="flex gap-2">
-      <a href="{% url 'crm:patient_list' %}" class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700">All</a>
+      <a href="{% url 'patients:patient_list' %}" class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700">All</a>
       <span class="rounded-xl px-3 py-2 text-sm font-medium text-slate-500">Active</span>
       <span class="rounded-xl px-3 py-2 text-sm font-medium text-slate-500">Risk</span>
     </div>
@@ -55,7 +57,7 @@
               </svg>
             </a>
           {% endif %}
-          <a href="{% url 'crm:whatsapp_booking' row.patient.pk %}"
+          <a href="{% url 'booking:whatsapp_booking' row.patient.pk %}"
              target="_blank" rel="noopener noreferrer"
              class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 active:scale-95"
              title="Send booking link via WhatsApp">
@@ -94,7 +96,7 @@
               <td class="px-5 py-4 text-right">
                 <div class="flex justify-end gap-2">
                   <a href="{{ row.patient.get_absolute_url }}" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white">View</a>
-                  <a href="{% url 'crm:whatsapp_booking' row.patient.pk %}"
+                  <a href="{% url 'booking:whatsapp_booking' row.patient.pk %}"
                      target="_blank" rel="noopener noreferrer"
                      class="inline-flex items-center gap-1.5 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm font-semibold text-green-700 hover:bg-green-100"
                      title="Send booking link via WhatsApp">
@@ -103,8 +105,8 @@
                     </svg>
                     WhatsApp
                   </a>
-                  <a href="{% url 'crm:patient_update' row.patient.pk %}" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white">Edit</a>
-                  <a href="{% url 'crm:patient_delete' row.patient.pk %}" class="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50">Delete</a>
+                  <a href="{% url 'patients:patient_update' row.patient.pk %}" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-white">Edit</a>
+                  <a href="{% url 'patients:patient_delete' row.patient.pk %}" class="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-50">Delete</a>
                 </div>
               </td>
             </tr>
